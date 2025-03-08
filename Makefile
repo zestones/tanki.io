@@ -40,6 +40,11 @@ dev:
 		'cd $(SERVER_DIR) && $(NPM) run dev' \; \
 		attach
 
+# Stop Session
+stop:
+	@echo "Stopping development session..."
+	@tmux kill-session -t tanki-dev
+
 # Production start
 .PHONY: start
 start:
