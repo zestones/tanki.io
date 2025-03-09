@@ -62,7 +62,7 @@ function AuthPage() {
     const result = await registerPlayer(username);
 
     if (result.success) {
-      navigate('/screen');
+      navigate('/controller');
     }
   };
 

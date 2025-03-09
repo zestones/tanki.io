@@ -45,8 +45,7 @@ class GameService {
                         username: username,
                     });
 
-                    // In a real implementation, we would wait for a register-response here
-                    // But for now we'll just resolve immediately as in the original code
+                    // TODO : wait for a register-response here
                     resolve({ success: true, username });
                 })
                 .catch(reject);
@@ -54,6 +53,7 @@ class GameService {
     }
 
     storePlayerSession(username) {
+        // TODO: create a hook useLocalStorage
         sessionStorage.setItem('diep_username', username);
     }
 }
