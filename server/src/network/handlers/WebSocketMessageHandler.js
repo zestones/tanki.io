@@ -56,11 +56,6 @@ class WebSocketMessageHandler extends BaseEventEmitter {
 
     handleServerStatsRequest(connection) {
         try {
-            this.logger.info(
-                "Server stats request received : ",
-                this.playerRegistry.getPlayerCount()
-            );
-
             this.messageSender.sendToClient(connection, {
                 type: "server-stats-response",
                 data: {
