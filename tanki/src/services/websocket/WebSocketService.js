@@ -8,6 +8,9 @@ class WebSocketService {
         this.reconnectAttempts = 0;
         this.maxReconnectAttempts = 5;
         this.reconnectDelay = 1000;
+
+        // Debug flag
+        this.debug = false;
     }
 
     connect() {
@@ -64,7 +67,14 @@ class WebSocketService {
 
     send(message) {
         return new Promise((resolve, reject) => {
+            if (this.debug) {
+                console.log('WebSocket sending message:', message);
+            }
+
             if (!this.socket || this.socket.readyState !== WebSocket.OPEN) {
+                if (this.debug) {
+                    console.log('Socket not ready, connecting first...');
+                }
                 this.connect()
                     .then(() => {
                         this._sendMessage(message, resolve, reject);
@@ -133,10 +143,23 @@ class WebSocketService {
             const data = JSON.parse(event.data);
             const messageType = data.type;
 
+            if (this.debug) {
+                console.log('WebSocket received message:', {
+                    type: messageType,
+                    data: data
+                });
+            }
+
             if (this.messageHandlers.has(messageType)) {
+                if (this.debug) {
+                    console.log(`Found handlers for message type: ${messageType}`);
+                }
                 this.messageHandlers.get(messageType).forEach((handler) => {
                     handler(data);
                 });
+            } else if (this.debug) {
+                console.log(`No handlers found for message type: ${messageType}`);
+                console.log('Available handlers:', Array.from(this.messageHandlers.keys()));
             }
 
             if (this.messageHandlers.has('*')) {
@@ -146,6 +169,7 @@ class WebSocketService {
             }
         } catch (error) {
             console.error('Error parsing WebSocket message:', error);
+            console.error('Raw message:', event.data);
         }
     }
 

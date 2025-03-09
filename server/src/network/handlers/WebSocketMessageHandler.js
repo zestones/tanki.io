@@ -14,6 +14,7 @@ class WebSocketMessageHandler extends BaseEventEmitter {
     handleMessage(connection, message) {
         try {
             const data = JSON.parse(message);
+            const requestId = data.requestId;
 
             switch (data.type) {
                 case "register-request":
@@ -21,7 +22,8 @@ class WebSocketMessageHandler extends BaseEventEmitter {
                     break;
 
                 case "stats-request":
-                    this.handleServerStatsRequest(connection);
+                    this.logger.info("Stats request received");
+                    this.handleServerStatsRequest(connection, requestId);
                     break;
 
                 default:
@@ -43,6 +45,7 @@ class WebSocketMessageHandler extends BaseEventEmitter {
 
             this.messageSender.sendToClient(connection, {
                 type: "register-response",
+                requestId: data.requestId,
                 data: playerData,
             });
 
@@ -54,10 +57,11 @@ class WebSocketMessageHandler extends BaseEventEmitter {
         }
     }
 
-    handleServerStatsRequest(connection) {
+    handleServerStatsRequest(connection, requestId) {
         try {
             this.messageSender.sendToClient(connection, {
-                type: "server-stats-response",
+                type: "stats-response",
+                requestId: requestId,
                 data: {
                     players: this.playerRegistry.getPlayerCount(),
                 },
@@ -66,7 +70,8 @@ class WebSocketMessageHandler extends BaseEventEmitter {
             this.logger.error('Error handling server stats request:', error);
             this.messageSender.sendError(
                 connection,
-                "Failed to get server stats :" + error.message
+                "Failed to get server stats :" + error.message,
+                requestId
             );
         }
     }

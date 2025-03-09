@@ -5,6 +5,7 @@ import GameScreen from './pages/game-screen-page'
 import ControllerPage from './pages/controller-page'
 
 function App() {
+
   return (
     <Router>
       <Routes>

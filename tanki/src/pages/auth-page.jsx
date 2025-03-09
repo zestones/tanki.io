@@ -1,21 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import { WEBSOCKET_CONFIG } from '../config/websocket.config';
-import { useGameService } from '../hooks/useGameService';
+import PlayerService from '../services/game/PlayerService';
+import ServerStatsService from '../services/game/ServerStatsService';
 
 function AuthPage() {
   const [tanks, setTanks] = useState([]);
   const [username, setUsername] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [serverStats, setServerStats] = useState({ players: 0, uptime: '0' });
   const navigate = useNavigate();
 
-  const {
-    isLoading,
-    error,
-    serverStats,
-    fetchServerStats,
-    registerPlayer,
-  } = useGameService(WEBSOCKET_CONFIG.SERVER_URL);
+  // Initialize services
+  const playerService = PlayerService.getInstance(WEBSOCKET_CONFIG.SERVER_URL);
+  const statsService = ServerStatsService.getInstance(WEBSOCKET_CONFIG.SERVER_URL);
 
   const updateTankPositions = (prevTanks) => {
     return prevTanks.map((tank) => ({
@@ -23,6 +22,26 @@ function AuthPage() {
       x: (tank.x + Math.cos(tank.direction * (Math.PI / 180)) * tank.speed + 100) % 100,
       y: (tank.y + Math.sin(tank.direction * (Math.PI / 180)) * tank.speed + 100) % 100,
     }));
+  };
+
+  // Fetch server stats
+  const fetchServerStats = async () => {
+    try {
+      const stats = await statsService.fetchStats();
+      setServerStats({
+        players: stats.players || 0,
+        uptime: formatUptime(stats.uptime || 0)
+      });
+    } catch (err) {
+      console.error('Failed to fetch server stats:', err);
+    }
+  };
+
+  // Format uptime to readable string
+  const formatUptime = (seconds) => {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    return `${hours}h ${minutes}m`;
   };
 
   // Generate random tanks for background
@@ -45,24 +64,34 @@ function AuthPage() {
       setTanks(updateTankPositions);
     }, 50);
 
-    // Fetch server stats on load
+    // Fetch server stats on load and every 30 seconds
     fetchServerStats();
+    const statsInterval = setInterval(fetchServerStats, 30000);
 
-    return () => clearInterval(interval);
-  }, [fetchServerStats]);
+    return () => {
+      clearInterval(interval);
+      clearInterval(statsInterval);
+    };
+  }, []);
 
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!username.trim()) {
+      setError('Please enter a username');
       return;
     }
 
-    const result = await registerPlayer(username);
+    setIsLoading(true);
+    setError('');
 
-    if (result.success) {
+    try {
+      await playerService.register(username.trim());
       navigate('/controller');
+    } catch (err) {
+      setError('Connection failed. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -118,12 +147,9 @@ function AuthPage() {
                 className='w-full px-5 py-4 bg-gray-900/60 rounded-xl border border-gray-700 focus:border-blue-500 text-white placeholder-gray-500 transition-all duration-300 outline-none group-hover:border-blue-400/50 text-center'
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                disabled={isLoading}
               />
               <div className='absolute inset-0 rounded-xl border border-blue-500/30 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity'></div>
             </div>
-
-            {error && <div className='text-red-500 text-sm text-center'>{error}</div>}
 
             <button
               type='submit'
@@ -155,6 +181,12 @@ function AuthPage() {
               </span>
             </button>
           </form>
+
+          {error && (
+            <div className='mt-4 text-red-500 text-sm text-center bg-red-500/10 p-3 rounded-lg border border-red-500/20'>
+              {error}
+            </div>
+          )}
 
           {/* Stats with glow effect */}
           <div className='mt-8 bg-gray-900/40 rounded-xl p-4 border border-gray-800'>
