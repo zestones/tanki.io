@@ -75,6 +75,11 @@ export class GameRoom extends Room {
 
         const player = new Player();
         player.username = options.username;
+
+        // Spawn player at a random position within the arena
+        player.x = Math.random() * this.state.arenaWidth;
+        player.y = Math.random() * this.state.arenaHeight;
+
         this.state.players.set(client.sessionId, player);
     }
 
@@ -166,6 +171,7 @@ export class GameRoom extends Room {
             if (player.isDead && Date.now() - player.respawnTime >= RESPAWN_TIME) {
                 player.isDead = false;
                 player.hp = 3;
+                // Respawn at a random position within the arena
                 player.x = Math.random() * this.state.arenaWidth;
                 player.y = Math.random() * this.state.arenaHeight;
             }

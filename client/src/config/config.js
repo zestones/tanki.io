@@ -1,5 +1,5 @@
 // Create a properly initialized config object
-const config = { wsUrl: null };
+const config = { wsUrl: 'ws://localhost:3000' };
 
 // Dynamically import the IP configuration
 import('./ipConfig.template.js').then(ipConfig => {

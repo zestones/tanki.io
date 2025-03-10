@@ -61,8 +61,8 @@ export class GameState extends Schema {
         this.players = new MapSchema();
         this.bullets = new ArraySchema();
         this.explosions = new ArraySchema();
-        this.arenaWidth = 800;
-        this.arenaHeight = 600;
+        this.arenaWidth = 800;  // Default, will be updated based on client viewport
+        this.arenaHeight = 600; // Default, will be updated based on client viewport
     }
 }
 
