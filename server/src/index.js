@@ -19,8 +19,11 @@ const gameServer = new Server({
     })
 });
 
-// Register GameRoom as "game"
-gameServer.define("game", GameRoom);
+// Define room with autoCreate option set to true
+gameServer.define("game", GameRoom, {
+    // Room creation options can go here
+    autoCreate: true  // This will ensure the room is created when the server starts
+});
 
 // Register Colyseus Monitor
 app.use("/colyseus", monitor());

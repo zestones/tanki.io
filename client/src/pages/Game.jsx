@@ -19,7 +19,7 @@ export default function Game() {
         const client = new Client('ws://localhost:3000');
         setIsConnecting(true);
 
-        client.join('game', { isSpectator: true }).then(room => {
+        client.joinOrCreate('game', { isSpectator: true }).then(room => {
             setIsConnecting(false);
 
             room.onStateChange((state) => {
