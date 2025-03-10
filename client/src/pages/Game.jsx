@@ -24,6 +24,17 @@ export default function Game() {
     const stageRef = useRef(null);
     const containerRef = useRef(null);
     const viewportSize = useViewportSize(containerRef);
+    const roomRef = useRef(null);
+
+    // Send viewport size to server when it changes
+    useEffect(() => {
+        if (roomRef.current && viewportSize.width && viewportSize.height) {
+            roomRef.current.send('updateArenaSize', {
+                width: viewportSize.width,
+                height: viewportSize.height
+            });
+        }
+    }, [viewportSize.width, viewportSize.height]);
 
     useEffect(() => {
         const client = new Client('ws://192.168.10.105:3000');
@@ -31,6 +42,15 @@ export default function Game() {
 
         client.joinOrCreate('game', { isSpectator: true }).then(room => {
             setIsConnecting(false);
+            roomRef.current = room;
+
+            // Send initial viewport size
+            if (viewportSize.width && viewportSize.height) {
+                room.send('updateArenaSize', {
+                    width: viewportSize.width,
+                    height: viewportSize.height
+                });
+            }
 
             room.onStateChange((state) => {
                 setGameState({
@@ -76,9 +96,7 @@ export default function Game() {
                     className="w-full h-full"
                 >
                     <Layer>
-                        <Arena
-                            gameState={gameState}
-                        />
+                        <Arena gameState={gameState} />
                     </Layer>
                 </Stage>
 

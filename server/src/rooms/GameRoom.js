@@ -15,6 +15,16 @@ export class GameRoom extends Room {
 
         this.setSimulationInterval((deltaTime) => this.update(deltaTime), TICK_RATE);
 
+        this.onMessage("updateArenaSize", (client, data) => {
+            // Update arena size based on client viewport
+            if (data.width && data.height &&
+                data.width > 0 && data.height > 0) {
+                console.log(`Updating arena size to ${data.width}x${data.height}`);
+                this.state.arenaWidth = data.width;
+                this.state.arenaHeight = data.height;
+            }
+        });
+
         this.onMessage("move", (client, data) => {
             const player = this.state.players.get(client.sessionId);
             if (!player || player.isDead) return;
