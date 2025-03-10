@@ -34,6 +34,13 @@ cd ../client
 npm install
 ```
 
+3. Configure the client for your local network (optional):
+```bash
+cd client/src
+cp ipConfig.template.js ipConfig.js
+```
+   Then edit `ipConfig.js` and replace `YOUR_LOCAL_IP_ADDRESS` with your actual local IP address.
+
 ## Running the Game
 
 1. Start the server:
@@ -60,6 +67,28 @@ npm run dev
 4. Avoid enemy bullets and try to hit other players
 5. When hit, you lose 1 HP (starting with 3)
 6. At 0 HP, you'll respawn after 3 seconds
+
+## Local Network Play
+
+The game can be played in two modes:
+- Development mode: Using localhost (default)
+- Local network mode: Using your local IP address
+
+To switch between these modes, you can:
+1. Use the helper functions in your code:
+   ```javascript
+   // To toggle between modes
+   import { toggleMode } from './config';
+   toggleMode();
+   
+   // Or to set a specific mode
+   import { setMode } from './config';
+   setMode('localNetwork'); // or setMode('dev')
+   ```
+
+2. The chosen mode will be saved in localStorage and persist across page reloads
+
+For local network play, make sure you've set up your `ipConfig.js` file as described in the Setup section.
 
 ## Controls
 

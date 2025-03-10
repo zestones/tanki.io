@@ -19,21 +19,22 @@ export class GameRoom extends Room {
             const player = this.state.players.get(client.sessionId);
             if (!player || player.isDead) return;
 
+            // Update player's direction (in degrees)
             player.direction = data.direction;
 
-            switch (data.direction) {
-                case 0: // right
-                    player.x = Math.min(player.x + TANK_SPEED, this.state.arenaWidth);
-                    break;
-                case 90: // up
-                    player.y = Math.max(player.y - TANK_SPEED, 0);
-                    break;
-                case 180: // left
-                    player.x = Math.max(player.x - TANK_SPEED, 0);
-                    break;
-                case 270: // down
-                    player.y = Math.min(player.y + TANK_SPEED, this.state.arenaHeight);
-                    break;
+            // Calculate velocity based on direction and speed
+            if (data.moving) {
+                // Convert degrees to radians
+                const radians = (data.direction * Math.PI) / 180;
+
+                // Calculate movement vector
+                // This will ensure the tank moves in the direction of the joystick
+                const dx = Math.cos(radians) * TANK_SPEED;
+                const dy = Math.sin(radians) * TANK_SPEED;
+
+                // Update position with boundary checks
+                player.x = Math.max(0, Math.min(player.x + dx, this.state.arenaWidth));
+                player.y = Math.max(0, Math.min(player.y - dy, this.state.arenaHeight));
             }
         });
 

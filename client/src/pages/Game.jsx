@@ -16,7 +16,7 @@ export default function Game() {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        const client = new Client('ws://localhost:3000');
+        const client = new Client('ws://192.168.10.105:3000');
         setIsConnecting(true);
 
         client.joinOrCreate('game', { isSpectator: true }).then(room => {
