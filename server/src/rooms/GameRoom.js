@@ -1,5 +1,5 @@
 import { Room } from "@colyseus/core";
-import { GameState, Player } from "../schema/GameState.js";
+import { GameState, Player, Bullet } from "../schema/GameState.js";
 
 const BULLET_SPEED = 5;
 const TANK_SPEED = 3;
@@ -48,12 +48,12 @@ export class GameRoom extends Room {
 
             this.lastShootTime.set(client.sessionId, now);
 
-            const bullet = new this.state.bullets.push({
-                x: player.x,
-                y: player.y,
-                direction: player.direction,
-                ownerId: client.sessionId
-            });
+            const bullet = new Bullet();
+            bullet.x = player.x;
+            bullet.y = player.y;
+            bullet.direction = player.direction;
+            bullet.ownerId = client.sessionId;
+            this.state.bullets.push(bullet);
         });
     }
 

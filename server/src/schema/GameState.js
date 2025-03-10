@@ -21,7 +21,7 @@ type("string")(Player.prototype, "username");
 type("boolean")(Player.prototype, "isDead");
 type("number")(Player.prototype, "respawnTime");
 
-class Bullet extends Schema {
+export class Bullet extends Schema {
     constructor() {
         super();
         this.x = 0;
