@@ -1,6 +1,6 @@
 import { Schema, type, MapSchema, ArraySchema } from "@colyseus/schema";
 
-class Player extends Schema {
+export class Player extends Schema {
     constructor() {
         super();
         this.x = Math.random() * 800;
@@ -46,7 +46,7 @@ export class GameState extends Schema {
     }
 }
 
-type("map", Player)(GameState.prototype, "players");
-type("array", Bullet)(GameState.prototype, "bullets");
+type({ map: Player })(GameState.prototype, "players");
+type({ array: Bullet })(GameState.prototype, "bullets");
 type("number")(GameState.prototype, "arenaWidth");
 type("number")(GameState.prototype, "arenaHeight"); 

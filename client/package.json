@@ -1,5 +1,5 @@
 {
-  "name": "tanki",
+  "name": "client",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -10,25 +10,28 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@tailwindcss/forms": "^0.5.7",
-    "autoprefixer": "^10.4.17",
-    "colyseus.js": "^0.15.0",
-    "konva": "^9.3.3",
-    "postcss": "^8.4.35",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-konva": "^18.2.10",
-    "react-router-dom": "^6.22.1",
-    "tailwindcss": "^3.4.1"
+    "@tailwindcss/forms": "^0.5.10",
+    "@tailwindcss/vite": "^4.0.9",
+    "colyseus.js": "^0.15.27",
+    "konva": "9.2.3",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-router-dom": "^6.22.0",
+    "react-konva": "18.2.10",
+    "tailwindcss": "^4.0.12"
   },
   "devDependencies": {
-    "@types/react": "^18.2.56",
+    "@types/react": "^18.2.55",
     "@types/react-dom": "^18.2.19",
     "@vitejs/plugin-react": "^4.2.1",
-    "eslint": "^8.56.0",
-    "eslint-plugin-react": "^7.33.2",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-react-refresh": "^0.4.5",
-    "vite": "^5.1.4"
+    "eslint": "^9.22.0",
+    "eslint-plugin-react": "^7.37.4",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.19",
+    "vite": "^6.2.1"
+  },
+  "overrides": {
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
   }
 }

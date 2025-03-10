@@ -1,5 +1,5 @@
 import { Room } from "@colyseus/core";
-import { GameState } from "../schema/GameState.js";
+import { GameState, Player } from "../schema/GameState.js";
 
 const BULLET_SPEED = 5;
 const TANK_SPEED = 3;
@@ -9,6 +9,7 @@ const RESPAWN_TIME = 3000; // 3 seconds
 
 export class GameRoom extends Room {
     onCreate() {
+        this.maxClients = 10; // Adjust as needed
         this.setState(new GameState());
         this.lastShootTime = new Map();
 
@@ -57,6 +58,11 @@ export class GameRoom extends Room {
     }
 
     onJoin(client, options) {
+        if (options.isSpectator) {
+            // Don't create a player for spectators
+            return;
+        }
+
         const player = new Player();
         player.username = options.username;
         this.state.players.set(client.sessionId, player);

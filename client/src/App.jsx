@@ -1,8 +1,8 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 
-import Home from './pages/home-page'
-import Game from './pages/game-page'
-import Controller from './pages/controller-page'
+import Home from './pages/Home'
+import Game from './pages/Game'
+import Controller from './pages/Controller'
 
 function App() {
 
@@ -10,7 +10,7 @@ function App() {
     <Router>
       <Routes>
         <Route path='/' element={<Home />} />
-        <Route path='/screen' element={<Game />} />
+        <Route path='/game' element={<Game />} />
         <Route path='/controller' element={<Controller />} />
       </Routes>
     </Router>
