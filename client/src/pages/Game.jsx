@@ -9,6 +9,7 @@ import StatsPanel from '../components/layout/StatsPanel';
 import ErrorScreen from '../components/ui/ErrorScreen';
 import LoadingScreen from '../components/ui/LoadingScreen';
 import useViewportSize from '../hooks/useViewportSize';
+import { config } from '../config/config';
 
 export default function Game() {
     const [gameState, setGameState] = useState({
@@ -37,7 +38,7 @@ export default function Game() {
     }, [viewportSize.width, viewportSize.height]);
 
     useEffect(() => {
-        const client = new Client('ws://192.168.10.105:3000');
+        const client = new Client(config.wsUrl);
         setIsConnecting(true);
 
         client.joinOrCreate('game', { isSpectator: true }).then(room => {
@@ -57,8 +58,8 @@ export default function Game() {
                     players: state.players,
                     bullets: Array.from(state.bullets),
                     explosions: Array.from(state.explosions),
-                    arenaWidth: state.arenaWidth || 2000,
-                    arenaHeight: state.arenaHeight || 1200
+                    arenaWidth: state.arenaWidth,
+                    arenaHeight: state.arenaHeight
                 });
             });
         }).catch(e => {
