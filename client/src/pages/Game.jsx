@@ -9,6 +9,7 @@ export default function Game() {
     const [gameState, setGameState] = useState({
         players: new Map(),
         bullets: [],
+        explosions: [],
         arenaWidth: 800,
         arenaHeight: 600
     });
@@ -26,6 +27,7 @@ export default function Game() {
                 setGameState({
                     players: state.players,
                     bullets: Array.from(state.bullets),
+                    explosions: Array.from(state.explosions),
                     arenaWidth: state.arenaWidth,
                     arenaHeight: state.arenaHeight
                 });
@@ -195,9 +197,44 @@ export default function Game() {
                             fill="#1a1a2e"
                         />
 
-                        {/* Render bullets with glow effect */}
+                        {/* Render explosions */}
+                        {gameState.explosions.map((explosion, index) => (
+                            <Circle
+                                key={`explosion-${index}`}
+                                x={explosion.x}
+                                y={explosion.y}
+                                radius={explosion.radius}
+                                fillRadialGradientStartPoint={{ x: 0, y: 0 }}
+                                fillRadialGradientStartRadius={0}
+                                fillRadialGradientEndPoint={{ x: 0, y: 0 }}
+                                fillRadialGradientEndRadius={explosion.radius}
+                                fillRadialGradientColorStops={[
+                                    0, 'rgba(255, 255, 255, 0.8)',
+                                    0.3, 'rgba(255, 165, 0, 0.6)',
+                                    0.7, 'rgba(255, 0, 0, 0.4)',
+                                    1, 'rgba(0, 0, 0, 0)'
+                                ]}
+                            />
+                        ))}
+
+                        {/* Render bullets with glow effect and trail */}
                         {gameState.bullets.map((bullet, index) => (
                             <>
+                                {/* Bullet trail */}
+                                <Line
+                                    key={`bullet-trail-${index}`}
+                                    points={[
+                                        bullet.x - Math.cos((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 4,
+                                        bullet.y + Math.sin((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 4,
+                                        bullet.x,
+                                        bullet.y
+                                    ]}
+                                    stroke="rgba(255, 165, 0, 0.5)"
+                                    strokeWidth={BULLET_SIZE}
+                                    lineCap="round"
+                                />
+
+                                {/* Bullet glow */}
                                 <Circle
                                     key={`bullet-glow-${index}`}
                                     x={bullet.x}
@@ -205,6 +242,8 @@ export default function Game() {
                                     radius={BULLET_SIZE * 2}
                                     fill="rgba(255, 165, 0, 0.2)"
                                 />
+
+                                {/* Bullet */}
                                 <Circle
                                     key={`bullet-${index}`}
                                     x={bullet.x}

@@ -16,6 +16,7 @@ export default function Controller() {
     // Joystick state
     const [joystickPos, setJoystickPos] = useState({ x: 0, y: 0 });
     const [isDragging, setIsDragging] = useState(false);
+    const [lastDirection, setLastDirection] = useState(0);
     const joystickRef = useRef(null);
     const baseRef = useRef(null);
 
@@ -221,6 +222,9 @@ export default function Controller() {
         let degrees = (angle * 180 / Math.PI) % 360;
         if (degrees < 0) degrees += 360;
 
+        // Store the last direction
+        setLastDirection(degrees);
+
         // Limit joystick movement radius
         const maxDistance = 50;
         const clampedDistance = Math.min(maxDistance, distance);
@@ -248,10 +252,10 @@ export default function Controller() {
         setIsDragging(false);
         setJoystickPos({ x: 0, y: 0 });
 
-        // Send stop moving signal
+        // Send stop moving signal but keep the last direction
         if (room) {
             room.send('move', {
-                direction: 0,
+                direction: lastDirection,
                 moving: false
             });
         }

@@ -36,11 +36,31 @@ type("number")(Bullet.prototype, "y");
 type("number")(Bullet.prototype, "direction");
 type("string")(Bullet.prototype, "ownerId");
 
+export class Explosion extends Schema {
+    constructor() {
+        super();
+        this.x = 0;
+        this.y = 0;
+        this.radius = 1;
+        this.maxRadius = 20;
+        this.createdAt = Date.now();
+        this.duration = 300; // 300ms
+    }
+}
+
+type("number")(Explosion.prototype, "x");
+type("number")(Explosion.prototype, "y");
+type("number")(Explosion.prototype, "radius");
+type("number")(Explosion.prototype, "maxRadius");
+type("number")(Explosion.prototype, "createdAt");
+type("number")(Explosion.prototype, "duration");
+
 export class GameState extends Schema {
     constructor() {
         super();
         this.players = new MapSchema();
         this.bullets = new ArraySchema();
+        this.explosions = new ArraySchema();
         this.arenaWidth = 800;
         this.arenaHeight = 600;
     }
@@ -48,5 +68,6 @@ export class GameState extends Schema {
 
 type({ map: Player })(GameState.prototype, "players");
 type({ array: Bullet })(GameState.prototype, "bullets");
+type({ array: Explosion })(GameState.prototype, "explosions");
 type("number")(GameState.prototype, "arenaWidth");
 type("number")(GameState.prototype, "arenaHeight"); 

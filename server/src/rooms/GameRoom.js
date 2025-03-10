@@ -1,8 +1,8 @@
 import { Room } from "@colyseus/core";
-import { GameState, Player, Bullet } from "../schema/GameState.js";
+import { GameState, Player, Bullet, Explosion } from "../schema/GameState.js";
 
-const BULLET_SPEED = 5;
 const TANK_SPEED = 3;
+const BULLET_SPEED = 5 + TANK_SPEED;
 const TICK_RATE = 1000 / 60; // 60 FPS
 const SHOOT_COOLDOWN = 500; // 0.5 seconds
 const RESPAWN_TIME = 3000; // 3 seconds
@@ -50,8 +50,15 @@ export class GameRoom extends Room {
             this.lastShootTime.set(client.sessionId, now);
 
             const bullet = new Bullet();
-            bullet.x = player.x;
-            bullet.y = player.y;
+
+            // Calculate the position at the end of the tank's barrel
+            const BARREL_LENGTH = 30; // Should match the barrel length in the client
+            const radians = (player.direction * Math.PI) / 180;
+
+            // Spawn bullet at the end of the barrel
+            bullet.x = player.x + Math.cos(radians) * BARREL_LENGTH;
+            bullet.y = player.y - Math.sin(radians) * BARREL_LENGTH; // Subtract because y-axis is inverted
+
             bullet.direction = player.direction;
             bullet.ownerId = client.sessionId;
             this.state.bullets.push(bullet);
@@ -80,21 +87,17 @@ export class GameRoom extends Room {
         for (let i = this.state.bullets.length - 1; i >= 0; i--) {
             const bullet = this.state.bullets[i];
 
-            // Move bullet
-            switch (bullet.direction) {
-                case 0: // right
-                    bullet.x += BULLET_SPEED;
-                    break;
-                case 90: // up
-                    bullet.y -= BULLET_SPEED;
-                    break;
-                case 180: // left
-                    bullet.x -= BULLET_SPEED;
-                    break;
-                case 270: // down
-                    bullet.y += BULLET_SPEED;
-                    break;
-            }
+            // Move bullet based on direction angle
+            // Convert degrees to radians
+            const radians = (bullet.direction * Math.PI) / 180;
+
+            // Calculate movement vector using trigonometry
+            const dx = Math.cos(radians) * BULLET_SPEED;
+            const dy = Math.sin(radians) * BULLET_SPEED;
+
+            // Update bullet position
+            bullet.x += dx;
+            bullet.y -= dy; // Subtract because y-axis is inverted in canvas
 
             // Check if bullet is out of bounds
             if (
@@ -103,6 +106,10 @@ export class GameRoom extends Room {
                 bullet.y < 0 ||
                 bullet.y > this.state.arenaHeight
             ) {
+                // Create explosion at bullet position
+                this.createExplosion(bullet.x, bullet.y);
+
+                // Remove bullet
                 this.state.bullets.splice(i, 1);
                 continue;
             }
@@ -116,15 +123,42 @@ export class GameRoom extends Room {
                 const distance = Math.sqrt(dx * dx + dy * dy);
 
                 if (distance < 20) { // Tank hit radius
+                    // Create explosion at hit position
+                    this.createExplosion(bullet.x, bullet.y);
+
+                    // Remove bullet
                     this.state.bullets.splice(i, 1);
                     player.hp--;
 
                     if (player.hp <= 0) {
                         player.isDead = true;
                         player.respawnTime = Date.now();
+
+                        // Create larger explosion for tank destruction
+                        const explosion = new Explosion();
+                        explosion.x = player.x;
+                        explosion.y = player.y;
+                        explosion.maxRadius = 40; // Larger explosion
+                        explosion.duration = 500; // Longer duration
+                        this.state.explosions.push(explosion);
                     }
                 }
             });
+        }
+
+        // Update explosions
+        for (let i = this.state.explosions.length - 1; i >= 0; i--) {
+            const explosion = this.state.explosions[i];
+            const elapsed = Date.now() - explosion.createdAt;
+
+            // Update explosion radius based on time
+            const progress = Math.min(1, elapsed / explosion.duration);
+            explosion.radius = explosion.maxRadius * progress;
+
+            // Remove explosion when it's done
+            if (elapsed >= explosion.duration) {
+                this.state.explosions.splice(i, 1);
+            }
         }
 
         // Check for respawns
@@ -136,5 +170,13 @@ export class GameRoom extends Room {
                 player.y = Math.random() * this.state.arenaHeight;
             }
         });
+    }
+
+    // Helper method to create explosions
+    createExplosion(x, y) {
+        const explosion = new Explosion();
+        explosion.x = x;
+        explosion.y = y;
+        this.state.explosions.push(explosion);
     }
 } 
