@@ -58,10 +58,12 @@ export class GameRoom extends Room {
     }
 
     onJoin(client, options) {
+        // Don't create a player for spectators
         if (options.isSpectator) {
-            // Don't create a player for spectators
             return;
         }
+
+        console.log('joining', options);
 
         const player = new Player();
         player.username = options.username;
