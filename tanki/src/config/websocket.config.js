@@ -1,6 +1,0 @@
-export const WEBSOCKET_CONFIG = {
-    SERVER_URL: 'ws://localhost:8080',
-    RECONNECT_ATTEMPTS: 5,
-    RECONNECT_DELAY: 1000,
-    REQUEST_TIMEOUT: 5000,
-};

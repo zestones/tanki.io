@@ -1,7 +1,7 @@
 # Makefile for Tanki Project
 
 # Variables
-CLIENT_DIR := tanki
+CLIENT_DIR := client
 SERVER_DIR := server
 NODE := node
 NPM := npm
