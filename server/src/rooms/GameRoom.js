@@ -22,9 +22,9 @@ export class GameRoom extends Room {
         // Initialize systems
         this.explosionSystem = new ExplosionSystem(this.state);
         this.movementSystem = new MovementSystem(this.state);
-        this.collisionSystem = new CollisionSystem(this.state, this.explosionSystem);
+        this.collisionSystem = new CollisionSystem(this.state, this.explosionSystem, this);
         this.weaponSystem = new WeaponSystem(this.state);
-        this.respawnSystem = new RespawnSystem(this.state);
+        this.respawnSystem = new RespawnSystem(this.state, this);
 
         // Initialize controllers
         this.inputController = new InputController(this.movementSystem, this.weaponSystem);

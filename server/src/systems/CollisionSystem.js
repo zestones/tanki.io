@@ -2,9 +2,10 @@ import MathUtils from "../utils/MathUtils.js";
 import gameConfig from "../config/gameConfig.js";
 
 export default class CollisionSystem {
-    constructor(state, explosionSystem) {
+    constructor(state, explosionSystem, room) {
         this.state = state;
         this.explosionSystem = explosionSystem;
+        this.room = room;
     }
 
     checkBulletBoundaryCollisions() {
@@ -53,6 +54,11 @@ export default class CollisionSystem {
 
                         // Create larger explosion for tank destruction
                         this.explosionSystem.createTankExplosion(player.x, player.y);
+
+                        // Send countdown to the specific player
+                        this.room.clients.getById(sessionId)?.send('respawnCountdown', {
+                            countdown: Math.ceil(gameConfig.RESPAWN_TIME / 1000)
+                        });
                     }
                 }
             });
