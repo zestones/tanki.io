@@ -6,7 +6,7 @@ export default {
     RESPAWN_TIME: 3000, // 3 seconds
     TANK_HIT_RADIUS: 20,
     BARREL_LENGTH: 30,
-    MAX_PLAYERS: 10,
+    MAX_PLAYERS: 50,
     PLAYER_INITIAL_HP: 3,
 
     // Explosion config
