@@ -46,7 +46,7 @@ export default function Home() {
                 </form>
 
                 <div className="mt-8 text-center">
-                    <a href="/game" className="text-sm text-indigo-300 hover:text-indigo-200 underline">
+                    <a href="/tanki.io/game" className="text-sm text-indigo-300 hover:text-indigo-200 underline">
                         Open Game Screen (Spectator Mode)
                     </a>
                 </div>
