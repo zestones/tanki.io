@@ -46,9 +46,12 @@ export default function Home() {
                 </form>
 
                 <div className="mt-8 text-center">
-                    <a href="/tanki.io/game" className="text-sm text-indigo-300 hover:text-indigo-200 underline">
+                    <button
+                        onClick={() => navigate('/tanki.io/game')}
+                        className="text-sm text-indigo-300 hover:text-indigo-200 underline hover:cursor-pointer"
+                    >
                         Open Game Screen (Spectator Mode)
-                    </a>
+                    </button>
                 </div>
 
                 <div className="mt-8 border-t border-gray-700 pt-6">
