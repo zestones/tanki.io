@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host=0.0.0.0",
-    "build": "vite build",
+    "build": "NODE_ENV=production vite build",
+    "start:prod": "NODE_ENV=production vite preview --host=0.0.0.0",
     "lint": "eslint .",
     "preview": "vite preview"
   },
