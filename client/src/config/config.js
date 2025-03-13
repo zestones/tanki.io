@@ -3,7 +3,7 @@
 const config = { wsUrl: 'ws://localhost:3000', clientUrl: 'http://localhost:5175' };
 
 // Dynamically import the IP configuration
-import('./ipConfig.template.js').then(ipConfig => {
+import('./ipConfig.js').then(ipConfig => {
     if (ipConfig.IP_ADDRESS) {
         let mode = 'prod';
 

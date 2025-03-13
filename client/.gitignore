@@ -30,4 +30,4 @@ dist-ssr
 .env.production
 
 # Config file with IP address
-src/config/ipConfig.template.js
+src/config/ipConfig.js
