@@ -7,5 +7,5 @@
  * 3. The ipConfig.template.js file is gitignored, so your IP address won't be committed to the repository
  */
 
-export const IP_ADDRESS = 'ws://localhost:3000'; // OR IP_ADDRESSE
+export const LOCAL_ADDRESSE = 'ws://localhost:3000'; // OR IP ADDRESSE
 export const PROD_ADDRESS = 'https://tanki-io.onrender.com/';

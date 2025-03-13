@@ -5,8 +5,8 @@ const config = { wsUrl: 'ws://localhost:3000', clientUrl: 'http://localhost:5175
 // Dynamically import the IP configuration
 import('./ipConfig.js').then(ipConfig => {
     if (ipConfig) {
-        // Use environment variable with a fallback to 'dev'
-        const mode = process.env.NODE_ENV || 'dev';
+        const mode = import.meta.env.MODE;
+        console.log("process env: " + mode)
 
         const localNetwork = ipConfig.LOCAL_ADDRESSE;
         const prodNetwork = ipConfig.PROD_ADDRESS
