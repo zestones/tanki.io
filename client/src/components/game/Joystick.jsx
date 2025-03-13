@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 
-function Joystick({ onMove, onStop }) {
+function Joystick({ onMove, onStop, size = "w-48 h-48", type = "movement" }) {
     const [position, setPosition] = useState({ x: 0, y: 0 });
     const [isDragging, setIsDragging] = useState(false);
     const [lastDirection, setLastDirection] = useState(0);
@@ -8,6 +8,7 @@ function Joystick({ onMove, onStop }) {
     const baseRef = useRef(null);
     const updateIntervalRef = useRef(null);
     const lastPositionRef = useRef({ degrees: 0, isMoving: false });
+    const touchIdRef = useRef(null); // Store the touch identifier
 
     // TODO: make it match the server update rate
     const UPDATE_RATE = 16; // ~60fps (1000ms / 60 = 16.67ms) 
@@ -16,7 +17,7 @@ function Joystick({ onMove, onStop }) {
         if (isDragging) {
             updateIntervalRef.current = setInterval(() => {
                 if (lastPositionRef.current.isMoving) {
-                    onMove(lastPositionRef.current.degrees, lastPositionRef.current.isMoving);
+                    onMove(lastPositionRef.current.degrees, lastPositionRef.current.isMoving, type);
                 }
             }, UPDATE_RATE);
         } else {
@@ -32,12 +33,14 @@ function Joystick({ onMove, onStop }) {
                 updateIntervalRef.current = null;
             }
         };
-    }, [isDragging, onMove]);
+    }, [isDragging, onMove, type]);
 
-    const handleStart = (clientX, clientY) => {
+    const handleStart = (clientX, clientY, touchId = null) => {
         if (!baseRef.current) return;
 
+        touchIdRef.current = touchId; // Store the touch ID for multi-touch support
         setIsDragging(true);
+
         const baseRect = baseRef.current.getBoundingClientRect();
         const baseCenterX = baseRect.left + baseRect.width / 2;
         const baseCenterY = baseRect.top + baseRect.height / 2;
@@ -89,7 +92,8 @@ function Joystick({ onMove, onStop }) {
     const handleEnd = () => {
         setIsDragging(false);
         setPosition({ x: 0, y: 0 });
-        onStop(lastDirection);
+        onStop(lastDirection, type);
+        touchIdRef.current = null; // Reset the touch ID
 
         // Clear the update interval
         if (updateIntervalRef.current) {
@@ -100,83 +104,132 @@ function Joystick({ onMove, onStop }) {
 
     // Event handlers for mouse
     const handleMouseDown = (e) => {
+        // Check if we're already dragging (could happen with multiple input methods)
+        if (isDragging) return;
+
         e.preventDefault();
+
+        // Use window instead of document for better mouse capture
+        window.addEventListener('mousemove', handleMouseMove);
+        window.addEventListener('mouseup', handleMouseUp);
+
         handleStart(e.clientX, e.clientY);
-        document.addEventListener('mousemove', handleMouseMove);
-        document.addEventListener('mouseup', handleMouseUp);
     };
 
     const handleMouseMove = (e) => {
-        e.preventDefault();
         handleMove(e.clientX, e.clientY);
     };
 
-    const handleMouseUp = (e) => {
-        e.preventDefault();
+    const handleMouseUp = () => {
         handleEnd();
-        document.removeEventListener('mousemove', handleMouseMove);
-        document.removeEventListener('mouseup', handleMouseUp);
+        window.removeEventListener('mousemove', handleMouseMove);
+        window.removeEventListener('mouseup', handleMouseUp);
     };
 
     // Event handlers for touch
     const handleTouchStart = (e) => {
-        e.preventDefault();
-        const touch = e.touches[0];
-        handleStart(touch.clientX, touch.clientY);
+        // Check if we're already dragging with this joystick
+        if (isDragging) return;
+
+        const baseRect = baseRef.current.getBoundingClientRect();
+
+        // Find a touch that's within this joystick's boundaries
+        const touchWithinBounds = Array.from(e.touches).find(touch => {
+            return (
+                touch.clientX >= baseRect.left &&
+                touch.clientX <= baseRect.right &&
+                touch.clientY >= baseRect.top &&
+                touch.clientY <= baseRect.bottom
+            );
+        });
+
+        // If no touch is within this joystick's bounds, don't do anything
+        if (!touchWithinBounds) return;
+
+        // Store this touch for this joystick instance
+        handleStart(touchWithinBounds.clientX, touchWithinBounds.clientY, touchWithinBounds.identifier);
     };
 
     const handleTouchMove = (e) => {
-        e.preventDefault();
-        if (!isDragging) return;
-        const touch = e.touches[0];
+        if (!isDragging || touchIdRef.current === null) return;
+
+        // Find our specific touch by ID
+        const touchIndex = Array.from(e.touches).findIndex(
+            touch => touch.identifier === touchIdRef.current
+        );
+
+        if (touchIndex === -1) return;
+
+        const touch = e.touches[touchIndex];
         handleMove(touch.clientX, touch.clientY);
     };
 
     const handleTouchEnd = (e) => {
-        e.preventDefault();
-        handleEnd();
+        // Check if our tracked touch has ended
+        const isTouchActive = Array.from(e.touches).some(
+            touch => touch.identifier === touchIdRef.current
+        );
+
+        if (!isTouchActive && isDragging) {
+            handleEnd();
+        }
     };
 
     useEffect(() => {
         const element = baseRef.current;
         if (!element) return;
 
-        element.addEventListener('touchstart', handleTouchStart, { passive: false });
-        element.addEventListener('touchmove', handleTouchMove, { passive: false });
-        element.addEventListener('touchend', handleTouchEnd, { passive: false });
+        // Attach touch events to the specific joystick element
+        element.addEventListener('touchstart', handleTouchStart, { passive: true });
+
+        // But attach move and end handlers to window for better tracking outside the element
+        window.addEventListener('touchmove', handleTouchMove, { passive: true });
+        window.addEventListener('touchend', handleTouchEnd, { passive: true });
+        window.addEventListener('touchcancel', handleTouchEnd, { passive: true });
 
         return () => {
             element.removeEventListener('touchstart', handleTouchStart);
-            element.removeEventListener('touchmove', handleTouchMove);
-            element.removeEventListener('touchend', handleTouchEnd);
+            window.removeEventListener('touchmove', handleTouchMove);
+            window.removeEventListener('touchend', handleTouchEnd);
+            window.removeEventListener('touchcancel', handleTouchEnd);
         };
-    }, [isDragging]);
+    }, [isDragging]); // Re-attach listeners when isDragging changes
+
+    // Determine colors based on joystick type
+    const borderColor = type === "movement" ? "border-indigo-600/30" : "border-red-600/30";
+    const guideColor = type === "movement" ? "bg-indigo-500/20" : "bg-red-500/20";
+    const handleGradient = type === "movement"
+        ? "from-indigo-500 to-indigo-700"
+        : "from-red-500 to-red-700";
+    const handleBg = type === "movement" ? "bg-indigo-600" : "bg-red-600";
+    const handleInner = type === "movement" ? "bg-indigo-400/30" : "bg-red-400/30";
+    const ringColor = type === "movement" ? "border-indigo-500/10" : "border-red-500/10";
 
     return (
         <div
             ref={baseRef}
-            className="relative w-48 h-48 bg-black/40 backdrop-blur-sm rounded-full border-2 border-indigo-600/30 shadow-lg flex items-center justify-center"
+            className={`relative ${size} bg-black/40 backdrop-blur-sm rounded-full border-2 ${borderColor} shadow-lg flex items-center justify-center`}
             onMouseDown={handleMouseDown}
         >
             {/* Visual guides */}
             <div className="absolute w-full h-full rounded-full">
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1 h-8 bg-indigo-500/20 rounded-full"></div>
-                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-8 bg-indigo-500/20 rounded-full"></div>
-                <div className="absolute top-1/2 left-0 -translate-y-1/2 w-8 h-1 bg-indigo-500/20 rounded-full"></div>
-                <div className="absolute top-1/2 right-0 -translate-y-1/2 w-8 h-1 bg-indigo-500/20 rounded-full"></div>
-                <div className="absolute inset-0 border-[16px] border-indigo-500/10 rounded-full"></div>
+                <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-1 h-8 ${guideColor} rounded-full`}></div>
+                <div className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-8 ${guideColor} rounded-full`}></div>
+                <div className={`absolute top-1/2 left-0 -translate-y-1/2 w-8 h-1 ${guideColor} rounded-full`}></div>
+                <div className={`absolute top-1/2 right-0 -translate-y-1/2 w-8 h-1 ${guideColor} rounded-full`}></div>
+                <div className={`absolute inset-0 border-[16px] ${ringColor} rounded-full`}></div>
             </div>
 
             {/* Joystick handle */}
             <div
-                className="absolute w-20 h-20 bg-gradient-to-br from-indigo-500 to-indigo-700 rounded-full shadow-md cursor-grab active:cursor-grabbing transform-gpu will-change-transform"
+                className={`absolute w-20 h-20 bg-gradient-to-br ${handleGradient} rounded-full shadow-md cursor-grab active:cursor-grabbing transform-gpu will-change-transform`}
                 style={{
                     transform: `translate(${position.x}px, ${position.y}px)`,
                     transition: isDragging ? 'none' : 'transform 0.2s ease-out'
                 }}
             >
-                <div className="absolute inset-2 rounded-full bg-indigo-600 flex items-center justify-center">
-                    <div className="w-1/2 h-1/2 rounded-full bg-indigo-400/30"></div>
+                <div className={`absolute inset-2 rounded-full ${handleBg} flex items-center justify-center`}>
+                    <div className={`w-1/2 h-1/2 rounded-full ${handleInner}`}></div>
                 </div>
             </div>
         </div>

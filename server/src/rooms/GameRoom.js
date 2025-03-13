@@ -44,17 +44,21 @@ export class GameRoom extends Room {
             }
         });
 
-        this.onMessage("move", (client, data) => {
+        this.onMessage("dualStickInput", (client, data) => {
             const player = this.state.players.get(client.sessionId);
-            this.inputController.handleMoveInput(player, data);
+            if (player) {
+                this.inputController.handleDualStickInput(player, data, client.sessionId);
+            }
         });
 
+        // Legacy shoot handler (can keep for backward compatibility)
         this.onMessage("shoot", (client) => {
             const player = this.state.players.get(client.sessionId);
             this.inputController.handleShootInput(player, client.sessionId);
         });
     }
 
+    // Rest of the code remains the same
     onJoin(client, options) {
         // Don't create a player for spectators
         if (options.isSpectator) {

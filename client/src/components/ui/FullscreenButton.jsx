@@ -1,9 +1,9 @@
-function FullscreenButton({ isFullscreen, enterFullscreen }) {
+function FullscreenButton({ isFullscreen, onClick }) {
     if (isFullscreen) return null;
 
     return (
         <button
-            onClick={enterFullscreen}
+            onClick={onClick}
             className="absolute top-2 right-2 z-50 bg-indigo-600 text-white rounded-full p-2 shadow-lg"
             aria-label="Enter fullscreen mode"
         >
