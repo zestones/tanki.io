@@ -1,8 +1,8 @@
-# Makefile for Tanki Project
 
 # Variables
 CLIENT_DIR := client
 SERVER_DIR := server
+TEST_DIR := test
 NODE := node
 NPM := npm
 
@@ -17,6 +17,7 @@ help:
 	@echo "  make install       - Install dependencies for both client and server"
 	@echo "  make dev           - Run both client and server in development mode"
 	@echo "  make start         - Start the production build of client and server"
+	@echo "  make test          - Run tests"
 	@echo "  make clean         - Remove node_modules and build artifacts"
 	@echo "  make update        - Update npm packages for both client and server"
 	@echo "  make lint          - Run ESLint on both client and server"
@@ -29,6 +30,8 @@ install:
 	cd $(CLIENT_DIR) && $(NPM) install
 	@echo "Installing server dependencies..."
 	cd $(SERVER_DIR) && $(NPM) install
+	@echo "Installing test dependencies..."
+	cd $(TEST_DIR) && $(NPM) install
 
 # Development mode
 .PHONY: dev
@@ -40,11 +43,6 @@ dev:
 		'cd $(SERVER_DIR) && $(NPM) run dev' \; \
 		attach
 
-# Stop Session
-stop:
-	@echo "Stopping development session..."
-	@tmux kill-session -t tanki-dev
-
 # Production start
 .PHONY: start
 start:
@@ -54,6 +52,17 @@ start:
 		split-window -h \
 		'cd $(SERVER_DIR) && $(NPM) start' \; \
 		attach
+
+# Test
+.PHONY: test
+test:
+	@echo "Running tests..."
+	cd $(TEST_DIR) && $(NPM) run test
+
+# Stop Session
+stop:
+	@echo "Stopping development session..."
+	@tmux kill-session -t tanki-dev
 
 # Clean up
 .PHONY: clean
