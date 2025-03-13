@@ -1,0 +1,15 @@
+{
+  "name": "tank-game-tests",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "node index.js",
+    "test:aggressive": "node index.js --behavior=aggressive",
+    "test:50": "node index.js --players=50",
+    "test:short": "node index.js --duration=30",
+    "test:monitor": "node index.js --players=20 --duration=300"
+  },
+  "dependencies": {
+    "colyseus.js": "^0.15.10",
+    "minimist": "^1.2.8"
+  }
+}
