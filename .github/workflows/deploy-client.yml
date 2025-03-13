@@ -12,9 +12,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Install dependencies
-        run: npm install
+        run: cd client/ && npm install
       - name: Build
-        run: npm run build
+        run: cd client/ && npm run build
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
