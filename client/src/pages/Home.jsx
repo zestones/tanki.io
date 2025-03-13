@@ -10,7 +10,7 @@ export default function Home() {
         if (username.trim()) {
             // Store username in sessionStorage
             sessionStorage.setItem('username', username.trim());
-            navigate('/controller');
+            navigate('/tanki.io/controller');
         }
     };
 

@@ -9,9 +9,9 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path='/game' element={<Game />} />
-        <Route path='/controller' element={<Controller />} />
+        <Route path='/tanki.io/' element={<Home />} />
+        <Route path='/tanki.io/game' element={<Game />} />
+        <Route path='/tanki.io/controller' element={<Controller />} />
       </Routes>
     </Router>
   )
