@@ -1,6 +1,4 @@
 import { useRef } from 'react';
-
-import FireButton from '../components/controller/FireButton';
 import PlayerStatus from '../components/controller/PlayerStatus';
 import Joystick from '../components/game/Joystick';
 import RespawnCountdown from '../components/ui/CountdownScreen';
@@ -20,7 +18,7 @@ export default function Controller() {
         respawnCountdown,
         handleMove,
         handleStopMoving,
-        handleShoot
+        handleAim
     } = useConnectionManager();
 
     // Loading screen
@@ -31,20 +29,37 @@ export default function Controller() {
     return (
         <div
             ref={containerRef}
-            className="fixed inset-0 bg-gradient-to-r from-gray-900 to-gray-800 flex items-center justify-center overflow-hidden select-none"
+            className="relative h-screen w-screen bg-zinc-900 overflow-hidden touch-none"
         >
-            <FullscreenButton isFullscreen={isFullscreen} enterFullscreen={enterFullscreen} />
-            <RespawnCountdown countdown={respawnCountdown} />
+            {respawnCountdown > 0 && (
+                <RespawnCountdown countdown={respawnCountdown} />
+            )}
 
-            <div className="w-full h-full flex flex-row items-center justify-between px-4 py-2">
-                <div className="flex-1 flex items-center justify-center">
-                    <Joystick onMove={handleMove} onStop={handleStopMoving} />
-                </div>
+            <div className="absolute top-4 right-4">
+                <FullscreenButton
+                    isFullscreen={isFullscreen}
+                    onClick={enterFullscreen}
+                />
+            </div>
 
+            <div className="absolute top-0 left-0 right-0 p-4">
                 <PlayerStatus username={username} health={health} />
-                <div className="flex-1 flex items-center justify-center">
-                    <FireButton onShoot={handleShoot} />
-                </div>
+            </div>
+
+            <div className="absolute bottom-10 left-10">
+                <Joystick
+                    onMove={handleMove}
+                    onStop={handleStopMoving}
+                    type="movement"
+                />
+            </div>
+
+            <div className="absolute bottom-10 right-10">
+                <Joystick
+                    onMove={handleAim}
+                    onStop={handleStopMoving}
+                    type="aiming"
+                />
             </div>
         </div>
     );
