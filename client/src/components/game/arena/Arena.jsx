@@ -1,8 +1,8 @@
 import { Rect } from 'react-konva';
 import Grid from './Grid';
-import SentinelTank from './tanks/SentinelTank';
-import Bullet from './Bullet';
-import Explosion from './Explosion';
+import SentinelTank from '../entities/tanks/types/SentinelTank';
+import Bullet from '../entities/bullets/Bullet';
+import Explosion from '../fx/Explosion';
 
 export default function Arena({ gameState }) {
     const { arenaWidth, arenaHeight, players, bullets, explosions } = gameState;

@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { Circle, Group, Line, Text } from 'react-konva';
-import { shadeColor } from '../../../utils/colorUtils';
-import HealthBar from './shared/HealthBar';
+import { shadeColor } from '../../../../../utils/colorUtils';
+import HealthBar from '../shared/HealthBar';
 
 const TANK_SIZE = 30;
 

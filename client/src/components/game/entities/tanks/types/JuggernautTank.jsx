@@ -1,6 +1,6 @@
 import { Group, Circle, Line, Text, Rect, RegularPolygon } from 'react-konva';
-import { shadeColor } from '../../../utils/colorUtils';
-import HealthBar from './shared/HealthBar';
+import { shadeColor } from '../../../../../utils/colorUtils';
+import HealthBar from '../shared/HealthBar';
 import PropTypes from 'prop-types';
 
 const TANK_SIZE = 38; // Slightly larger than standard tank

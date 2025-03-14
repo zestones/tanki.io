@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
-import { useFullscreenContext } from '../../contexts/FullscreenContext';
+import { useFullscreenContext } from '../../../contexts/FullscreenContext';
 
-const FullscreenController = () => {
+const FullscreenStateManager = () => {
     const { isFullscreen, enterFullscreen } = useFullscreenContext();
 
     useEffect(() => {
@@ -22,4 +22,4 @@ const FullscreenController = () => {
     return null;
 };
 
-export default FullscreenController;
+export default FullscreenStateManager;

@@ -1,7 +1,7 @@
 import { Group, RegularPolygon, Circle, Line, Text, Rect } from 'react-konva';
-import { shadeColor } from '../../../utils/colorUtils'; // Utility to adjust color brightness
+import { shadeColor } from '../../../../../utils/colorUtils'; // Utility to adjust color brightness
 import PropTypes from 'prop-types';
-import HealthBar from './shared/HealthBar'; // Reusable HealthBar component
+import HealthBar from '../shared/HealthBar'; // Reusable HealthBar component
 
 // Define tank size constant
 const TANK_SIZE = 30;

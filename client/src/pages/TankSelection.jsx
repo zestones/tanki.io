@@ -1,12 +1,12 @@
 import { ArrowRight, ChevronLeft, ChevronRight, Info, Shield, Target, Zap } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import FullscreenController from '../components/controller/FullscreenController.jsx';
-import GuardianTank from '../components/game/tanks/GuardianTank.jsx';
-import JuggernautTank from '../components/game/tanks/JuggernautTank.jsx';
-import SentinelTank from '../components/game/tanks/SentinelTank.jsx';
-import ShredderTank from '../components/game/tanks/ShredderTank.jsx';
-import ThunderboltTank from '../components/game/tanks/ThunderboltTank.jsx';
+import FullscreenController from '../components/mobile/utils/FullscreenStateManager.jsx';
+import GuardianTank from '../components/game/entities/tanks/types/GuardianTank.jsx';
+import JuggernautTank from '../components/game/entities/tanks/types/JuggernautTank.jsx';
+import SentinelTank from '../components/game/entities/tanks/types/SentinelTank.jsx';
+import ShredderTank from '../components/game/entities/tanks/types/ShredderTank.jsx';
+import ThunderboltTank from '../components/game/entities/tanks/types/ThunderboltTank.jsx';
 
 import { Layer, Stage } from 'react-konva';
 

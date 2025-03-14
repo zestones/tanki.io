@@ -1,5 +1,5 @@
 import React from 'react';
-import { config } from '../../config/config';
+import { config } from '../../../config/config';
 export default function Footer() {
     return (
         <div className="w-full bg-black/40 backdrop-blur-sm border-t border-indigo-500/10 py-3 px-4">

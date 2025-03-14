@@ -1,9 +1,9 @@
 import { useRef } from 'react';
-import PlayerStatus from '../components/controller/PlayerStatus';
-import Joystick from '../components/game/Joystick';
-import RespawnCountdown from '../components/ui/CountdownScreen';
-import FullscreenButton from '../components/ui/FullscreenButton';
-import LoadingScreen from '../components/ui/LoadingScreen';
+import PlayerStatus from '../components/mobile/controller/PlayerStatus';
+import Joystick from '../components/mobile/controller/Joystick';
+import RespawnCountdown from '../components/mobile/screens/CountdownScreen';
+import FullscreenButton from '../components/mobile/buttons/FullscreenButton';
+import LoadingScreen from '../components/common/LoadingScreen';
 import useConnectionManager from '../hooks/useConnectionManager';
 import { useFullscreen } from '../hooks/useFullScreen';
 

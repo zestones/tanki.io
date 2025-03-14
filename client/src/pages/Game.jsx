@@ -2,13 +2,13 @@ import { Client } from 'colyseus.js';
 import { useEffect, useRef, useState } from 'react';
 import { Layer, Stage } from 'react-konva';
 
-import Arena from '../components/game/Arena';
-import Leaderboard from '../components/game/Leaderboard';
-import Footer from '../components/layout/Footer';
-import Header from '../components/layout/Header';
-import StatsPanel from '../components/layout/StatsPanel';
-import ErrorScreen from '../components/ui/ErrorScreen';
-import LoadingScreen from '../components/ui/LoadingScreen';
+import Arena from '../components/game/arena/Arena';
+import Leaderboard from '../components/game/arena/Leaderboard';
+import Footer from '../components/spectator/layout/Footer';
+import Header from '../components/spectator/layout/Header';
+import StatsPanel from '../components/spectator/layout/StatsPanel';
+import ErrorScreen from '../components/common/ErrorScreen';
+import LoadingScreen from '../components/common/LoadingScreen';
 import { config } from '../config/config';
 import useViewportSize from '../hooks/useViewportSize';
 
