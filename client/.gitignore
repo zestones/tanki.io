@@ -27,7 +27,4 @@ dist-ssr
 .env
 .env.local
 .env.development
-.env.production
-
-# Config file with IP address
-# src/config/ipConfig.js
+# .env.production

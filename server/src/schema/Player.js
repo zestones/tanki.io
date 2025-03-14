@@ -7,10 +7,13 @@ export class Player extends Schema {
         this.x = Math.random() * 800;
         this.y = Math.random() * 600;
         this.direction = 0;
-        this.hp = gameConfig.PLAYER_INITIAL_HP;
+
         this.isDead = false;
         this.respawnTime = 0;
+
+        this.hp = gameConfig.PLAYER_INITIAL_HP;
         this.username = "";
+        this.score = 0;
     }
 }
 
@@ -21,3 +24,4 @@ type("number")(Player.prototype, "hp");
 type("boolean")(Player.prototype, "isDead");
 type("number")(Player.prototype, "respawnTime");
 type("string")(Player.prototype, "username");
+type("number")(Player.prototype, "score");

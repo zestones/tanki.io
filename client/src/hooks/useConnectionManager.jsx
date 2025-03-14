@@ -10,6 +10,7 @@ export default function useConnectionManager() {
     const [username, setUsername] = useState('');
     const [isConnecting, setIsConnecting] = useState(true);
     const [respawnCountdown, setRespawnCountdown] = useState(null);
+    const [score, setScore] = useState(0); // Add score state
     const hasConnected = useRef(false);
 
     // Add state to track both joystick positions
@@ -48,6 +49,7 @@ export default function useConnectionManager() {
                     const myPlayer = state.players.get(room.sessionId);
                     if (myPlayer) {
                         setHealth(myPlayer.hp);
+                        setScore(myPlayer.score);
                     }
                 });
             })
@@ -145,6 +147,7 @@ export default function useConnectionManager() {
         username,
         isConnecting,
         respawnCountdown,
+        score,
         handleMove,
         handleStopMoving,
         handleAim

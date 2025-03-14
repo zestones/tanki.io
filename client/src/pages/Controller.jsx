@@ -15,6 +15,7 @@ export default function Controller() {
         isConnecting,
         username,
         health,
+        score,
         respawnCountdown,
         handleMove,
         handleStopMoving,
@@ -43,7 +44,11 @@ export default function Controller() {
             </div>
 
             <div className="absolute top-0 left-0 right-0 p-4">
-                <PlayerStatus username={username} health={health} />
+                <PlayerStatus
+                    username={username}
+                    health={health}
+                    score={score} // Pass score to PlayerStatus
+                />
             </div>
 
             <div className="absolute bottom-10 left-10">
