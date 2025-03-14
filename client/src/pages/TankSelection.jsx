@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { ChevronRight, ChevronLeft, Info, ArrowRight, Clock, Shield, Zap, AlertTriangle, Star, Target, Hexagon } from 'lucide-react';
-import ShredderTank from '../components/game/tanks/ShredderTank';
+import { ArrowRight, ChevronLeft, ChevronRight, Info, Shield, Target, Zap } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import FullscreenController from '../components/controller/FullscreenController.jsx';
 import GuardianTank from '../components/game/tanks/GuardianTank.jsx';
-import JuggernautTank from '../components/game/tanks/JuggernautTank';
-import ThunderboltTank from '../components/game/tanks/ThunderboltTank';
+import JuggernautTank from '../components/game/tanks/JuggernautTank.jsx';
 import SentinelTank from '../components/game/tanks/SentinelTank.jsx';
+import ShredderTank from '../components/game/tanks/ShredderTank.jsx';
+import ThunderboltTank from '../components/game/tanks/ThunderboltTank.jsx';
 
-import { Stage, Layer } from 'react-konva';
+import { Layer, Stage } from 'react-konva';
 
-function ClassSelection() {
+function TankSelection() {
     const navigate = useNavigate();
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [tankRotation, setTankRotation] = useState(0);
@@ -133,7 +134,7 @@ function ClassSelection() {
     };
 
     const handleSelect = () => {
-        navigate('/game', { state: { selectedTank: selectedTank.name } });
+        navigate('/tanki.io/controller');
     };
 
     // Render hexagonal stat indicator
@@ -192,6 +193,8 @@ function ClassSelection() {
 
     return (
         <div className="flex flex-col min-h-screen bg-gray-900 text-white overflow-hidden">
+            <FullscreenController />
+
             {/* Top navigation bar */}
             <div className="bg-black bg-opacity-70 py-2 px-4 flex justify-between items-center border-b border-gray-800">
                 <div className="flex items-center">
@@ -366,4 +369,4 @@ function ClassSelection() {
     );
 }
 
-export default ClassSelection;
+export default TankSelection;
