@@ -1,28 +1,57 @@
-import React from 'react';
-
 export default function PlayerStatus({ username, health, score = 0 }) {
+    // Calculate health percentage for progress bar
+    // TODO : make the 3 match the max health in the server
+    const healthPercentage = Math.max(0, Math.min(100, (health / 3) * 100));
+
     return (
-        <div className="bg-black/50 backdrop-blur-sm rounded-lg p-3 text-white flex items-center justify-between w-full max-w-md mx-auto">
-            <div className="flex items-center">
-                <div className="bg-indigo-600 rounded-full w-10 h-10 flex items-center justify-center mr-3">
-                    {username.charAt(0).toUpperCase()}
+        <div className="bg-black/30 backdrop-blur-md rounded-lg border border-indigo-500/30 shadow-lg shadow-indigo-500/20 p-3 text-white flex items-center justify-between w-full max-w-md mx-auto relative overflow-hidden">
+            {/* Animated glow effect */}
+            <div className="absolute inset-0 bg-gradient-to-r from-indigo-600/10 to-cyan-400/5 animate-pulse" />
+
+            {/* Diagonal lines overlay for tech feel */}
+            <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_95%,rgba(99,102,241,0.3)_100%)] bg-[length:6px_6px]" />
+
+            <div className="flex items-center z-10">
+                <div className="bg-gradient-to-br from-indigo-600 to-blue-500 rounded-xl w-10 h-10 flex items-center justify-center mr-3 shadow-md shadow-indigo-500/50 border border-indigo-400/30">
+                    <span className="font-bold text-white text-shadow">{username.charAt(0).toUpperCase()}</span>
                 </div>
-                <span className="font-medium">{username}</span>
+                <div>
+                    <span className="font-medium tracking-wide text-cyan-50">{username}</span>
+                    <div className="text-xs text-cyan-300/70 mt-0.5 font-mono">ACTIVE</div>
+                </div>
             </div>
 
-            <div className="flex items-center gap-4">
-                <div className="flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-red-500 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
-                    </svg>
-                    <span>{health}</span>
+            <div className="flex items-center gap-5 z-10">
+                {/* Health with modern progress bar */}
+                <div className="flex flex-col">
+                    <div className="flex items-center mb-1">
+                        {/* Modern heart icon */}
+                        <svg className="h-4 w-4 text-red-400 mr-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M19.5 12.572L12 20l-7.5-7.428A5 5 0 1 1 12 6.006a5 5 0 1 1 7.5 6.572"
+                                stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+                                fill="rgba(248, 113, 113, 0.5)" />
+                        </svg>
+                        <span className="text-sm font-mono">{health}</span>
+                    </div>
+                    <div className="w-16 h-1.5 bg-gray-700/50 rounded-full overflow-hidden">
+                        <div
+                            className="h-full bg-gradient-to-r from-red-500 to-rose-400 rounded-full"
+                            style={{ width: `${healthPercentage}%` }}
+                        />
+                    </div>
                 </div>
 
-                <div className="flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-yellow-500 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                    <span>{score}</span>
+                {/* Score with better star icon */}
+                <div className="flex flex-col items-end">
+                    <div className="flex items-center mb-1">
+                        <span className="text-sm font-mono mr-1">{score}</span>
+                        {/* Modern star icon */}
+                        <svg className="h-4 w-4 text-amber-300" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2l2.4 7.4h7.6l-6 4.6 2.3 7-6.3-4.6-6.3 4.6 2.3-7-6-4.6h7.6z"
+                                fill="currentColor" stroke="currentColor" strokeWidth="1" strokeLinejoin="round" />
+                        </svg>
+                    </div>
+                    <div className="text-xs text-amber-300/70 font-mono">POINTS</div>
                 </div>
             </div>
         </div>
