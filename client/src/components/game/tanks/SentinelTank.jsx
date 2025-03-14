@@ -1,24 +1,25 @@
-import { Group, Circle, Line, Text, Rect } from 'react-konva';
-import { shadeColor } from '../../utils/colorUtils';
+import PropTypes from 'prop-types';
+import { Circle, Group, Line, Text } from 'react-konva';
+import { shadeColor } from '../../../utils/colorUtils';
+import HealthBar from './shared/HealthBar';
 
 const TANK_SIZE = 30;
 
-export default function Tank({ player, sessionId }) {
-    if (player.isDead) return null;
+function SentinelTank({ x, y, rotation, hp, username, isDead }) {
+    if (isDead) return null;
 
-    const rotation = player.direction;
     const barrelLength = TANK_SIZE;
 
     let fillColor = "#4CAF50";
-    if (player.hp === 2) fillColor = "#FFC107";
-    if (player.hp === 1) fillColor = "#F44336";
+    if (hp === 2) fillColor = "#FFC107";
+    if (hp === 1) fillColor = "#F44336";
 
     return (
         <Group>
             {/* Tank shadow */}
             <Circle
-                x={player.x + 4}
-                y={player.y + 4}
+                x={x + 4}
+                y={y + 4}
                 radius={TANK_SIZE / 2 + 2}
                 fill="rgba(0,0,0,0.4)"
                 opacity={0.5}
@@ -26,8 +27,8 @@ export default function Tank({ player, sessionId }) {
 
             {/* Tank body */}
             <Circle
-                x={player.x}
-                y={player.y}
+                x={x}
+                y={y}
                 radius={TANK_SIZE / 2}
                 fillRadialGradientStartPoint={{ x: -TANK_SIZE / 4, y: -TANK_SIZE / 4 }}
                 fillRadialGradientStartRadius={1}
@@ -44,10 +45,10 @@ export default function Tank({ player, sessionId }) {
             {/* Barrel shadow */}
             <Line
                 points={[
-                    player.x + 2,
-                    player.y + 2,
-                    player.x + 2 + Math.cos((rotation * Math.PI) / 180) * barrelLength,
-                    player.y + 2 - Math.sin((rotation * Math.PI) / 180) * barrelLength
+                    x + 2,
+                    y + 2,
+                    x + 2 + Math.cos((rotation * Math.PI) / 180) * barrelLength,
+                    y + 2 - Math.sin((rotation * Math.PI) / 180) * barrelLength
                 ]}
                 stroke="rgba(0,0,0,0.5)"
                 strokeWidth={6}
@@ -58,10 +59,10 @@ export default function Tank({ player, sessionId }) {
             {/* Barrel */}
             <Line
                 points={[
-                    player.x,
-                    player.y,
-                    player.x + Math.cos((rotation * Math.PI) / 180) * barrelLength,
-                    player.y - Math.sin((rotation * Math.PI) / 180) * barrelLength
+                    x,
+                    y,
+                    x + Math.cos((rotation * Math.PI) / 180) * barrelLength,
+                    y - Math.sin((rotation * Math.PI) / 180) * barrelLength
                 ]}
                 stroke="#333"
                 strokeWidth={5}
@@ -70,8 +71,8 @@ export default function Tank({ player, sessionId }) {
 
             {/* Turret center */}
             <Circle
-                x={player.x}
-                y={player.y}
+                x={x}
+                y={y}
                 radius={TANK_SIZE / 4}
                 fill="#333"
                 stroke="#000"
@@ -80,9 +81,9 @@ export default function Tank({ player, sessionId }) {
 
             {/* Username */}
             <Text
-                x={player.x - 50}
-                y={player.y + TANK_SIZE + 5}
-                text={player.username}
+                x={x - 50}
+                y={y + TANK_SIZE + 5}
+                text={username}
                 fontSize={14}
                 fontStyle="bold"
                 fill="#FFF"
@@ -94,29 +95,24 @@ export default function Tank({ player, sessionId }) {
                 shadowOpacity={1}
             />
 
-            {/* Health bar background */}
-            <Rect
-                x={player.x - 25}
-                y={player.y - TANK_SIZE - 15}
-                width={50}
-                height={8}
-                fill="rgba(0,0,0,0.6)"
-                cornerRadius={4}
-                shadowColor="black"
-                shadowBlur={2}
-                shadowOffset={{ x: 0, y: 1 }}
-                shadowOpacity={0.5}
-            />
-
-            {/* Health bar foreground */}
-            <Rect
-                x={player.x - 23}
-                y={player.y - TANK_SIZE - 14}
-                width={(player.hp / 3) * 46}
-                height={6}
-                fill={fillColor}
-                cornerRadius={3}
+            <HealthBar
+                hp={hp}
+                x={x}
+                y={y}
+                size={TANK_SIZE}
+                color={fillColor}
             />
         </Group>
     );
 }
+
+SentinelTank.propTypes = {
+    x: PropTypes.number.isRequired,
+    y: PropTypes.number.isRequired,
+    rotation: PropTypes.number.isRequired,
+    hp: PropTypes.number.isRequired,
+    username: PropTypes.string.isRequired,
+    isDead: PropTypes.bool.isRequired
+};
+
+export default SentinelTank;

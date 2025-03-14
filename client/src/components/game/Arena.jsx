@@ -1,6 +1,6 @@
 import { Rect } from 'react-konva';
 import Grid from './Grid';
-import Tank from './Tank';
+import SentinelTank from './tanks/SentinelTank';
 import Bullet from './Bullet';
 import Explosion from './Explosion';
 
@@ -37,7 +37,14 @@ export default function Arena({ gameState }) {
             ))}
 
             {Array.from(players.entries()).map(([sessionId, player]) => (
-                <Tank key={`tank-${sessionId}`} player={player} sessionId={sessionId} />
+                <SentinelTank
+                    key={`tank-${sessionId}`}
+                    x={player.x}
+                    y={player.y}
+                    rotation={player.direction}
+                    hp={player.hp}
+                    username={player.username}
+                />
             ))}
         </>
     );
