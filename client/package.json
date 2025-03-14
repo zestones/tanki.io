@@ -4,9 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --host=0.0.0.0",
-    "build": "NODE_ENV=production vite build",
-    "start:prod": "NODE_ENV=production vite preview --host=0.0.0.0",
+    "dev": "vite --host=0.0.0.0 --mode development",
+    "build": "vite build --mode production",
+    "start:prod": "vite preview --host=0.0.0.0 --mode production",
     "lint": "eslint .",
     "preview": "vite preview"
   },

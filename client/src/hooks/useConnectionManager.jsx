@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { config } from '../config/config';
 
-
 export default function useConnectionManager() {
     const navigate = useNavigate();
     const [room, setRoom] = useState(null);
@@ -11,7 +10,20 @@ export default function useConnectionManager() {
     const [username, setUsername] = useState('');
     const [isConnecting, setIsConnecting] = useState(true);
     const [respawnCountdown, setRespawnCountdown] = useState(null);
+    const [score, setScore] = useState(0); // Add score state
     const hasConnected = useRef(false);
+
+    // Add state to track both joystick positions
+    const playerState = useRef({
+        movement: {
+            direction: 0,
+            moving: false
+        },
+        aiming: {
+            direction: 0,
+            active: false
+        }
+    });
 
     // Connect to game server
     useEffect(() => {
@@ -37,6 +49,7 @@ export default function useConnectionManager() {
                     const myPlayer = state.players.get(room.sessionId);
                     if (myPlayer) {
                         setHealth(myPlayer.hp);
+                        setScore(myPlayer.score);
                     }
                 });
             })
@@ -72,23 +85,60 @@ export default function useConnectionManager() {
         };
     }, [room]);
 
+    // Effect to send updated player state to server
+    useEffect(() => {
+        if (!room) return;
+
+        const interval = setInterval(() => {
+            const state = playerState.current;
+
+            // Send the current state to server
+            room.send('dualStickInput', {
+                movement: {
+                    direction: state.movement.direction,
+                    moving: state.movement.moving
+                },
+                aiming: {
+                    direction: state.aiming.direction,
+                    shooting: state.aiming.active
+                }
+            });
+        }, 1000 / 30); // TODO : 30fps -> MAKE IT MATCH SERVER TICK RATE
+
+        return () => clearInterval(interval);
+    }, [room]);
+
     // Game control handlers
-    const handleMove = (direction, isMoving) => {
-        if (room) {
-            room.send('move', { direction, moving: isMoving });
+    const handleMove = (direction, isMoving, type) => {
+        if (type === "movement") {
+            playerState.current.movement = {
+                direction,
+                moving: isMoving
+            };
+        } else if (type === "aiming") {
+            playerState.current.aiming = {
+                direction,
+                active: isMoving
+            };
         }
     };
 
-    const handleStopMoving = (lastDirection) => {
-        if (room) {
-            room.send('move', { direction: lastDirection, moving: false });
+    const handleStopMoving = (lastDirection, type) => {
+        if (type === "movement") {
+            playerState.current.movement = {
+                direction: lastDirection,
+                moving: false
+            };
+        } else if (type === "aiming") {
+            playerState.current.aiming = {
+                direction: lastDirection,
+                active: false
+            };
         }
     };
 
-    const handleShoot = () => {
-        if (room) {
-            room.send('shoot');
-        }
+    const handleAim = (direction, isActive) => {
+        handleMove(direction, isActive, "aiming");
     };
 
     return {
@@ -97,8 +147,9 @@ export default function useConnectionManager() {
         username,
         isConnecting,
         respawnCountdown,
+        score,
         handleMove,
         handleStopMoving,
-        handleShoot
+        handleAim
     };
 }

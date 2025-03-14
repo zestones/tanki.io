@@ -27,6 +27,7 @@ function useFullscreen(ref) {
     }, []);
 
     const enterFullscreen = () => {
+        console.log("enterFullscreen");
         if (!ref.current) return;
 
         const element = ref.current;

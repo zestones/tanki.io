@@ -48,17 +48,28 @@ export default class CollisionSystem {
                     this.state.bullets.splice(i, 1);
                     player.hp--;
 
-                    if (player.hp <= 0) {
-                        player.isDead = true;
-                        player.respawnTime = Date.now();
+                    // Get the shooter player
+                    const shooter = this.state.players.get(bullet.ownerId);
 
-                        // Create larger explosion for tank destruction
-                        this.explosionSystem.createTankExplosion(player.x, player.y);
+                    if (shooter) {
+                        if (player.hp <= 0) {
+                            // Award 5 points for a kill
+                            shooter.score += 5;
 
-                        // Send countdown to the specific player
-                        this.room.clients.getById(sessionId)?.send('respawnCountdown', {
-                            countdown: Math.ceil(gameConfig.RESPAWN_TIME / 1000)
-                        });
+                            player.isDead = true;
+                            player.respawnTime = Date.now();
+
+                            // Create larger explosion for tank destruction
+                            this.explosionSystem.createTankExplosion(player.x, player.y);
+
+                            // Send countdown to the specific player
+                            this.room.clients.getById(sessionId)?.send('respawnCountdown', {
+                                countdown: Math.ceil(gameConfig.RESPAWN_TIME / 1000)
+                            });
+                        } else {
+                            // Award 3 points for a hit
+                            shooter.score += 3;
+                        }
                     }
                 }
             });

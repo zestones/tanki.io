@@ -3,13 +3,14 @@ import { useEffect, useRef, useState } from 'react';
 import { Layer, Stage } from 'react-konva';
 
 import Arena from '../components/game/Arena';
+import Leaderboard from '../components/game/Leaderboard';
 import Footer from '../components/layout/Footer';
 import Header from '../components/layout/Header';
 import StatsPanel from '../components/layout/StatsPanel';
 import ErrorScreen from '../components/ui/ErrorScreen';
 import LoadingScreen from '../components/ui/LoadingScreen';
-import useViewportSize from '../hooks/useViewportSize';
 import { config } from '../config/config';
+import useViewportSize from '../hooks/useViewportSize';
 
 export default function Game() {
     const [gameState, setGameState] = useState({
@@ -101,6 +102,7 @@ export default function Game() {
                     </Layer>
                 </Stage>
 
+                <Leaderboard players={gameState.players} />
                 {showStats && (
                     <StatsPanel
                         gameState={gameState}
