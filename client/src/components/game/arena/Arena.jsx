@@ -1,4 +1,4 @@
-import { Rect } from 'react-konva';
+import { Rect, Group, Line } from 'react-konva';
 import Grid from './Grid';
 import SentinelTank from '../entities/tanks/types/SentinelTank';
 import Bullet from '../entities/bullets/Bullet';
@@ -8,26 +8,88 @@ import PropTypes from 'prop-types';
 function Arena({ gameState }) {
     const { arenaWidth, arenaHeight, players, bullets, explosions } = gameState;
 
+    // Create decorative corner elements for Arknights style
+    const cornerSize = 100;
+
     return (
         <>
+            {/* Background with dark Arknights style */}
             <Rect
                 x={0}
                 y={0}
                 width={arenaWidth}
                 height={arenaHeight}
-                fill="#0f172a"
+                fill="#0d0d10"
+            />
+
+            {/* Subtle radial gradient overlay */}
+            <Rect
+                x={0}
+                y={0}
+                width={arenaWidth}
+                height={arenaHeight}
+                fillRadialGradientStartPoint={{ x: arenaWidth / 2, y: arenaHeight / 2 }}
+                fillRadialGradientStartRadius={0}
+                fillRadialGradientEndPoint={{ x: arenaWidth / 2, y: arenaHeight / 2 }}
+                fillRadialGradientEndRadius={Math.max(arenaWidth, arenaHeight) / 1.5}
+                fillRadialGradientColorStops={[0, 'rgba(50, 50, 70, 0.2)', 1, 'rgba(10, 10, 15, 0)']}
             />
 
             <Grid arenaWidth={arenaWidth} arenaHeight={arenaHeight} />
 
+            {/* Arena border with white accents */}
             <Rect
                 x={0}
                 y={0}
                 width={arenaWidth}
                 height={arenaHeight}
-                stroke="rgba(99, 102, 241, 0.5)"
+                stroke="rgba(255, 255, 255, 0.3)"
                 strokeWidth={2}
             />
+
+            {/* Arknights-style corner decorations */}
+            <Group>
+                {/* Top left */}
+                <Line
+                    points={[0, 0, cornerSize, 0, cornerSize, 2, 2, 2, 2, cornerSize, 0, cornerSize]}
+                    closed={true}
+                    fill="rgba(255, 255, 255, 0.2)"
+                />
+                {/* Top right */}
+                <Line
+                    points={[arenaWidth, 0, arenaWidth - cornerSize, 0, arenaWidth - cornerSize, 2, arenaWidth - 2, 2, arenaWidth - 2, cornerSize, arenaWidth, cornerSize]}
+                    closed={true}
+                    fill="rgba(255, 255, 255, 0.2)"
+                />
+                {/* Bottom left */}
+                <Line
+                    points={[0, arenaHeight, cornerSize, arenaHeight, cornerSize, arenaHeight - 2, 2, arenaHeight - 2, 2, arenaHeight - cornerSize, 0, arenaHeight - cornerSize]}
+                    closed={true}
+                    fill="rgba(255, 255, 255, 0.2)"
+                />
+                {/* Bottom right */}
+                <Line
+                    points={[arenaWidth, arenaHeight, arenaWidth - cornerSize, arenaHeight, arenaWidth - cornerSize, arenaHeight - 2, arenaWidth - 2, arenaHeight - 2, arenaWidth - 2, arenaHeight - cornerSize, arenaWidth, arenaHeight - cornerSize]}
+                    closed={true}
+                    fill="rgba(255, 255, 255, 0.2)"
+                />
+            </Group>
+
+            {/* Decorative center lines */}
+            <Group>
+                <Line
+                    points={[arenaWidth / 2, 0, arenaWidth / 2, arenaHeight]}
+                    stroke="rgba(255, 255, 255, 0.05)"
+                    strokeWidth={1}
+                    dash={[10, 20]}
+                />
+                <Line
+                    points={[0, arenaHeight / 2, arenaWidth, arenaHeight / 2]}
+                    stroke="rgba(255, 255, 255, 0.05)"
+                    strokeWidth={1}
+                    dash={[10, 20]}
+                />
+            </Group>
 
             {explosions.map((explosion, index) => (
                 <Explosion key={'explosion-' + index} explosion={explosion} />
