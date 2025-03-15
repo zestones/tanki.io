@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 function TankDetails({ selectedTank, animateIn, spacing }) {
     return (
-        <div className={`bg-black bg-opacity-70 ${spacing.tankDetails} overflow-y-auto`}>
+        <div className={`bg-black bg-opacity-70 h-full overflow-y-auto`}>
             <div className="border-t border-gray-800" style={{ borderColor: selectedTank.color, opacity: 0.5 }}></div>
 
             <div className="flex border-b border-gray-800">

@@ -23,7 +23,6 @@ export default function useLayoutSpacing(height) {
                 actionButtons: 'p-2',
                 tankPreview: 'h-48',
                 tankStats: 'py-2',
-                tankDetails: 'h-32'
             },
             sm: {
                 header: 'pt-1 pb-1',
@@ -33,7 +32,6 @@ export default function useLayoutSpacing(height) {
                 actionButtons: 'p-1',
                 tankPreview: 'h-38',
                 tankStats: 'py-2',
-                tankDetails: 'h-54'
             },
             md: {
                 header: 'pt-6 pb-2',
@@ -43,7 +41,6 @@ export default function useLayoutSpacing(height) {
                 actionButtons: 'p-4',
                 tankPreview: 'h-64',
                 tankStats: 'py-4',
-                tankDetails: 'h-48'
             },
             lg: {
                 header: 'pt-8 pb-2',
@@ -53,7 +50,6 @@ export default function useLayoutSpacing(height) {
                 actionButtons: 'p-6',
                 tankPreview: 'h-72',
                 tankStats: 'py-5',
-                tankDetails: 'h-56'
             }
         };
 
