@@ -1,4 +1,6 @@
 import { Schema, type } from "@colyseus/schema";
+import { Tank } from "./Tank.js";
+
 import gameConfig from "../config/gameConfig.js";
 
 export class Player extends Schema {
@@ -14,6 +16,8 @@ export class Player extends Schema {
         this.hp = gameConfig.PLAYER_INITIAL_HP;
         this.username = "";
         this.score = 0;
+
+        this.tank = new Tank();
     }
 }
 
@@ -25,3 +29,4 @@ type("boolean")(Player.prototype, "isDead");
 type("number")(Player.prototype, "respawnTime");
 type("string")(Player.prototype, "username");
 type("number")(Player.prototype, "score");
+type(Tank)(Player.prototype, "tank");

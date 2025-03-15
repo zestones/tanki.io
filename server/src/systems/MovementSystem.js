@@ -12,7 +12,7 @@ export default class MovementSystem {
         player.direction = direction;
 
         if (moving) {
-            const { dx, dy } = MathUtils.calculateVelocity(direction, gameConfig.TANK_SPEED);
+            const { dx, dy } = MathUtils.calculateVelocity(direction, player.tank.speed);
 
             // Update position with boundary checks
             player.x = MathUtils.clamp(

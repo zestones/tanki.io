@@ -1,11 +1,15 @@
 import { Server } from "@colyseus/core";
-import { WebSocketTransport } from "@colyseus/ws-transport";
 import { monitor } from "@colyseus/monitor";
-import express from "express";
+import { WebSocketTransport } from "@colyseus/ws-transport";
+
+import os from "os";
 import cors from "cors";
+import express from "express";
 import { createServer } from "http";
+
+import tanksConfig from "./config/tanksConfig.js";
 import { GameRoom } from "./rooms/GameRoom.js";
-import os from "os"; // Added to get network interfaces
+
 
 const port = parseInt(process.env.PORT, 10) || 3000;
 const app = express();
@@ -30,6 +34,11 @@ gameServer.define("game", GameRoom, {
 // Register Colyseus Monitor
 app.use("/colyseus", monitor());
 
+// API endpoint to get tank configuration data
+app.get("/api/tanks", (req, res) => {
+    res.json(tanksConfig);
+});
+
 // Get local IP address to display in console
 function getLocalIP() {
     const interfaces = os.networkInterfaces();
@@ -49,3 +58,4 @@ const localIP = getLocalIP();
 gameServer.listen(port);
 console.log(`🚀 Game server running on ws://localhost:${port}`);
 console.log(`🌐 Available on your network at ws://${localIP}:${port}`);
+console.log(`📊 API endpoint available at http://${localIP}:${port}/api/tanks`);

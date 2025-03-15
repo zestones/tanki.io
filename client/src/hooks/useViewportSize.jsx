@@ -14,7 +14,7 @@ export default function useViewportSize(containerRef) {
         };
 
         // Initial measurement after a short delay to ensure the container is rendered
-        setTimeout(updateViewportSize, 100);
+        setTimeout(updateViewportSize, 200);
 
         // Update on window resize
         window.addEventListener('resize', updateViewportSize);
