@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import PropTypes from 'prop-types';
 
 function Joystick({ onMove, onStop, size = "w-48 h-48", type = "movement" }) {
     const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -20,11 +21,9 @@ function Joystick({ onMove, onStop, size = "w-48 h-48", type = "movement" }) {
                     onMove(lastPositionRef.current.degrees, lastPositionRef.current.isMoving, type);
                 }
             }, UPDATE_RATE);
-        } else {
-            if (updateIntervalRef.current) {
-                clearInterval(updateIntervalRef.current);
-                updateIntervalRef.current = null;
-            }
+        } else if (updateIntervalRef.current) {
+            clearInterval(updateIntervalRef.current);
+            updateIntervalRef.current = null;
         }
 
         return () => {
@@ -235,5 +234,13 @@ function Joystick({ onMove, onStop, size = "w-48 h-48", type = "movement" }) {
         </div>
     );
 }
+
+
+Joystick.propTypes = {
+    onMove: PropTypes.func.isRequired,
+    onStop: PropTypes.func.isRequired,
+    size: PropTypes.string,
+    type: PropTypes.oneOf(['movement', 'turret'])
+};
 
 export default Joystick;
