@@ -7,7 +7,10 @@ export default function useConnectionManager() {
     const navigate = useNavigate();
     const [room, setRoom] = useState(null);
     const [health, setHealth] = useState(3);
+
     const [username, setUsername] = useState('');
+    const [tankType, setTankType] = useState('');
+
     const [isConnecting, setIsConnecting] = useState(true);
     const [respawnCountdown, setRespawnCountdown] = useState(null);
     const [score, setScore] = useState(0); // Add score state
@@ -30,17 +33,20 @@ export default function useConnectionManager() {
         if (hasConnected.current) return;
 
         const storedUsername = sessionStorage.getItem('username');
-        if (!storedUsername) {
-            navigate('/');
+        const storedTankType = sessionStorage.getItem('tank-type');
+        if (!storedUsername || !storedTankType) {
+            navigate('/tanki.io');
             return;
         }
 
         setUsername(storedUsername);
+        setTankType(storedTankType);
+
         const client = new Client(config.wsUrl);
         setIsConnecting(true);
         hasConnected.current = true;
 
-        client.joinOrCreate('game', { username: storedUsername })
+        client.joinOrCreate('game', { username: storedUsername, tankType: storedTankType })
             .then(room => {
                 setRoom(room);
                 setIsConnecting(false);
@@ -57,7 +63,7 @@ export default function useConnectionManager() {
                 hasConnected.current = false;
                 console.error('Could not join room:', e);
                 setIsConnecting(false);
-                navigate('/');
+                navigate('/tanki.io');
             });
 
         return () => {
@@ -145,6 +151,7 @@ export default function useConnectionManager() {
         room,
         health,
         username,
+        tankType,
         isConnecting,
         respawnCountdown,
         score,

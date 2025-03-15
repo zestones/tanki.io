@@ -2,13 +2,13 @@ import { Client } from 'colyseus.js';
 import { useEffect, useRef, useState } from 'react';
 import { Layer, Stage } from 'react-konva';
 
-import Arena from '../components/game/Arena';
-import Leaderboard from '../components/game/Leaderboard';
-import Footer from '../components/layout/Footer';
-import Header from '../components/layout/Header';
-import StatsPanel from '../components/layout/StatsPanel';
-import ErrorScreen from '../components/ui/ErrorScreen';
-import LoadingScreen from '../components/ui/LoadingScreen';
+import Arena from '../components/game/arena/Arena';
+import Leaderboard from '../components/game/arena/Leaderboard';
+import Footer from '../components/spectator/layout/Footer';
+import Header from '../components/spectator/layout/Header';
+import StatsPanel from '../components/spectator/layout/StatsPanel';
+import ErrorScreen from '../components/common/ErrorScreen';
+import LoadingScreen from '../components/common/LoadingScreen';
 import { config } from '../config/config';
 import useViewportSize from '../hooks/useViewportSize';
 
@@ -79,7 +79,7 @@ export default function Game() {
     }
 
     return (
-        <div className="flex flex-col h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-black overflow-hidden">
+        <div className="flex flex-col h-screen bg-[#141418] overflow-hidden relative">
             <Header
                 playersCount={gameState.players.size}
                 bulletsCount={gameState.bullets.length}
@@ -109,9 +109,22 @@ export default function Game() {
                         viewportSize={viewportSize}
                     />
                 )}
+
+                <div className="absolute inset-0 bg-[linear-gradient(transparent_50%,rgba(255,255,255,0.02)_50%)] bg-[length:100%_2px] pointer-events-none z-10"></div>
+
+                {/* Hexagonal center decoration - white/light variant */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 opacity-10 pointer-events-none">
+                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" fill="none">
+                        <polygon points="50,3 97,25 97,75 50,97 3,75 3,25" stroke="rgba(255,255,255,0.2)" strokeWidth="1" />
+                        <polygon points="50,15 85,30 85,70 50,85 15,70 15,30" stroke="rgba(255,255,255,0.15)" strokeWidth="1" />
+                        <polygon points="50,30 70,40 70,60 50,70 30,60 30,40" stroke="rgba(255,255,255,0.25)" strokeWidth="1" />
+                    </svg>
+                </div>
             </div>
 
             <Footer />
+
+            <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-white/30 via-transparent to-white/30"></div>
         </div>
     );
 }
