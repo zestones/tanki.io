@@ -1,6 +1,6 @@
-import React from 'react';
+import PropTypes from 'prop-types';
 
-export default function ErrorScreen({ error }) {
+function ErrorScreen({ error }) {
     return (
         <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black flex items-center justify-center p-6">
             <div className="text-center bg-gray-800/80 backdrop-blur-sm p-8 rounded-xl shadow-2xl max-w-md border border-red-500/30">
@@ -21,3 +21,9 @@ export default function ErrorScreen({ error }) {
         </div>
     );
 }
+
+ErrorScreen.propTypes = {
+    error: PropTypes.string.isRequired
+};
+
+export default ErrorScreen;

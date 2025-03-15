@@ -1,4 +1,4 @@
-import React from 'react';
+import PropTypes from 'prop-types';
 
 function Leaderboard({ players }) {
     // Convert Map to array, sort by score (highest first), and take top 5
@@ -11,7 +11,6 @@ function Leaderboard({ players }) {
         .sort((a, b) => b.score - a.score)
         .slice(0, 5);
 
-    // Generate clip-path for Arknights-style angular container
     const clipPathStyle = "polygon(0% 0%, 100% 0%, 95% 100%, 0% 100%, 5% 50%)";
 
     return (
@@ -19,7 +18,6 @@ function Leaderboard({ players }) {
             className="absolute top-20 right-4 p-4 text-white shadow-lg w-64 border-l-2 border-white bg-[#1a1a20]/80 overflow-hidden"
             style={{ clipPath: clipPathStyle }}
         >
-            {/* Arknights-style overlay patterns */}
             <div className="absolute inset-0 bg-[linear-gradient(45deg,rgba(255,255,255,0.03)_25%,transparent_25%,transparent_50%,rgba(255,255,255,0.03)_50%,rgba(255,255,255,0.03)_75%,transparent_75%,transparent)] bg-[length:10px_10px]"></div>
 
             {/* Diagonal border accent */}
@@ -27,8 +25,8 @@ function Leaderboard({ players }) {
             <div className="absolute bottom-0 left-0 w-[40%] h-1 bg-white/50"></div>
 
             <h3 className="text-white font-mono uppercase tracking-wider text-sm mb-3 flex items-center z-10 relative">
-                <span className="border border-white/30 px-2 py-0.5 mr-2">R-01</span>
-                TACTICAL DATA // RANKING
+                <span className="border border-white/30 px-2 py-0.5 mr-2">R-01</span>{' '}
+                DATA//RANKING
             </h3>
 
             <div className="space-y-2 z-10 relative">
@@ -73,6 +71,13 @@ function Leaderboard({ players }) {
             <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-white/30 via-transparent to-white/30"></div>
         </div>
     );
+};
+
+Leaderboard.propTypes = {
+    players: PropTypes.oneOfType([
+        PropTypes.instanceOf(Map),
+        PropTypes.object
+    ]).isRequired
 };
 
 export default Leaderboard;

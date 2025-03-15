@@ -104,14 +104,12 @@ function IntroAnimation({ onLoadComplete }) {
 
             {/* Main content container */}
             <div className="relative z-10 w-full max-w-2xl px-6">
-                {/* Logo section with Arknights-style framing */}
                 <motion.div
                     className={`relative transition-all duration-1000 ${logoTransitioning ? 'transform -translate-y-32 scale-90' : ''}`}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8 }}
                 >
-                    {/* Logo container with Arknights-style frame */}
                     <div className="relative">
                         <div className="absolute -left-3 -top-3 w-6 h-6 border-l-2 border-t-2 border-blue-400"></div>
                         <div className="absolute -right-3 -top-3 w-6 h-6 border-r-2 border-t-2 border-blue-400"></div>
@@ -133,7 +131,6 @@ function IntroAnimation({ onLoadComplete }) {
                     </div>
                 </motion.div>
 
-                {/* Loading display - Arknights style */}
                 <AnimatePresence>
                     {!logoTransitioning && (
                         <motion.div
@@ -155,7 +152,6 @@ function IntroAnimation({ onLoadComplete }) {
                                     <span className="text-sm text-blue-400 font-mono tracking-wider">{loadingStages[loadingStage].text}</span>
                                 </div>
 
-                                {/* Sub-status indicators - Arknights style small data points */}
                                 <div className="grid grid-cols-2 gap-1 ml-5 text-xs text-gray-400 font-mono">
                                     <div>OPERATOR STATUS: STANDBY</div>
                                     <div>WEAPONS: CALIBRATED</div>
@@ -164,7 +160,6 @@ function IntroAnimation({ onLoadComplete }) {
                                 </div>
                             </motion.div>
 
-                            {/* Progress bar with segments - Arknights style */}
                             <div className="relative">
                                 <div className="relative h-1.5 bg-gray-800/70 rounded-sm overflow-hidden border border-gray-700">
                                     <motion.div
@@ -173,7 +168,6 @@ function IntroAnimation({ onLoadComplete }) {
                                         transition={{ type: "spring", stiffness: 30 }}
                                     />
 
-                                    {/* Arknights-style progress markers */}
                                     {loadingStages.map((stage, index) => (
                                         <div
                                             key={'stage-' + index}

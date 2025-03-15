@@ -6,8 +6,6 @@ function Grid({ arenaWidth, arenaHeight }) {
     const HEX_SIZE = 40; // Size of hexagons
     const lines = [];
 
-    // Create standard grid lines with Arknights styling
-    // Horizontal grid lines
     for (let i = 0; i <= Math.ceil(arenaHeight / GRID_SIZE); i++) {
         lines.push(
             <Line
@@ -64,7 +62,6 @@ function Grid({ arenaWidth, arenaHeight }) {
         }
     }
 
-    // Add diagonal accent lines (Arknights style)
     lines.push(
         <Line
             key="diagonal-1"

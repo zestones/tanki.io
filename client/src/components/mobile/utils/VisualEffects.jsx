@@ -74,7 +74,6 @@ export function BackgroundEffects() {
 export function CornerDecorations() {
   return (
     <>
-      {/* Corner decorations - Arknights style */}
       <div className="absolute top-0 left-0 w-24 h-24 pointer-events-none">
         <svg viewBox="0 0 100 100" className="w-full h-full text-blue-500/60">
           <path d="M0,20 L20,20 L20,0" fill="none" stroke="currentColor" strokeWidth="2" />

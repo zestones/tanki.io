@@ -110,7 +110,6 @@ export default function Game() {
                     />
                 )}
 
-                {/* Arknights-style scanline effect */}
                 <div className="absolute inset-0 bg-[linear-gradient(transparent_50%,rgba(255,255,255,0.02)_50%)] bg-[length:100%_2px] pointer-events-none z-10"></div>
 
                 {/* Hexagonal center decoration - white/light variant */}
@@ -125,7 +124,6 @@ export default function Game() {
 
             <Footer />
 
-            {/* Bottom decoration line - Arknights style with white accent */}
             <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-white/30 via-transparent to-white/30"></div>
         </div>
     );

@@ -1,6 +1,6 @@
-import React from 'react';
+import PropTypes from 'prop-types';
 
-export default function Header({ playersCount, bulletsCount, showStats, onToggleStats }) {
+function Header({ playersCount, bulletsCount, showStats, onToggleStats }) {
     return (
         <div className="w-full bg-black/60 backdrop-blur-md border-b border-white/20 shadow-lg z-10 relative overflow-hidden">
             {/* Hexagonal grid pattern overlay */}
@@ -89,3 +89,12 @@ export default function Header({ playersCount, bulletsCount, showStats, onToggle
         </div>
     );
 }
+
+Header.propTypes = {
+    playersCount: PropTypes.number.isRequired,
+    bulletsCount: PropTypes.number.isRequired,
+    showStats: PropTypes.bool.isRequired,
+    onToggleStats: PropTypes.func.isRequired
+};
+
+export default Header;

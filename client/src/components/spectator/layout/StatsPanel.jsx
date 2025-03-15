@@ -1,6 +1,6 @@
-import React from 'react';
+import PropTypes from 'prop-types';
 
-export default function StatsPanel({ gameState, viewportSize }) {
+function StatsPanel({ gameState, viewportSize }) {
     return (
         <div className="absolute top-20 left-4 bg-black/60 backdrop-blur-sm text-white p-4 rounded-lg text-sm border border-white/10 shadow-lg max-w-xs">
             <h3 className="font-bold mb-2 text-indigo-300">Game Stats</h3>
@@ -19,3 +19,20 @@ export default function StatsPanel({ gameState, viewportSize }) {
         </div>
     );
 }
+StatsPanel.propTypes = {
+    gameState: PropTypes.shape({
+        players: PropTypes.shape({
+            size: PropTypes.number
+        }),
+        bullets: PropTypes.array,
+        explosions: PropTypes.array,
+        arenaWidth: PropTypes.number,
+        arenaHeight: PropTypes.number
+    }).isRequired,
+    viewportSize: PropTypes.shape({
+        width: PropTypes.number,
+        height: PropTypes.number
+    }).isRequired
+};
+
+export default StatsPanel;

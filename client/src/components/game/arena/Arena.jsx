@@ -8,12 +8,10 @@ import PropTypes from 'prop-types';
 function Arena({ gameState }) {
     const { arenaWidth, arenaHeight, players, bullets, explosions } = gameState;
 
-    // Create decorative corner elements for Arknights style
     const cornerSize = 100;
 
     return (
         <>
-            {/* Background with dark Arknights style */}
             <Rect
                 x={0}
                 y={0}
@@ -47,7 +45,6 @@ function Arena({ gameState }) {
                 strokeWidth={2}
             />
 
-            {/* Arknights-style corner decorations */}
             <Group>
                 {/* Top left */}
                 <Line

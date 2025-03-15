@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 function CountdownScreen({ countdown }) {
     if (countdown === null) return null;
 
@@ -13,5 +15,9 @@ function CountdownScreen({ countdown }) {
         </div>
     );
 }
+
+CountdownScreen.propTypes = {
+    countdown: PropTypes.number,
+};
 
 export default CountdownScreen;

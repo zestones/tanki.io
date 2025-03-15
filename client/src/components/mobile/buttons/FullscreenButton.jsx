@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 function FullscreenButton({ isFullscreen, onClick }) {
     if (isFullscreen) return null;
 
@@ -13,5 +15,10 @@ function FullscreenButton({ isFullscreen, onClick }) {
         </button>
     );
 }
+
+FullscreenButton.propTypes = {
+    isFullscreen: PropTypes.bool.isRequired,
+    onClick: PropTypes.func.isRequired
+};
 
 export default FullscreenButton;

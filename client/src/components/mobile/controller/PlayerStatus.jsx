@@ -5,7 +5,6 @@ function PlayerStatus({ username, health, score = 0 }) {
     // TODO : make the 3 match the max health in the server
     const healthPercentage = Math.max(0, Math.min(100, (health / 3) * 100));
 
-    // Generate clip-path for the Arknights-style angular container
     const clipPathStyle = "polygon(0% 0%, 100% 0%, 98% 100%, 0% 100%, 2% 50%)";
 
     return (
@@ -13,7 +12,6 @@ function PlayerStatus({ username, health, score = 0 }) {
             className="bg-[#1a1a20]/80 border-l-4 border-[#ff8c00] shadow-lg p-3 text-white flex items-center justify-between w-full max-w-md mx-auto relative overflow-hidden"
             style={{ clipPath: clipPathStyle }}
         >
-            {/* Arknights-style overlay patterns */}
             <div className="absolute inset-0 bg-[linear-gradient(45deg,rgba(255,140,0,0.05)_25%,transparent_25%,transparent_50%,rgba(255,140,0,0.05)_50%,rgba(255,140,0,0.05)_75%,transparent_75%,transparent)] bg-[length:10px_10px]"></div>
 
             {/* Diagonal border accent */}
@@ -48,14 +46,12 @@ function PlayerStatus({ username, health, score = 0 }) {
             </div>
 
             <div className="flex items-center gap-5 z-10">
-                {/* Health with Arknights-style progress bar */}
                 <div className="flex flex-col">
                     <div className="flex items-center mb-1">
                         <span className="text-sm font-mono text-[#ff8c00] mr-1">HP</span>
                         <span className="text-sm font-mono">{health}</span>
                     </div>
                     <div className="w-16 h-2 bg-[#1a1a20] relative border border-[#ff8c00]/30">
-                        {/* Arknights-style segmented progress bar */}
                         <div className="absolute inset-0 flex">
                             {[...Array(10)].map((_, i) => (
                                 <div
@@ -71,7 +67,6 @@ function PlayerStatus({ username, health, score = 0 }) {
                     </div>
                 </div>
 
-                {/* Score with Arknights-style display */}
                 <div className="flex flex-col items-end"></div>
                 <div className="flex items-center mb-1">
                     <span className="text-sm font-mono mr-1">{score}</span>

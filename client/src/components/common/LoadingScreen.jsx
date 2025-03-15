@@ -1,6 +1,4 @@
-import React from 'react';
-
-export default function LoadingScreen() {
+function LoadingScreen() {
     return (
         <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black flex items-center justify-center">
             <div className="text-center">
@@ -14,3 +12,5 @@ export default function LoadingScreen() {
         </div>
     );
 }
+
+export default LoadingScreen;

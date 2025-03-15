@@ -240,7 +240,7 @@ Joystick.propTypes = {
     onMove: PropTypes.func.isRequired,
     onStop: PropTypes.func.isRequired,
     size: PropTypes.string,
-    type: PropTypes.oneOf(['movement', 'turret'])
+    type: PropTypes.oneOf(['movement', 'aiming'])
 };
 
 export default Joystick;

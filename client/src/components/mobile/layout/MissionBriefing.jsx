@@ -1,4 +1,6 @@
 
+import PropTypes from 'prop-types';
+
 function MissionBriefing({ spacing, animateIn, layoutSize }) {
     return (
         <div className={`${spacing.stats} transition-all duration-700 delay-500 transform ${animateIn ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}>
@@ -31,6 +33,12 @@ function MissionBriefing({ spacing, animateIn, layoutSize }) {
             </div>
         </div>
     );
+}
+
+MissionBriefing.propTypes = {
+    spacing: PropTypes.object.isRequired,
+    animateIn: PropTypes.bool.isRequired,
+    layoutSize: PropTypes.string.isRequired
 };
 
 export default MissionBriefing;

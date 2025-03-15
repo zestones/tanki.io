@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { ArrowRight } from 'lucide-react';
 
 function ActionButtons({ spacing, layoutSize, themeColor, username, handleSubmit, navigate }) {
@@ -27,6 +28,15 @@ function ActionButtons({ spacing, layoutSize, themeColor, username, handleSubmit
             )}
         </div>
     );
+};
+
+ActionButtons.propTypes = {
+    spacing: PropTypes.string.isRequired,
+    layoutSize: PropTypes.string.isRequired,
+    themeColor: PropTypes.string.isRequired,
+    username: PropTypes.string.isRequired,
+    handleSubmit: PropTypes.func.isRequired,
+    navigate: PropTypes.func.isRequired
 };
 
 export default ActionButtons;

@@ -32,7 +32,6 @@ export default function Controller() {
             ref={containerRef}
             className="relative h-screen w-screen bg-[#1a1a20] overflow-hidden touch-none flex flex-col"
         >
-            {/* Arknights-style background with hexagonal pattern */}
             <div className="absolute inset-0 bg-[#141418] z-0">
                 {/* Hexagonal grid pattern */}
                 <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MCIgaGVpZ2h0PSI0MyIgdmlld0JveD0iMCAwIDUwIDQzIj48cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiMzMDMwNDAiIHN0cm9rZS13aWR0aD0iMC44IiBkPSJNMjUsMSBMMSwyMSBMMSw2MSBMMjUsODEgTDQ5LDYxIEw0OSwyMSBMMjUsMSIgLz48L3N2Zz4=')] opacity-10"></div>
@@ -41,7 +40,6 @@ export default function Controller() {
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,140,0,0.05),transparent_70%)]"></div>
             </div>
 
-            {/* UI Decorative elements - Arknights styled angular corners */}
             <div className="absolute top-4 left-4 w-20 h-20">
                 <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M0 0L80 0L80 16L16 16L16 80L0 80L0 0Z" fill="rgba(255, 128, 0, 0.2)" />
@@ -67,7 +65,6 @@ export default function Controller() {
                 </svg>
             </div>
 
-            {/* Arknights-style hexagonal design element in center */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 opacity-15 pointer-events-none">
                 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" fill="none">
                     <polygon points="50,3 97,25 97,75 50,97 3,75 3,25" stroke="rgba(255,140,0,0.3)" strokeWidth="1" />
@@ -95,10 +92,8 @@ export default function Controller() {
                 />
             </div>
 
-            {/* Left joystick container with Arknights aesthetics */}
             <div className="absolute bottom-10 left-10 z-10">
                 <div className="relative">
-                    {/* Arknights-style hexagonal border */}
                     <div className="absolute -inset-4 -z-10">
                         <svg viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
                             <polygon
@@ -122,10 +117,8 @@ export default function Controller() {
                 </div>
             </div>
 
-            {/* Right joystick container with Arknights aesthetics */}
             <div className="absolute bottom-10 right-10 z-10">
                 <div className="relative">
-                    {/* Arknights-style hexagonal border */}
                     <div className="absolute -inset-4 -z-10">
                         <svg viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
                             <polygon
@@ -149,10 +142,7 @@ export default function Controller() {
                 </div>
             </div>
 
-            {/* Bottom decoration line - Arknights style */}
             <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-[#ff8c00]/50 via-transparent to-[#ff8c00]/50"></div>
-
-            {/* Arknights-style scanline effect */}
             <div className="absolute inset-0 bg-[linear-gradient(transparent_50%,rgba(0,0,0,0.03)_50%)] bg-[length:100%_2px] pointer-events-none z-10"></div>
         </div>
     );
