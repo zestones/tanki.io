@@ -1,8 +1,9 @@
 import { Group, Circle, Line } from 'react-konva';
+import PropTypes from 'prop-types';
 
 const BULLET_SIZE = 5;
 
-export default function Bullet({ bullet }) {
+function Bullet({ bullet }) {
     return (
         <Group>
             {/* Bullet trail */}
@@ -52,3 +53,13 @@ export default function Bullet({ bullet }) {
         </Group>
     );
 }
+
+Bullet.propTypes = {
+    bullet: PropTypes.shape({
+        x: PropTypes.number.isRequired,
+        y: PropTypes.number.isRequired,
+        direction: PropTypes.number.isRequired
+    }).isRequired
+};
+
+export default Bullet;

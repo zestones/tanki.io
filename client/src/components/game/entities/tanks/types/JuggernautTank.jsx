@@ -1,11 +1,11 @@
-import { Group, Circle, Line, Text, Rect, RegularPolygon } from 'react-konva';
+import PropTypes from 'prop-types';
+import { Circle, Group, Line, Rect, RegularPolygon, Text } from 'react-konva';
 import { shadeColor } from '../../../../../utils/colorUtils';
 import HealthBar from '../shared/HealthBar';
-import PropTypes from 'prop-types';
 
-const TANK_SIZE = 38; // Slightly larger than standard tank
+const TANK_SIZE = 38;
 
-export default function JuggernautTank({ x, y, rotation, hp, username, isDead }) {
+export default function JuggernautTank({ x, y, rotation, hp, username, isDead, color = "#f1c40f" }) {
     if (isDead) return null;
 
     const barrelLength = TANK_SIZE * 1.2;
@@ -143,20 +143,19 @@ export default function JuggernautTank({ x, y, rotation, hp, username, isDead })
 
             {/* Username with special styling */}
             <Text
-                x={x - 60}
+                x={x - 50}
                 y={y + TANK_SIZE + 5}
                 text={username}
-                fontSize={16}
+                fontSize={14}
                 fontStyle="bold"
-                fill="#FFD700" // Gold color for Juggernaut
+                fill={color}
                 align="center"
-                width={120}
+                width={100}
                 shadowColor="black"
-                shadowBlur={5}
+                shadowBlur={4}
                 shadowOffset={{ x: 0, y: 0 }}
                 shadowOpacity={1}
             />
-
             <HealthBar
                 hp={hp}
                 x={x}
@@ -175,5 +174,6 @@ JuggernautTank.propTypes = {
     rotation: PropTypes.number.isRequired,
     hp: PropTypes.number.isRequired,
     username: PropTypes.string.isRequired,
-    isDead: PropTypes.bool.isRequired
+    isDead: PropTypes.bool.isRequired,
+    color: PropTypes.string
 };

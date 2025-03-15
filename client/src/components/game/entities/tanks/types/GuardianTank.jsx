@@ -5,7 +5,7 @@ import HealthBar from '../shared/HealthBar';
 
 const TANK_SIZE = 38;
 
-function GuardianTank({ x, y, rotation, hp, username, isDead }) {
+function GuardianTank({ x, y, rotation, hp, username, isDead, color = "#3498db" }) {
     if (isDead) return null;
 
     const barrelLength = TANK_SIZE * 0.8;
@@ -153,7 +153,7 @@ function GuardianTank({ x, y, rotation, hp, username, isDead }) {
                 text={username}
                 fontSize={14}
                 fontStyle="bold"
-                fill="#FFF"
+                fill={color}
                 align="center"
                 width={100}
                 shadowColor="black"
@@ -180,7 +180,8 @@ GuardianTank.propTypes = {
     rotation: PropTypes.number.isRequired,
     hp: PropTypes.number.isRequired,
     username: PropTypes.string.isRequired,
-    isDead: PropTypes.bool.isRequired
+    isDead: PropTypes.bool.isRequired,
+    color: PropTypes.string
 };
 
 export default GuardianTank;

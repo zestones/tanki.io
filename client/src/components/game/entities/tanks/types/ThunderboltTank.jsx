@@ -6,7 +6,7 @@ import HealthBar from '../shared/HealthBar'; // Reusable HealthBar component
 // Define tank size constant
 const TANK_SIZE = 30;
 
-function ThunderboltTank({ x, y, rotation, hp, username, isDead }) {
+function ThunderboltTank({ x, y, rotation, hp, username, isDead, color = "#9b59b6" }) {
     // If the tank is dead, render nothing
     if (isDead) return null;
 
@@ -161,9 +161,9 @@ function ThunderboltTank({ x, y, rotation, hp, username, isDead }) {
                 text={username}
                 fontSize={14}
                 fontStyle="bold"
-                fill={themeColor}
+                fill={color}
                 align="center"
-                width={100}
+                width={110}
                 shadowColor="black"
                 shadowBlur={4}
                 shadowOffset={{ x: 0, y: 0 }}
@@ -189,7 +189,8 @@ ThunderboltTank.propTypes = {
     rotation: PropTypes.number.isRequired,
     hp: PropTypes.number.isRequired,
     username: PropTypes.string.isRequired,
-    isDead: PropTypes.bool.isRequired
+    isDead: PropTypes.bool.isRequired,
+    color: PropTypes.string
 };
 
 export default ThunderboltTank;

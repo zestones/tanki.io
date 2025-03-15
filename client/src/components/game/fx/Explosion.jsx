@@ -1,6 +1,7 @@
 import { Group, Circle } from 'react-konva';
+import PropTypes from 'prop-types';
 
-export default function Explosion({ explosion }) {
+function Explosion({ explosion }) {
     return (
         <Group>
             {/* Outer explosion glow */}
@@ -39,3 +40,13 @@ export default function Explosion({ explosion }) {
         </Group>
     );
 }
+
+Explosion.propTypes = {
+    explosion: PropTypes.shape({
+        x: PropTypes.number.isRequired,
+        y: PropTypes.number.isRequired,
+        radius: PropTypes.number.isRequired,
+    }).isRequired,
+};
+
+export default Explosion;

@@ -5,7 +5,7 @@ import HealthBar from '../shared/HealthBar';
 
 const TANK_SIZE = 30;
 
-function SentinelTank({ x, y, rotation, hp, username, isDead }) {
+function SentinelTank({ x, y, rotation, hp, username, isDead, color = "#2ecc71" }) {
     if (isDead) return null;
 
     const barrelLength = TANK_SIZE;
@@ -86,7 +86,7 @@ function SentinelTank({ x, y, rotation, hp, username, isDead }) {
                 text={username}
                 fontSize={14}
                 fontStyle="bold"
-                fill="#FFF"
+                fill={color}
                 align="center"
                 width={100}
                 shadowColor="black"
@@ -112,7 +112,8 @@ SentinelTank.propTypes = {
     rotation: PropTypes.number.isRequired,
     hp: PropTypes.number.isRequired,
     username: PropTypes.string.isRequired,
-    isDead: PropTypes.bool.isRequired
+    isDead: PropTypes.bool.isRequired,
+    color: PropTypes.string
 };
 
 export default SentinelTank;

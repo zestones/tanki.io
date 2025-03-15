@@ -5,7 +5,7 @@ import HealthBar from '../shared/HealthBar';
 
 const TANK_SIZE = 30;
 
-function ShredderTank({ x, y, rotation, hp, username, isDead }) {
+function ShredderTank({ x, y, rotation, hp, username, isDead, color = "#e74c3c" }) {
     // If the tank is dead, render nothing
     if (isDead) return null;
 
@@ -155,7 +155,7 @@ function ShredderTank({ x, y, rotation, hp, username, isDead }) {
                 text={username}
                 fontSize={14}
                 fontStyle="bold"
-                fill="#FFF"
+                fill={color}
                 align="center"
                 width={100}
                 shadowColor="black"
@@ -182,7 +182,8 @@ ShredderTank.propTypes = {
     rotation: PropTypes.number.isRequired,
     hp: PropTypes.number.isRequired,
     username: PropTypes.string.isRequired,
-    isDead: PropTypes.bool.isRequired
+    isDead: PropTypes.bool.isRequired,
+    color: PropTypes.string
 };
 
 export default ShredderTank;

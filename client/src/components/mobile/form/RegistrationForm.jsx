@@ -1,6 +1,7 @@
 import { Info } from 'lucide-react';
+import PropTypes from 'prop-types';
 
-export default function RegistrationForm({ username, setUsername, handleSubmit, spacing, layoutSize, themeColor }) {
+function RegistrationForm({ username, setUsername, handleSubmit, spacing, layoutSize, themeColor }) {
     return (
         <form onSubmit={handleSubmit} className={spacing.form}>
             <div>
@@ -30,3 +31,14 @@ export default function RegistrationForm({ username, setUsername, handleSubmit, 
         </form>
     );
 }
+
+RegistrationForm.propTypes = {
+    username: PropTypes.string.isRequired,
+    setUsername: PropTypes.func.isRequired,
+    handleSubmit: PropTypes.func.isRequired,
+    spacing: PropTypes.object.isRequired,
+    layoutSize: PropTypes.string.isRequired,
+    themeColor: PropTypes.string.isRequired
+};
+
+export default RegistrationForm;

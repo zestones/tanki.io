@@ -3,8 +3,9 @@ import Grid from './Grid';
 import SentinelTank from '../entities/tanks/types/SentinelTank';
 import Bullet from '../entities/bullets/Bullet';
 import Explosion from '../fx/Explosion';
+import PropTypes from 'prop-types';
 
-export default function Arena({ gameState }) {
+function Arena({ gameState }) {
     const { arenaWidth, arenaHeight, players, bullets, explosions } = gameState;
 
     return (
@@ -29,11 +30,11 @@ export default function Arena({ gameState }) {
             />
 
             {explosions.map((explosion, index) => (
-                <Explosion key={`explosion-${index}`} explosion={explosion} />
+                <Explosion key={'explosion-' + index} explosion={explosion} />
             ))}
 
             {bullets.map((bullet, index) => (
-                <Bullet key={`bullet-${index}`} bullet={bullet} />
+                <Bullet key={'bullet-' + index} bullet={bullet} />
             ))}
 
             {Array.from(players.entries()).map(([sessionId, player]) => (
@@ -44,8 +45,21 @@ export default function Arena({ gameState }) {
                     rotation={player.direction}
                     hp={player.hp}
                     username={player.username}
+                    isDead={player.isDead}
                 />
             ))}
         </>
     );
 }
+
+Arena.propTypes = {
+    gameState: PropTypes.shape({
+        arenaWidth: PropTypes.number.isRequired,
+        arenaHeight: PropTypes.number.isRequired,
+        players: PropTypes.object.isRequired,
+        bullets: PropTypes.arrayOf(PropTypes.object).isRequired,
+        explosions: PropTypes.arrayOf(PropTypes.object).isRequired,
+    }).isRequired,
+};
+
+export default Arena;
