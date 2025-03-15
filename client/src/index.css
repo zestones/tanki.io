@@ -46,3 +46,139 @@ html, body {
     -webkit-user-select: none;
     user-select: none;
 }
+
+/* IntroAnimation specific styles */
+.glitch-effect {
+  position: relative;
+  animation: glitch 0.2s cubic-bezier(.25, .46, .45, .94) both infinite;
+}
+
+@keyframes glitch {
+  0% {
+    transform: translate(0);
+  }
+  20% {
+    transform: translate(-3px, 3px);
+  }
+  40% {
+    transform: translate(-3px, -3px);
+  }
+  60% {
+    transform: translate(3px, 3px);
+  }
+  80% {
+    transform: translate(3px, -3px);
+  }
+  100% {
+    transform: translate(0);
+  }
+}
+
+.scanline {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    transparent 50%,
+    rgba(0, 30, 60, 0.05) 50%
+  );
+  background-size: 100% 4px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.hexagon-grid {
+  background-image: 
+    repeating-linear-gradient(60deg, rgba(37, 109, 133, 0.1) 0, rgba(37, 109, 133, 0.1) 1px, transparent 1px, transparent 30px),
+    repeating-linear-gradient(120deg, rgba(37, 109, 133, 0.1) 0, rgba(37, 109, 133, 0.1) 1px, transparent 1px, transparent 30px);
+  height: 100%;
+  width: 100%;
+}
+
+.blink {
+  animation: blink-animation 1s step-start infinite;
+}
+
+@keyframes blink-animation {
+  50% {
+    opacity: 0;
+  }
+}
+
+.glitch-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.glitch-container::before,
+.glitch-container::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.glitch-effect::before {
+  left: 2px;
+  text-shadow: -1px 0 #00bfff;
+  clip: rect(24px, 550px, 90px, 0);
+  animation: glitch-anim-2 0.3s infinite linear alternate-reverse;
+}
+
+.glitch-effect::after {
+  left: -2px;
+  text-shadow: -1px 0 #ff00ff;
+  clip: rect(85px, 550px, 140px, 0);
+  animation: glitch-anim 0.3s infinite linear alternate-reverse;
+}
+
+@keyframes glitch-anim {
+  0% {
+    clip: rect(42px, 9999px, 44px, 0);
+  }
+  20% {
+    clip: rect(12px, 9999px, 59px, 0);
+  }
+  40% {
+    clip: rect(43px, 9999px, 73px, 0);
+  }
+  60% {
+    clip: rect(23px, 9999px, 31px, 0);
+  }
+  80% {
+    clip: rect(54px, 9999px, 69px, 0);
+  }
+  100% {
+    clip: rect(25px, 9999px, 99px, 0);
+  }
+}
+
+@keyframes glitch-anim-2 {
+  0% {
+    clip: rect(25px, 9999px, 99px, 0);
+  }
+  20% {
+    clip: rect(54px, 9999px, 69px, 0);
+  }
+  40% {
+    clip: rect(23px, 9999px, 31px, 0);
+  }
+  60% {
+    clip: rect(43px, 9999px, 73px, 0);
+  }
+  80% {
+    clip: rect(12px, 9999px, 59px, 0);
+  }
+  100% {
+    clip: rect(42px, 9999px, 44px, 0);
+  }
+}
+
+.bg-gradient-radial {
+    background: radial-gradient(circle, var(--tw-gradient-from) 0%, var(--tw-gradient-to) 100%);
+}

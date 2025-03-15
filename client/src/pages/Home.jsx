@@ -1,36 +1,39 @@
+import { motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
-
 import { useNavigate } from 'react-router-dom';
-import { useFullscreenContext } from '../contexts/FullscreenContext';
 
 import useLayoutSpacing from '../hooks/useLayoutSpacing';
 import useViewportSize from '../hooks/useViewportSize';
 
-
-import Header from '../components/mobile/layout/Header';
-import NavBar from '../components/mobile/layout/NavBar';
 import ActionButtons from '../components/mobile/buttons/ActionButtons';
 import RegistrationForm from '../components/mobile/form/RegistrationForm';
-import FullscreenModal from '../components/mobile/modal/FullscreenModal';
-import MissionBriefing from '../components/mobile/layout/MissionBriefing';
 import CombatOperationStatus from '../components/mobile/layout/CombatOperationStatus';
+import Header from '../components/mobile/layout/Header';
+import MissionBriefing from '../components/mobile/layout/MissionBriefing';
+import NavBar from '../components/mobile/layout/NavBar';
+import { BackgroundEffects, CornerDecorations, SidePanels } from '../components/mobile/utils/VisualEffects';
 
-function Home() {
+import PropTypes from 'prop-types';
+
+function Home({ animateIn = false, themeColor = "#3498db" }) {
     const [username, setUsername] = useState('');
-    const [animateIn, setAnimateIn] = useState(false);
-    const [showFullscreenModal, setShowFullscreenModal] = useState(false);
+    const [contentReady, setContentReady] = useState(false);
 
     const navigate = useNavigate();
     const rootRef = useRef(null);
 
-    const { isFullscreen, enterFullscreen } = useFullscreenContext();
     const { height } = useViewportSize(rootRef);
     const { layoutSize, spacing } = useLayoutSpacing(height);
 
+    // Stagger the animation of elements for a more dramatic entry
     useEffect(() => {
-        setAnimateIn(true);
-        if (!isFullscreen) setShowFullscreenModal(true);
-    }, [isFullscreen]);
+        if (animateIn) {
+            const timer = setTimeout(() => {
+                setContentReady(true);
+            }, 300);
+            return () => clearTimeout(timer);
+        }
+    }, [animateIn]);
 
     const handleSubmit = (e) => {
         if (e) e.preventDefault();
@@ -40,44 +43,38 @@ function Home() {
         }
     };
 
-    const enableFullscreen = () => {
-        enterFullscreen(document.documentElement);
-        setShowFullscreenModal(false);
-        sessionStorage.setItem('preferFullscreen', 'true');
-    };
-
-    const dismissFullscreenModal = () => {
-        localStorage.setItem('fullscreenDismissed', 'true');
-        setShowFullscreenModal(false);
-    };
-
-    const themeColor = "#3498db";
-
     return (
         <div ref={rootRef} className="flex flex-col h-screen bg-gray-900 text-white overflow-hidden">
+            {/* Use imported visual effect components */}
+            <BackgroundEffects />
+            <CornerDecorations />
+
             <NavBar
                 themeColor={themeColor}
                 title="TANKI.IO"
                 version="SYSTEM v2.5"
             />
 
-            <div className="flex-grow flex flex-col h-full">
-                <Header
-                    spacing={spacing.header}
-                    animateIn={animateIn}
-                    layoutSize={layoutSize}
-                />
-
-                {layoutSize !== 'xs' && (
-                    <div className="absolute inset-0 pointer-events-none">
-                        <div className="absolute top-20 left-4 w-10 h-10 border-t-2 border-l-2 border-gray-700 opacity-70"></div>
-                        <div className="absolute top-20 right-4 w-10 h-10 border-t-2 border-r-2 border-gray-700 opacity-70"></div>
-                    </div>
-                )}
+            <div className="flex-grow flex flex-col h-full relative z-10">
+                <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: contentReady ? 1 : 0, y: contentReady ? 0 : 10 }}
+                    transition={{ duration: 0.5 }}
+                >
+                    <Header
+                        spacing={spacing.header}
+                        animateIn={contentReady}
+                        layoutSize={layoutSize}
+                    />
+                </motion.div>
 
                 <div className="flex flex-col flex-grow px-6">
                     <div>
-                        <div className={`transition-all duration-700 delay-300 transform ${animateIn ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}>
+                        <motion.div
+                            initial={{ opacity: 0, y: 15 }}
+                            animate={{ opacity: contentReady ? 1 : 0, y: contentReady ? 0 : 15 }}
+                            transition={{ duration: 0.6, delay: 0.1 }}
+                        >
                             <RegistrationForm
                                 username={username}
                                 setUsername={setUsername}
@@ -86,44 +83,60 @@ function Home() {
                                 layoutSize={layoutSize}
                                 themeColor={themeColor}
                             />
-                        </div>
+                        </motion.div>
 
-                        {/* Unit statistics preview - adaptive heights */}
-                        <CombatOperationStatus
-                            spacing={spacing}
-                            animateIn={animateIn}
-                            themeColor={themeColor}
-                            layoutSize={layoutSize}
-                        />
+                        <motion.div
+                            initial={{ opacity: 0, y: 15 }}
+                            animate={{ opacity: contentReady ? 1 : 0, y: contentReady ? 0 : 15 }}
+                            transition={{ duration: 0.6, delay: 0.2 }}
+                        >
+                            <CombatOperationStatus
+                                spacing={spacing}
+                                animateIn={contentReady}
+                                themeColor={themeColor}
+                                layoutSize={layoutSize}
+                            />
+                        </motion.div>
 
-                        <MissionBriefing
-                            spacing={spacing}
-                            animateIn={animateIn}
-                            layoutSize={layoutSize}
-                        />
+                        <motion.div
+                            initial={{ opacity: 0, y: 15 }}
+                            animate={{ opacity: contentReady ? 1 : 0, y: contentReady ? 0 : 15 }}
+                            transition={{ duration: 0.6, delay: 0.3 }}
+                        >
+                            <MissionBriefing
+                                spacing={spacing}
+                                animateIn={contentReady}
+                                layoutSize={layoutSize}
+                            />
+                        </motion.div>
                     </div>
                 </div>
 
-                <ActionButtons
-                    spacing={spacing.actionButtons}
-                    layoutSize={layoutSize}
-                    themeColor={themeColor}
-                    username={username}
-                    handleSubmit={handleSubmit}
-                    navigate={navigate}
-                />
+                <motion.div
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: contentReady ? 1 : 0, y: contentReady ? 0 : 15 }}
+                    transition={{ duration: 0.6, delay: 0.4 }}
+                >
+                    <ActionButtons
+                        spacing={spacing.actionButtons}
+                        layoutSize={layoutSize}
+                        themeColor={themeColor}
+                        username={username}
+                        handleSubmit={handleSubmit}
+                        navigate={navigate}
+                    />
+                </motion.div>
             </div>
 
-            {/* Fullscreen Modal Component */}
-            {showFullscreenModal && (
-                <FullscreenModal
-                    onEnable={enableFullscreen}
-                    onDismiss={dismissFullscreenModal}
-                    themeColor={themeColor}
-                />
-            )}
+            {/* Use SidePanels component instead of duplicated code */}
+            <SidePanels />
         </div>
     );
 }
+
+Home.propTypes = {
+    animateIn: PropTypes.bool,
+    themeColor: PropTypes.string
+};
 
 export default Home;

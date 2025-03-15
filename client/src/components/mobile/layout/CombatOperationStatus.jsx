@@ -1,5 +1,21 @@
+import { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+
 
 function CombatOperationStatus({ spacing, animateIn, themeColor, layoutSize }) {
+    const [currentTime, setCurrentTime] = useState('');
+
+    // Update time display
+    useEffect(() => {
+        const interval = setInterval(() => {
+            const now = new Date();
+            const formatted = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+            setCurrentTime(formatted);
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, []);
+
     return (
         <div className={`${spacing.stats} transition-all duration-700 delay-500 transform ${animateIn ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}>
             <div className="flex items-center mb-2">
@@ -28,13 +44,20 @@ function CombatOperationStatus({ spacing, animateIn, themeColor, layoutSize }) {
                     {layoutSize !== 'xs' && (
                         <div className="flex justify-between text-xs">
                             <span className="text-gray-400">Operation Time</span>
-                            <span className="text-white font-mono">01:32:47</span>
+                            <span className="text-white font-mono">{currentTime}</span>
                         </div>
                     )}
                 </div>
             </div>
         </div>
     );
+};
+
+CombatOperationStatus.propTypes = {
+    spacing: PropTypes.object.isRequired,
+    animateIn: PropTypes.bool.isRequired,
+    themeColor: PropTypes.string.isRequired,
+    layoutSize: PropTypes.string.isRequired
 };
 
 export default CombatOperationStatus;
