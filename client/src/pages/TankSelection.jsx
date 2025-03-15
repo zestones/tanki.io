@@ -100,7 +100,6 @@ function TankSelection() {
                 <TankDetails
                     selectedTank={selectedTank}
                     animateIn={animateIn}
-                    spacing={spacing}
                 />
             </div>
 

@@ -1,7 +1,7 @@
 import { Info, Target } from 'lucide-react';
 import PropTypes from 'prop-types';
 
-function TankDetails({ selectedTank, animateIn, spacing }) {
+function TankDetails({ selectedTank, animateIn }) {
     return (
         <div className={`bg-black bg-opacity-70 h-full overflow-y-auto`}>
             <div className="border-t border-gray-800" style={{ borderColor: selectedTank.color, opacity: 0.5 }}></div>
@@ -72,7 +72,6 @@ TankDetails.propTypes = {
         abilities: PropTypes.arrayOf(PropTypes.string).isRequired
     }).isRequired,
     animateIn: PropTypes.bool.isRequired,
-    spacing: PropTypes.object.isRequired
 };
 
 export default TankDetails;
