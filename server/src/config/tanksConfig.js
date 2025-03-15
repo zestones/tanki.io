@@ -4,7 +4,7 @@ export default {
         stats: {
             health: 3,
             damage: 3,
-            speed: 3,
+            speed: 6,
             specialty: "Adaptive"
         },
         abilities: ["Armor Plating", "Adaptive Systems"],
