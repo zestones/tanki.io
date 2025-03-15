@@ -9,6 +9,7 @@ import CollisionSystem from "../systems/CollisionSystem.js";
 import WeaponSystem from "../systems/WeaponSystem.js";
 import RespawnSystem from "../systems/RespawnSystem.js";
 import ExplosionSystem from "../systems/ExplosionSystem.js";
+import TankSystem from "../systems/TankSystem.js";
 
 // Import controllers
 import InputController from "../controllers/InputController.js";
@@ -25,6 +26,7 @@ export class GameRoom extends Room {
         this.collisionSystem = new CollisionSystem(this.state, this.explosionSystem, this);
         this.weaponSystem = new WeaponSystem(this.state);
         this.respawnSystem = new RespawnSystem(this.state, this);
+        this.tankSystem = new TankSystem();
 
         // Initialize controllers
         this.inputController = new InputController(this.movementSystem, this.weaponSystem);
@@ -51,10 +53,22 @@ export class GameRoom extends Room {
             }
         });
 
-        // Legacy shoot handler (can keep for backward compatibility)
+        // TODO : Legacy shoot handler (can keep for backward compatibility with tests)
         this.onMessage("shoot", (client) => {
             const player = this.state.players.get(client.sessionId);
             this.inputController.handleShootInput(player, client.sessionId);
+        });
+
+        this.onMessage("upgradeTank", (client, message) => {
+            const player = this.state.players.get(client.sessionId);
+            if (!player) return;
+
+            const upgraded = this.tankSystem.upgradeTank(player.tank, message.stat);
+
+            // Optional: send confirmation to client
+            if (upgraded) {
+                client.send("upgradeSuccess", { stat: message.stat, newValue: player.tank[message.stat] });
+            }
         });
     }
 
@@ -69,6 +83,11 @@ export class GameRoom extends Room {
 
         const player = new Player();
         player.username = options.username || `Player ${client.sessionId.substr(0, 4)}`;
+
+        // Set tank type if specified
+        if (options.tankType && this.tankSystem.getTankConfig(options.tankType)) {
+            player.tank = this.tankSystem.createTank(options.tankType);
+        }
 
         // Spawn player at a random position
         const position = this.arenaController.getRandomPosition();
@@ -89,5 +108,23 @@ export class GameRoom extends Room {
         this.collisionSystem.checkBulletPlayerCollisions();
         this.explosionSystem.updateExplosions();
         this.respawnSystem.checkRespawns();
+    }
+
+    onPlayerKill(killer, victim) {
+        // Your existing code to handle kills
+
+        // Add XP rewards
+        if (killer && this.state.players.has(killer)) {
+            const killerPlayer = this.state.players.get(killer);
+            const levelUp = this.tankSystem.addXp(killerPlayer.tank, 50);
+
+            // Notify player of XP gain and potential level up
+            this.clients.getById(killer)?.send("xpGained", {
+                xp: 50,
+                levelUp,
+                currentXp: killerPlayer.tank.xp,
+                nextLevelXp: this.tankSystem.calculateXpForNextLevel(killerPlayer.tank.level)
+            });
+        }
     }
 }

@@ -9,7 +9,8 @@ export default defineConfig(({ mode }) => {
   console.log(`Loading environment for mode: ${mode}`)
   console.log('Environment variables:', {
     VITE_WS_URL: env.VITE_WS_URL,
-    VITE_CLIENT_URL: env.VITE_CLIENT_URL
+    VITE_CLIENT_URL: env.VITE_CLIENT_URL,
+    VITE_API_URL: env.VITE_API_URL
   })
 
   return {
@@ -18,7 +19,8 @@ export default defineConfig(({ mode }) => {
     plugins: [react(), tailwindcss()],
     define: {
       'import.meta.env.VITE_WS_URL': JSON.stringify(env.VITE_WS_URL),
-      'import.meta.env.VITE_CLIENT_URL': JSON.stringify(env.VITE_CLIENT_URL)
+      'import.meta.env.VITE_CLIENT_URL': JSON.stringify(env.VITE_CLIENT_URL),
+      'import.meta.env.VITE_API_URL': JSON.stringify(env.VITE_API_URL)
     }
   }
 })

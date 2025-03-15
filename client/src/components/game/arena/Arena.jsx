@@ -1,9 +1,12 @@
 import { Rect, Group, Line } from 'react-konva';
 import Grid from './Grid';
-import SentinelTank from '../entities/tanks/types/SentinelTank';
+
 import Bullet from '../entities/bullets/Bullet';
 import Explosion from '../fx/Explosion';
+
 import PropTypes from 'prop-types';
+
+import { tankComponentMap } from '../../../utils/tankComponentMap';
 
 function Arena({ gameState }) {
     const { arenaWidth, arenaHeight, players, bullets, explosions } = gameState;
@@ -96,17 +99,20 @@ function Arena({ gameState }) {
                 <Bullet key={'bullet-' + index} bullet={bullet} />
             ))}
 
-            {Array.from(players.entries()).map(([sessionId, player]) => (
-                <SentinelTank
-                    key={`tank-${sessionId}`}
-                    x={player.x}
-                    y={player.y}
-                    rotation={player.direction}
-                    hp={player.hp}
-                    username={player.username}
-                    isDead={player.isDead}
-                />
-            ))}
+            {Array.from(players.entries()).map(([sessionId, player]) => {
+                const TankComponent = tankComponentMap[player.tank.type];
+                return (
+                    <TankComponent
+                        key={`tank-${sessionId}`}
+                        x={player.x}
+                        y={player.y}
+                        rotation={player.direction}
+                        hp={player.hp}
+                        username={player.username}
+                        isDead={player.isDead}
+                    />
+                );
+            })}
         </>
     );
 }

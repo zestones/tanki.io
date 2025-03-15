@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-function PlayerStatus({ username, health, score = 0 }) {
+function PlayerStatus({ username, tankType, health, score = 0 }) {
     // Calculate health percentage for progress bar
     // TODO : make the 3 match the max health in the server
     const healthPercentage = Math.max(0, Math.min(100, (health / 3) * 100));
@@ -41,7 +41,7 @@ function PlayerStatus({ username, health, score = 0 }) {
                             OPERATOR
                         </div>
                     </div>
-                    <div className="text-xs text-[#ff8c00]/70 mt-0.5 font-mono">SENTINEL//ACTIVE</div>
+                    <div className="text-xs text-[#ff8c00]/70 mt-0.5 font-mono">{tankType}//ACTIVE</div>
                 </div>
             </div>
 
@@ -83,6 +83,7 @@ function PlayerStatus({ username, health, score = 0 }) {
 
 PlayerStatus.propTypes = {
     username: PropTypes.string.isRequired,
+    tankType: PropTypes.string.isRequired,
     health: PropTypes.number.isRequired,
     score: PropTypes.number
 };

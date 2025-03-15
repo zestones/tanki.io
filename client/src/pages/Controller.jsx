@@ -1,19 +1,17 @@
 import { useRef } from 'react';
-import PlayerStatus from '../components/mobile/controller/PlayerStatus';
-import Joystick from '../components/mobile/controller/Joystick';
-import RespawnCountdown from '../components/mobile/screens/CountdownScreen';
-import FullscreenButton from '../components/mobile/buttons/FullscreenButton';
 import LoadingScreen from '../components/common/LoadingScreen';
+import Joystick from '../components/mobile/controller/Joystick';
+import PlayerStatus from '../components/mobile/controller/PlayerStatus';
+import RespawnCountdown from '../components/mobile/screens/CountdownScreen';
 import useConnectionManager from '../hooks/useConnectionManager';
-import { useFullscreen } from '../hooks/useFullScreen';
 
 export default function Controller() {
     const containerRef = useRef(null);
-    const { isFullscreen, enterFullscreen } = useFullscreen(containerRef);
 
     const {
         isConnecting,
         username,
+        tankType,
         health,
         score,
         respawnCountdown,
@@ -77,16 +75,10 @@ export default function Controller() {
                 <RespawnCountdown countdown={respawnCountdown} />
             )}
 
-            <div className="absolute top-4 right-4 z-10">
-                <FullscreenButton
-                    isFullscreen={isFullscreen}
-                    onClick={enterFullscreen}
-                />
-            </div>
-
             <div className="absolute top-0 left-0 right-0 p-4 z-10">
                 <PlayerStatus
                     username={username}
+                    tankType={tankType}
                     health={health}
                     score={score}
                 />

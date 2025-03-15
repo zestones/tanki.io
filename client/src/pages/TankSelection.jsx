@@ -8,9 +8,12 @@ import TankPreview from '../components/mobile/tankSelection/TankPreview';
 import TankStats from '../components/mobile/tankSelection/TankStats';
 import TankDetails from '../components/mobile/tankSelection/TankDetails';
 
-import { tanks } from '../data/tanksData';
+// Import client-side tank components for rendering
+import { tankComponentMap } from '../utils/tankComponentMap';
+
 import useLayoutSpacing from '../hooks/useLayoutSpacing';
 import useViewportSize from '../hooks/useViewportSize';
+import { config } from '../config/config';
 
 function TankSelection() {
     const rootRef = useRef(null);
@@ -20,6 +23,41 @@ function TankSelection() {
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [tankRotation, setTankRotation] = useState(0);
     const [animateIn, setAnimateIn] = useState(false);
+    const [tanksData, setTanksData] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    // Fetch tank data from server
+    useEffect(() => {
+        const fetchTanksData = async () => {
+            try {
+                const response = await fetch(`${config.apiUrl}/tanks`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                console.log(data);
+
+                // Convert object to array of tanks with codeName as key
+                const tanksArray = Object.entries(data).map(([codeName, tankData]) => ({
+                    codeName,
+                    ...tankData,
+                }));
+
+                setTanksData(tanksArray);
+                setLoading(false);
+            } catch (err) {
+                console.error("Failed to fetch tanks data:", err);
+                setError(err.message);
+                setLoading(false);
+
+                // Fallback to client-side data if server fetch fails
+                setTanksData(tankComponents);
+            }
+        };
+
+        fetchTanksData();
+    }, []);
 
     // Animation effect for tank rotation
     useEffect(() => {
@@ -41,12 +79,43 @@ function TankSelection() {
         return () => clearTimeout(timer);
     }, [selectedIndex]);
 
-    const selectedTank = tanks[selectedIndex];
-    const TankComponent = selectedTank.component;
+    // Return loading state if tanks not yet loaded
+    if (loading) {
+        return (
+            <div className="flex flex-col h-screen bg-gray-900 text-white items-center justify-center">
+                <div className="animate-spin w-12 h-12 border-4 border-t-blue-500 rounded-full"></div>
+                <p className="mt-4">Loading tanks data...</p>
+            </div>
+        );
+    }
 
-    const goNext = () => setSelectedIndex((prev) => (prev + 1) % tanks.length);
-    const goPrev = () => setSelectedIndex((prev) => (prev - 1 + tanks.length) % tanks.length);
-    const handleSelect = () => navigate('/tanki.io/controller');
+    // Return error state if failed to load tanks
+    if (error) {
+        return (
+            <div className="flex flex-col h-screen bg-gray-900 text-white items-center justify-center">
+                <p className="text-red-500">Error loading tanks: {error}</p>
+                <button
+                    onClick={() => window.location.reload()}
+                    className="mt-4 px-4 py-2 bg-blue-500 rounded"
+                >
+                    Retry
+                </button>
+            </div>
+        );
+    }
+
+    const selectedTank = tanksData[selectedIndex];
+    const TankComponent = tankComponentMap[selectedTank.codeName];
+
+    const goNext = () => setSelectedIndex((prev) => (prev + 1) % tanksData.length);
+    const goPrev = () => setSelectedIndex((prev) => (prev - 1 + tanksData.length) % tanksData.length);
+
+    // Pass selected tank to game controller
+    const handleSelect = () => {
+        // Store selected tank type in session storage or context
+        sessionStorage.setItem('tank-type', selectedTank.codeName);
+        navigate('/tanki.io/controller');
+    };
 
     return (
         <div ref={rootRef} className="flex flex-col h-screen bg-gray-900 text-white overflow-hidden">
@@ -83,7 +152,7 @@ function TankSelection() {
                 />
 
                 <div className="flex justify-center space-x-2 mb-2">
-                    {tanks.map((tank, index) => (
+                    {tanksData.map((tank, index) => (
                         <div
                             key={tank.codeName}
                             className={`h-1 transition-all duration-300 ${selectedIndex === index ? 'w-8 bg-blue-400' : 'w-4 bg-gray-700'}`}
