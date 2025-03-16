@@ -1,9 +1,13 @@
 import { useRef } from 'react';
+
+import { withOpacity } from '../utils/colorUtils';
+
 import LoadingScreen from '../components/common/LoadingScreen';
 import Joystick from '../components/mobile/controller/Joystick';
 import PlayerStatus from '../components/mobile/controller/PlayerStatus';
 import RespawnCountdown from '../components/mobile/screens/CountdownScreen';
 import useConnectionManager from '../hooks/useConnectionManager';
+import tanksConfig from '../../../server/src/config/tanksConfig';
 
 export default function Controller() {
     const containerRef = useRef(null);
@@ -20,6 +24,9 @@ export default function Controller() {
         handleAim
     } = useConnectionManager();
 
+    // TODO: fix this by storing the tank details inside local
+    const tankColor = tankType && tanksConfig[tankType] ? tanksConfig[tankType].color : '#ff8c00';
+
     // Loading screen
     if (isConnecting) {
         return <LoadingScreen />;
@@ -35,39 +42,39 @@ export default function Controller() {
                 <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MCIgaGVpZ2h0PSI0MyIgdmlld0JveD0iMCAwIDUwIDQzIj48cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiMzMDMwNDAiIHN0cm9rZS13aWR0aD0iMC44IiBkPSJNMjUsMSBMMSwyMSBMMSw2MSBMMjUsODEgTDQ5LDYxIEw0OSwyMSBMMjUsMSIgLz48L3N2Zz4=')] opacity-10"></div>
                 {/* Overlay gradients */}
                 <div className="absolute inset-0 bg-gradient-to-t from-[#141418] via-transparent to-[#141418] opacity-70"></div>
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,140,0,0.05),transparent_70%)]"></div>
+                <div className="absolute inset-0" style={{ background: `radial-gradient(circle at center, ${withOpacity(tankColor, 0.05)}, transparent 70%)` }}></div>
             </div>
 
             <div className="absolute top-4 left-4 w-20 h-20">
                 <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M0 0L80 0L80 16L16 16L16 80L0 80L0 0Z" fill="rgba(255, 128, 0, 0.2)" />
-                    <path d="M0 0L70 0L70 3L3 3L3 70L0 70L0 0Z" fill="rgba(255, 150, 50, 0.5)" />
+                    <path d="M0 0L80 0L80 16L16 16L16 80L0 80L0 0Z" fill={withOpacity(tankColor, 0.2)} />
+                    <path d="M0 0L70 0L70 3L3 3L3 70L0 70L0 0Z" fill={withOpacity(tankColor, 0.5)} />
                 </svg>
             </div>
             <div className="absolute top-4 right-4 w-20 h-20">
                 <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transform: 'scaleX(-1)' }}>
-                    <path d="M0 0L80 0L80 16L16 16L16 80L0 80L0 0Z" fill="rgba(255, 128, 0, 0.2)" />
-                    <path d="M0 0L70 0L70 3L3 3L3 70L0 70L0 0Z" fill="rgba(255, 150, 50, 0.5)" />
+                    <path d="M0 0L80 0L80 16L16 16L16 80L0 80L0 0Z" fill={withOpacity(tankColor, 0.2)} />
+                    <path d="M0 0L70 0L70 3L3 3L3 70L0 70L0 0Z" fill={withOpacity(tankColor, 0.5)} />
                 </svg>
             </div>
             <div className="absolute bottom-4 left-4 w-20 h-20">
                 <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transform: 'scaleY(-1)' }}>
-                    <path d="M0 0L80 0L80 16L16 16L16 80L0 80L0 0Z" fill="rgba(255, 128, 0, 0.2)" />
-                    <path d="M0 0L70 0L70 3L3 3L3 70L0 70L0 0Z" fill="rgba(255, 150, 50, 0.5)" />
+                    <path d="M0 0L80 0L80 16L16 16L16 80L0 80L0 0Z" fill={withOpacity(tankColor, 0.2)} />
+                    <path d="M0 0L70 0L70 3L3 3L3 70L0 70L0 0Z" fill={withOpacity(tankColor, 0.5)} />
                 </svg>
             </div>
             <div className="absolute bottom-4 right-4 w-20 h-20">
                 <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transform: 'scale(-1)' }}>
-                    <path d="M0 0L80 0L80 16L16 16L16 80L0 80L0 0Z" fill="rgba(255, 128, 0, 0.2)" />
-                    <path d="M0 0L70 0L70 3L3 3L3 70L0 70L0 0Z" fill="rgba(255, 150, 50, 0.5)" />
+                    <path d="M0 0L80 0L80 16L16 16L16 80L0 80L0 0Z" fill={withOpacity(tankColor, 0.2)} />
+                    <path d="M0 0L70 0L70 3L3 3L3 70L0 70L0 0Z" fill={withOpacity(tankColor, 0.5)} />
                 </svg>
             </div>
 
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 opacity-15 pointer-events-none">
                 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" fill="none">
-                    <polygon points="50,3 97,25 97,75 50,97 3,75 3,25" stroke="rgba(255,140,0,0.3)" strokeWidth="1" />
-                    <polygon points="50,15 85,30 85,70 50,85 15,70 15,30" stroke="rgba(255,140,0,0.2)" strokeWidth="1" />
-                    <polygon points="50,30 70,40 70,60 50,70 30,60 30,40" stroke="rgba(255,140,0,0.4)" strokeWidth="1" />
+                    <polygon points="50,3 97,25 97,75 50,97 3,75 3,25" stroke={withOpacity(tankColor, 0.3)} strokeWidth="1" />
+                    <polygon points="50,15 85,30 85,70 50,85 15,70 15,30" stroke={withOpacity(tankColor, 0.2)} strokeWidth="1" />
+                    <polygon points="50,30 70,40 70,60 50,70 30,60 30,40" stroke={withOpacity(tankColor, 0.4)} strokeWidth="1" />
                 </svg>
             </div>
 
@@ -81,6 +88,7 @@ export default function Controller() {
                     tankType={tankType}
                     health={health}
                     score={score}
+                    tankColor={tankColor}
                 />
             </div>
 
@@ -134,7 +142,7 @@ export default function Controller() {
                 </div>
             </div>
 
-            <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-[#ff8c00]/50 via-transparent to-[#ff8c00]/50"></div>
+            <div className="absolute bottom-0 left-0 right-0 h-1" style={{ background: `linear-gradient(to right, ${withOpacity(tankColor, 0.5)}, transparent, ${withOpacity(tankColor, 0.5)})` }}></div>
             <div className="absolute inset-0 bg-[linear-gradient(transparent_50%,rgba(0,0,0,0.03)_50%)] bg-[length:100%_2px] pointer-events-none z-10"></div>
         </div>
     );
