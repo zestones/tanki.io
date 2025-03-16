@@ -36,7 +36,6 @@ function TankSelection() {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const data = await response.json();
-                console.log(data);
 
                 // Convert object to array of tanks with codeName as key
                 const tanksArray = Object.entries(data).map(([codeName, tankData]) => ({
@@ -79,7 +78,7 @@ function TankSelection() {
         return () => clearTimeout(timer);
     }, [selectedIndex]);
 
-    // Return loading state if tanks not yet loaded
+    // TODO use the loading screen and error screen components
     if (loading) {
         return (
             <div className="flex flex-col h-screen bg-gray-900 text-white items-center justify-center">
@@ -89,7 +88,6 @@ function TankSelection() {
         );
     }
 
-    // Return error state if failed to load tanks
     if (error) {
         return (
             <div className="flex flex-col h-screen bg-gray-900 text-white items-center justify-center">
@@ -110,10 +108,8 @@ function TankSelection() {
     const goNext = () => setSelectedIndex((prev) => (prev + 1) % tanksData.length);
     const goPrev = () => setSelectedIndex((prev) => (prev - 1 + tanksData.length) % tanksData.length);
 
-    // Pass selected tank to game controller
     const handleSelect = () => {
-        // Store selected tank type in session storage or context
-        sessionStorage.setItem('tank-type', selectedTank.codeName);
+        sessionStorage.setItem('tank', JSON.stringify(selectedTank));
         navigate('/tanki.io/controller');
     };
 

@@ -7,7 +7,6 @@ import Joystick from '../components/mobile/controller/Joystick';
 import PlayerStatus from '../components/mobile/controller/PlayerStatus';
 import RespawnCountdown from '../components/mobile/screens/CountdownScreen';
 import useConnectionManager from '../hooks/useConnectionManager';
-import tanksConfig from '../../../server/src/config/tanksConfig';
 
 export default function Controller() {
     const containerRef = useRef(null);
@@ -15,7 +14,7 @@ export default function Controller() {
     const {
         isConnecting,
         username,
-        tankType,
+        tank,
         health,
         score,
         respawnCountdown,
@@ -24,8 +23,7 @@ export default function Controller() {
         handleAim
     } = useConnectionManager();
 
-    // TODO: fix this by storing the tank details inside local
-    const tankColor = tankType && tanksConfig[tankType] ? tanksConfig[tankType].color : '#ff8c00';
+    const tankColor = tank?.color ?? '#ff8c00';
 
     // Loading screen
     if (isConnecting) {
@@ -85,7 +83,7 @@ export default function Controller() {
             <div className="absolute top-0 left-0 right-0 p-4 z-10">
                 <PlayerStatus
                     username={username}
-                    tankType={tankType}
+                    tankType={tank?.codeName}
                     health={health}
                     score={score}
                     tankColor={tankColor}
