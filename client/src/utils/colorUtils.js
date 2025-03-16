@@ -24,3 +24,30 @@ export function shadeColor(color, percent) {
 
     return `#${R}${G}${B}`;
 }
+
+
+/**
+ * Function to apply opacity to color
+ * @param {string} color - Hex, rgb, or rgba color code
+ * @param {number} opacity - Opacity value between 0 and 1
+ * @returns 
+ */
+export function withOpacity(color, opacity) {
+    // Check if color is already in rgba format
+    if (color.startsWith('rgba')) {
+        return color.replace(/rgba\((.+?),\s*[\d.]+\)/, `rgba($1, ${opacity})`);
+    }
+    // Check if color is in hex format
+    else if (color.startsWith('#')) {
+        // Convert hex to rgb
+        const r = parseInt(color.slice(1, 3), 16);
+        const g = parseInt(color.slice(3, 5), 16);
+        const b = parseInt(color.slice(5, 7), 16);
+        return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+    }
+    // Handle rgb format
+    else if (color.startsWith('rgb')) {
+        return color.replace('rgb', 'rgba').replace(')', `, ${opacity})`);
+    }
+    return color;
+};
