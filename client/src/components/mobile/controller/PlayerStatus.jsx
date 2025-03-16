@@ -3,7 +3,7 @@ import { withOpacity } from '../../../utils/colorUtils';
 function PlayerStatus({ username, tankType, health, score = 0, tankColor = '#ff8c00' }) {
     // Calculate health percentage for progress bar
     // TODO : make the 3 match the max health in the server
-    const healthPercentage = Math.max(0, Math.min(100, (health / 3) * 100));
+    const healthPercentage = Math.max(0, Math.min(100, (health / 100) * 100));
 
     const clipPathStyle = "polygon(0% 0%, 100% 0%, 98% 100%, 0% 100%, 2% 50%)";
 

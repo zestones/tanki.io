@@ -5,10 +5,6 @@ export class Tank extends Schema {
         super();
         this.type = tankType; // Code name (ST-N01, GD-N02, etc.)
 
-        this.health = 3;
-        this.damage = 3;
-        this.speed = 3;
-
         this.level = 1;
         this.xp = 0;
 

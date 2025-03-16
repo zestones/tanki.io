@@ -2,7 +2,7 @@ export default {
     "ST-N01": {
         name: "SENTINEL",
         stats: {
-            health: 3,
+            defense: 3,
             damage: 3,
             speed: 6,
             specialty: "Adaptive"
@@ -24,7 +24,7 @@ export default {
     "GD-N02": {
         name: "GUARDIAN",
         stats: {
-            health: 5,
+            defense: 5,
             damage: 2,
             speed: 3,
             specialty: "Shield Projection"
@@ -46,7 +46,7 @@ export default {
     "SH-N03": {
         name: "SHREDDER",
         stats: {
-            health: 3,
+            defense: 3,
             damage: 5,
             speed: 4,
             specialty: "Area Damage"
@@ -68,7 +68,7 @@ export default {
     "JG-N04": {
         name: "JUGGERNAUT",
         stats: {
-            health: 4,
+            defense: 4,
             damage: 5,
             speed: 2,
             specialty: "Breakthrough"
@@ -90,7 +90,7 @@ export default {
     "TB-N05": {
         name: "THUNDERBOLT",
         stats: {
-            health: 3,
+            defense: 3,
             damage: 4,
             speed: 5,
             specialty: "EMP Strike"
