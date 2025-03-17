@@ -22,7 +22,6 @@ function TankDetails({ selectedTank, animateIn }) {
         setActiveTab(tab);
     };
 
-    // Enhanced animations with Arknights-style effects
     const containerVariants = {
         hidden: { opacity: 0 },
         visible: {
@@ -157,7 +156,6 @@ function TankDetails({ selectedTank, animateIn }) {
                 ))}
             </div>
 
-            {/* Content area with enhanced Arknights-style tab transitions */}
             <div className="p-4 space-y-4 relative">
                 {/* Geometric accent element */}
                 <motion.div

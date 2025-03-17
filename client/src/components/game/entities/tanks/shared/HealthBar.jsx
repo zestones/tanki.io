@@ -6,8 +6,7 @@ function HealthBar({ hp, x, y, size, color }) {
         <>
             {/* Health bar background */}
             <Rect
-                x={x - 25
-                }
+                x={x - 25}
                 y={y - size - 15}
                 width={50}
                 height={8}
@@ -23,7 +22,7 @@ function HealthBar({ hp, x, y, size, color }) {
             <Rect
                 x={x - 23}
                 y={y - size - 14}
-                width={(hp / 3) * 46}
+                width={(hp / 100) * 46}
                 height={6}
                 fill={color}
                 cornerRadius={3}

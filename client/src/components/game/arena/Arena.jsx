@@ -11,8 +11,6 @@ import { tankComponentMap } from '../../../utils/tankComponentMap';
 function Arena({ gameState }) {
     const { arenaWidth, arenaHeight, players, bullets, explosions } = gameState;
 
-    const cornerSize = 100;
-
     return (
         <>
             <Rect
@@ -48,46 +46,40 @@ function Arena({ gameState }) {
                 strokeWidth={2}
             />
 
-            <Group>
-                {/* Top left */}
-                <Line
-                    points={[0, 0, cornerSize, 0, cornerSize, 2, 2, 2, 2, cornerSize, 0, cornerSize]}
-                    closed={true}
-                    fill="rgba(255, 255, 255, 0.2)"
-                />
-                {/* Top right */}
-                <Line
-                    points={[arenaWidth, 0, arenaWidth - cornerSize, 0, arenaWidth - cornerSize, 2, arenaWidth - 2, 2, arenaWidth - 2, cornerSize, arenaWidth, cornerSize]}
-                    closed={true}
-                    fill="rgba(255, 255, 255, 0.2)"
-                />
-                {/* Bottom left */}
-                <Line
-                    points={[0, arenaHeight, cornerSize, arenaHeight, cornerSize, arenaHeight - 2, 2, arenaHeight - 2, 2, arenaHeight - cornerSize, 0, arenaHeight - cornerSize]}
-                    closed={true}
-                    fill="rgba(255, 255, 255, 0.2)"
-                />
-                {/* Bottom right */}
-                <Line
-                    points={[arenaWidth, arenaHeight, arenaWidth - cornerSize, arenaHeight, arenaWidth - cornerSize, arenaHeight - 2, arenaWidth - 2, arenaHeight - 2, arenaWidth - 2, arenaHeight - cornerSize, arenaWidth, arenaHeight - cornerSize]}
-                    closed={true}
-                    fill="rgba(255, 255, 255, 0.2)"
-                />
-            </Group>
-
-            {/* Decorative center lines */}
+            {/* Hexagonal center decoration */}
             <Group>
                 <Line
-                    points={[arenaWidth / 2, 0, arenaWidth / 2, arenaHeight]}
-                    stroke="rgba(255, 255, 255, 0.05)"
-                    strokeWidth={1}
-                    dash={[10, 20]}
+                    points={[
+                        arenaWidth / 2, arenaHeight / 2 - 80,
+                        arenaWidth / 2 + 70, arenaHeight / 2 - 40,
+                        arenaWidth / 2 + 70, arenaHeight / 2 + 40,
+                        arenaWidth / 2, arenaHeight / 2 + 80,
+                        arenaWidth / 2 - 70, arenaHeight / 2 + 40,
+                        arenaWidth / 2 - 70, arenaHeight / 2 - 40
+                    ]}
+                    closed={true}
+                    stroke="rgba(78, 201, 255, 0.4)"
+                    strokeWidth={1.5}
+                    dash={[10, 5]}
+                    shadowColor="rgba(78, 201, 255, 0.6)"
+                    shadowBlur={10}
+                    shadowOpacity={0.3}
                 />
                 <Line
-                    points={[0, arenaHeight / 2, arenaWidth, arenaHeight / 2]}
-                    stroke="rgba(255, 255, 255, 0.05)"
+                    points={[
+                        arenaWidth / 2, arenaHeight / 2 - 40,
+                        arenaWidth / 2 + 35, arenaHeight / 2 - 20,
+                        arenaWidth / 2 + 35, arenaHeight / 2 + 20,
+                        arenaWidth / 2, arenaHeight / 2 + 40,
+                        arenaWidth / 2 - 35, arenaHeight / 2 + 20,
+                        arenaWidth / 2 - 35, arenaHeight / 2 - 20
+                    ]}
+                    closed={true}
+                    stroke="rgba(255, 140, 0, 0.4)"
                     strokeWidth={1}
-                    dash={[10, 20]}
+                    shadowColor="rgba(255, 140, 0, 0.6)"
+                    shadowBlur={10}
+                    shadowOpacity={0.3}
                 />
             </Group>
 

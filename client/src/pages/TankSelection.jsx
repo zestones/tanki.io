@@ -14,6 +14,8 @@ import { tankComponentMap } from '../utils/tankComponentMap';
 import useLayoutSpacing from '../hooks/useLayoutSpacing';
 import useViewportSize from '../hooks/useViewportSize';
 import { config } from '../config/config';
+import LoadingScreen from '../components/common/LoadingScreen';
+import ErrorScreen from '../components/common/ErrorScreen';
 
 function TankSelection() {
     const rootRef = useRef(null);
@@ -36,7 +38,6 @@ function TankSelection() {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const data = await response.json();
-                console.log(data);
 
                 // Convert object to array of tanks with codeName as key
                 const tanksArray = Object.entries(data).map(([codeName, tankData]) => ({
@@ -79,29 +80,13 @@ function TankSelection() {
         return () => clearTimeout(timer);
     }, [selectedIndex]);
 
-    // Return loading state if tanks not yet loaded
+    // TODO use the loading screen and error screen components
     if (loading) {
-        return (
-            <div className="flex flex-col h-screen bg-gray-900 text-white items-center justify-center">
-                <div className="animate-spin w-12 h-12 border-4 border-t-blue-500 rounded-full"></div>
-                <p className="mt-4">Loading tanks data...</p>
-            </div>
-        );
+        return <LoadingScreen title={'Initializing Tanks'} message={'Retrieving tank data from the tactical warfare network... Please wait.'} />;
     }
 
-    // Return error state if failed to load tanks
     if (error) {
-        return (
-            <div className="flex flex-col h-screen bg-gray-900 text-white items-center justify-center">
-                <p className="text-red-500">Error loading tanks: {error}</p>
-                <button
-                    onClick={() => window.location.reload()}
-                    className="mt-4 px-4 py-2 bg-blue-500 rounded"
-                >
-                    Retry
-                </button>
-            </div>
-        );
+        return <ErrorScreen error={error} />;
     }
 
     const selectedTank = tanksData[selectedIndex];
@@ -110,10 +95,8 @@ function TankSelection() {
     const goNext = () => setSelectedIndex((prev) => (prev + 1) % tanksData.length);
     const goPrev = () => setSelectedIndex((prev) => (prev - 1 + tanksData.length) % tanksData.length);
 
-    // Pass selected tank to game controller
     const handleSelect = () => {
-        // Store selected tank type in session storage or context
-        sessionStorage.setItem('tank-type', selectedTank.codeName);
+        sessionStorage.setItem('tank', JSON.stringify(selectedTank));
         navigate('/tanki.io/controller');
     };
 

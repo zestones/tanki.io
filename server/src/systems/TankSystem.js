@@ -8,15 +8,14 @@ export default class TankSystem {
 
     createTank(type) {
         if (!this.tanksConfig[type]) {
-            // Default to SENTINEL if invalid type
-            type = "ST-N01";
+            type = "ST-N01"; // Default to SENTINEL if invalid type
         }
 
         const tank = new Tank(type);
         const config = this.tanksConfig[type];
 
         // Apply base stats from config
-        tank.health = config.stats.health;
+        tank.defense = config.stats.defense;
         tank.damage = config.stats.damage;
         tank.speed = config.stats.speed;
         tank.specialty = config.stats.specialty;

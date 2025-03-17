@@ -90,6 +90,51 @@ To switch between these modes, you can:
 
 For local network play, make sure you've set up your `ipConfig.js` file as described in the Setup section.
 
+## Game Mechanics
+
+### Damage System
+
+The game uses a balanced damage formula that accounts for both attacking power and defensive capabilities:
+
+**Damage Formula:**
+
+```plaintext
+Final Damage = ceiling[(Base Damage + Scaled Damage) × Defense Multiplier]
+```
+
+Where:
+
+- Base Damage = 20 (constant minimum damage)
+- Scaled Damage = Attacker's Tank Damage × 2
+- Defense Multiplier = max(0.7, 1 - (Defense × 0.025))
+- Defense reduces damage by 2.5% per point (maximum 30% reduction)
+
+**Examples:**
+
+- Tank with Damage 1 attacking Tank with Defense 1:
+  - Raw Damage: 20 + (1 × 2) = 22
+  - Defense Multiplier: max(0.7, 1 - (1 × 0.025)) = 0.975
+  - Final Damage: ceiling(22 × 0.975) = 22
+  - Shots to kill (100 HP): 5
+
+- Tank with Damage 10 attacking Tank with Defense 1:
+  - Raw Damage: 20 + (10 × 2) = 40
+  - Defense Multiplier: max(0.7, 1 - (1 × 0.025)) = 0.975
+  - Final Damage: ceiling(40 × 0.975) = 39
+  - Shots to kill (100 HP): 3
+
+- Tank with Damage 1 attacking Tank with Defense 10:
+  - Raw Damage: 20 + (1 × 2) = 22
+  - Defense Multiplier: max(0.7, 1 - (10 × 0.025)) = 0.75
+  - Final Damage: ceiling(22 × 0.75) = 17
+  - Shots to kill (100 HP): 6
+
+- Tank with Damage 10 attacking Tank with Defense 10:
+  - Raw Damage: 20 + (10 × 2) = 40
+  - Defense Multiplier: max(0.7, 1 - (10 × 0.025)) = 0.75
+  - Final Damage: ceiling(40 × 0.75) = 30
+  - Shots to kill (100 HP): 4
+
 ## Controls
 
 - Arrow buttons: Move tank (Up, Down, Left, Right)

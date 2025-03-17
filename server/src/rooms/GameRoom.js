@@ -53,7 +53,7 @@ export class GameRoom extends Room {
             }
         });
 
-        // TODO : Legacy shoot handler (can keep for backward compatibility with tests)
+        // TODO : Legacy shoot handler (keeped for backward compatibility with tests)
         this.onMessage("shoot", (client) => {
             const player = this.state.players.get(client.sessionId);
             this.inputController.handleShootInput(player, client.sessionId);
@@ -72,12 +72,9 @@ export class GameRoom extends Room {
         });
     }
 
-    // Rest of the code remains the same
     onJoin(client, options) {
         // Don't create a player for spectators
-        if (options.isSpectator) {
-            return;
-        }
+        if (options.isSpectator) return;
 
         console.log('Player joining', options);
 
@@ -108,23 +105,5 @@ export class GameRoom extends Room {
         this.collisionSystem.checkBulletPlayerCollisions();
         this.explosionSystem.updateExplosions();
         this.respawnSystem.checkRespawns();
-    }
-
-    onPlayerKill(killer, victim) {
-        // Your existing code to handle kills
-
-        // Add XP rewards
-        if (killer && this.state.players.has(killer)) {
-            const killerPlayer = this.state.players.get(killer);
-            const levelUp = this.tankSystem.addXp(killerPlayer.tank, 50);
-
-            // Notify player of XP gain and potential level up
-            this.clients.getById(killer)?.send("xpGained", {
-                xp: 50,
-                levelUp,
-                currentXp: killerPlayer.tank.xp,
-                nextLevelXp: this.tankSystem.calculateXpForNextLevel(killerPlayer.tank.level)
-            });
-        }
     }
 }
