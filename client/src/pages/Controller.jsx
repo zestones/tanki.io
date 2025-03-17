@@ -6,11 +6,11 @@ import LoadingScreen from '../components/common/LoadingScreen';
 import Joystick from '../components/mobile/controller/Joystick';
 import PlayerStatus from '../components/mobile/controller/PlayerStatus';
 import RespawnCountdown from '../components/mobile/screens/CountdownScreen';
-import TankVisualization from '../components/mobile/modal/TankVisualization';
+import TankVisualization from '../components/mobile/screens/tankUpgradeScreen/TankUpgradeScreen';
 import useConnectionManager from '../hooks/useConnectionManager';
 import { tankComponentMap } from '../utils/tankComponentMap';
 
-export default function Controller() {
+function Controller() {
     const containerRef = useRef(null);
     const [showTankStats, setShowTankStats] = useState(false);
 
@@ -30,7 +30,7 @@ export default function Controller() {
 
     // Loading screen
     if (isConnecting) {
-        return <LoadingScreen />;
+        return <LoadingScreen title={'Initiating Combat Systems'} message={'Establishing neural link to tactical warfare network... Stand by, Commander.'} />;
     }
 
     return (
@@ -166,3 +166,5 @@ export default function Controller() {
         </div>
     );
 }
+
+export default Controller;
