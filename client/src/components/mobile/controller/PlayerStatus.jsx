@@ -1,6 +1,11 @@
 import PropTypes from 'prop-types';
 import { withOpacity } from '../../../utils/colorUtils';
-function PlayerStatus({ username, tankType, health, score = 0, tankColor = '#ff8c00' }) {
+import ScanTechButton from '../buttons/ScanTechButton';
+import StatsButtonIcon from '../buttons/StatsButtonIcon';
+
+
+
+function PlayerStatus({ onToggleStats, username, tankType, health, score = 0, tankColor = '#ff8c00' }) {
     // Calculate health percentage for progress bar
     // TODO : make the 3 match the max health in the server
     const healthPercentage = Math.max(0, Math.min(100, (health / 100) * 100));
@@ -51,11 +56,11 @@ function PlayerStatus({ username, tankType, health, score = 0, tankColor = '#ff8
                             OPERATOR
                         </div>
                     </div>
-                    <div className="text-xs mt-0.5 font-mono" style={{ color: withOpacity(tankColor, 0.7) }}>{tankType}//ACTIVE</div>
+                    <div className="text-xs mt-0.5 font-mono" style={{ color: withOpacity(tankColor, 0.7) }}>{tankType}{'//ACTIVE'}</div>
                 </div>
             </div>
 
-            <div className="flex items-center gap-5 z-10">
+            <div className="flex items-center gap-3 z-10">
                 <div className="flex flex-col">
                     <div className="flex items-center mb-1">
                         <span className="text-sm font-mono mr-1" style={{ color: tankColor }}>HP</span>
@@ -65,7 +70,7 @@ function PlayerStatus({ username, tankType, health, score = 0, tankColor = '#ff8
                         <div className="absolute inset-0 flex">
                             {[...Array(10)].map((_, i) => (
                                 <div
-                                    key={i}
+                                    key={'health-bar-' + i}
                                     className="h-full flex-1 mx-px"
                                     style={{
                                         backgroundColor: i * 10 < healthPercentage ? tankColor : 'transparent',
@@ -77,34 +82,38 @@ function PlayerStatus({ username, tankType, health, score = 0, tankColor = '#ff8
                     </div>
                 </div>
 
-                <div className="flex flex-col items-end"></div>
-                <div className="flex items-center mb-1">
-                    <span className="text-sm font-mono mr-1">{score}</span>
-                    <span className="text-xs font-mono px-1 border" style={{
-                        backgroundColor: withOpacity(tankColor, 0.2),
-                        color: tankColor,
-                        borderColor: withOpacity(tankColor, 0.4)
-                    }}>PTS</span>
+                <div className="flex flex-col items-end">
+                    <div className="flex items-center mb-1">
+                        <span className="text-sm font-mono mr-1">{score}</span>
+                        <span className="text-xs font-mono px-1 border" style={{
+                            backgroundColor: withOpacity(tankColor, 0.2),
+                            color: tankColor,
+                            borderColor: withOpacity(tankColor, 0.4)
+                        }}>PTS</span>
+                    </div>
                 </div>
-                <div
-                    className="text-xs font-mono border px-1"
-                    style={{
-                        clipPath: "polygon(0% 0%, 100% 0%, 90% 100%, 0% 100%)",
-                        color: tankColor,
-                        borderColor: withOpacity(tankColor, 0.3)
-                    }}
-                ></div>
+
+                {/* Arknights-style Tank Stats Toggle Button */}
+                <ScanTechButton
+                    onClose={onToggleStats}
+                    text='STATS'
+                    icon={<StatsButtonIcon color={tankColor} />}
+                    color={tankColor}
+                    className="relative h-12 ml-1 focus:outline-none active:opacity-80 transition-opacity duration-100"
+                    ariaLabel="Toggle tank stats"
+                />
             </div>
         </div>
     );
 }
 
 PlayerStatus.propTypes = {
+    onToggleStats: PropTypes.func.isRequired,
     username: PropTypes.string.isRequired,
     tankType: PropTypes.string.isRequired,
     health: PropTypes.number.isRequired,
     score: PropTypes.number,
-    tankColor: PropTypes.string
+    tankColor: PropTypes.string,
 };
 
 export default PlayerStatus;

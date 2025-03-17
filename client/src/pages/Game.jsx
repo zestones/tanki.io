@@ -12,7 +12,7 @@ import LoadingScreen from '../components/common/LoadingScreen';
 import { config } from '../config/config';
 import useViewportSize from '../hooks/useViewportSize';
 
-export default function Game() {
+function Game() {
     const [gameState, setGameState] = useState({
         players: new Map(),
         bullets: [],
@@ -71,7 +71,7 @@ export default function Game() {
     }, []);
 
     if (isConnecting) {
-        return <LoadingScreen />;
+        return <LoadingScreen title={'Connecting to the battlefield'} message={'Establishing secure connection to the tactical warfare network... Please wait.'} />;
     }
 
     if (error) {
@@ -128,3 +128,5 @@ export default function Game() {
         </div>
     );
 }
+
+export default Game;

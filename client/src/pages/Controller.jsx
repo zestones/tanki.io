@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 
 import { withOpacity } from '../utils/colorUtils';
 
@@ -6,10 +6,13 @@ import LoadingScreen from '../components/common/LoadingScreen';
 import Joystick from '../components/mobile/controller/Joystick';
 import PlayerStatus from '../components/mobile/controller/PlayerStatus';
 import RespawnCountdown from '../components/mobile/screens/CountdownScreen';
+import TankVisualization from '../components/mobile/screens/tankUpgradeScreen/TankUpgradeScreen';
 import useConnectionManager from '../hooks/useConnectionManager';
+import { tankComponentMap } from '../utils/tankComponentMap';
 
-export default function Controller() {
+function Controller() {
     const containerRef = useRef(null);
+    const [showTankStats, setShowTankStats] = useState(false);
 
     const {
         isConnecting,
@@ -27,7 +30,7 @@ export default function Controller() {
 
     // Loading screen
     if (isConnecting) {
-        return <LoadingScreen />;
+        return <LoadingScreen title={'Initiating Combat Systems'} message={'Establishing neural link to tactical warfare network... Stand by, Commander.'} />;
     }
 
     return (
@@ -80,68 +83,88 @@ export default function Controller() {
                 <RespawnCountdown countdown={respawnCountdown} />
             )}
 
-            <div className="absolute top-0 left-0 right-0 p-4 z-10">
-                <PlayerStatus
-                    username={username}
-                    tankType={tank?.codeName}
-                    health={health}
-                    score={score}
-                    tankColor={tankColor}
-                />
-            </div>
+            {!showTankStats && (
+                <>
+                    <div className="absolute top-0 left-0 right-0 p-4 z-10">
+                        <PlayerStatus
+                            onToggleStats={() => setShowTankStats(true)}
+                            username={username}
+                            tankType={tank?.codeName}
+                            health={health}
+                            score={score}
+                            tankColor={tankColor}
+                        />
+                    </div>
 
-            <div className="absolute bottom-10 left-10 z-10">
-                <div className="relative">
-                    <div className="absolute -inset-4 -z-10">
-                        <svg viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-                            <polygon
-                                points="30,15 150,15 170,90 150,165 30,165 10,90"
-                                fill="rgba(0,0,0,0.7)"
-                                stroke="rgba(0,128,255,0.5)"
-                                strokeWidth="2"
+
+                    <div className="absolute bottom-10 left-10 z-10">
+                        <div className="relative">
+                            <div className="absolute -inset-4 -z-10">
+                                <svg viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+                                    <polygon
+                                        points="30,15 150,15 170,90 150,165 30,165 10,90"
+                                        fill="rgba(0,0,0,0.7)"
+                                        stroke="rgba(0,128,255,0.5)"
+                                        strokeWidth="2"
+                                    />
+                                </svg>
+                            </div>
+                            <div className="absolute -top-8 left-0 text-xs text-blue-400 font-mono tracking-wider">
+                                |TACTICAL MOVEMENT|
+                            </div>
+                            <div className="absolute -bottom-6 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-blue-500/30 to-transparent"></div>
+
+                            <Joystick
+                                onMove={handleMove}
+                                onStop={handleStopMoving}
+                                type="movement"
                             />
-                        </svg>
+                        </div>
                     </div>
-                    <div className="absolute -top-8 left-0 text-xs text-blue-400 font-mono tracking-wider">
-                        |TACTICAL MOVEMENT|
-                    </div>
-                    <div className="absolute -bottom-6 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-blue-500/30 to-transparent"></div>
 
-                    <Joystick
-                        onMove={handleMove}
-                        onStop={handleStopMoving}
-                        type="movement"
-                    />
-                </div>
-            </div>
+                    <div className="absolute bottom-10 right-10 z-10">
+                        <div className="relative">
+                            <div className="absolute -inset-4 -z-10">
+                                <svg viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+                                    <polygon
+                                        points="30,15 150,15 170,90 150,165 30,165 10,90"
+                                        fill="rgba(0,0,0,0.7)"
+                                        stroke="rgba(255,0,0,0.5)"
+                                        strokeWidth="2"
+                                    />
+                                </svg>
+                            </div>
+                            <div className="absolute -top-8 right-0 text-xs text-red-600 font-mono tracking-wider">
+                                |WEAPON SYSTEMS|
+                            </div>
+                            <div className="absolute -bottom-6 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-red-600/30 to-transparent"></div>
 
-            <div className="absolute bottom-10 right-10 z-10">
-                <div className="relative">
-                    <div className="absolute -inset-4 -z-10">
-                        <svg viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-                            <polygon
-                                points="30,15 150,15 170,90 150,165 30,165 10,90"
-                                fill="rgba(0,0,0,0.7)"
-                                stroke="rgba(255,0,0,0.5)"
-                                strokeWidth="2"
+                            <Joystick
+                                onMove={handleAim}
+                                onStop={handleStopMoving}
+                                type="aiming"
                             />
-                        </svg>
+                        </div>
                     </div>
-                    <div className="absolute -top-8 right-0 text-xs text-red-600 font-mono tracking-wider">
-                        |WEAPON SYSTEMS|
-                    </div>
-                    <div className="absolute -bottom-6 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-red-600/30 to-transparent"></div>
-
-                    <Joystick
-                        onMove={handleAim}
-                        onStop={handleStopMoving}
-                        type="aiming"
-                    />
-                </div>
-            </div>
+                </>
+            )}
 
             <div className="absolute bottom-0 left-0 right-0 h-1" style={{ background: `linear-gradient(to right, ${withOpacity(tankColor, 0.5)}, transparent, ${withOpacity(tankColor, 0.5)})` }}></div>
             <div className="absolute inset-0 bg-[linear-gradient(transparent_50%,rgba(0,0,0,0.03)_50%)] bg-[length:100%_2px] pointer-events-none z-10"></div>
+
+            {showTankStats && (
+
+                <TankVisualization
+                    onClose={() => setShowTankStats(false)}
+                    TankComponent={tankComponentMap[tank?.codeName]}
+                    tankColor={tankColor}
+                    stats={tank?.stats}
+                    username={username}
+                />
+            )}
+
         </div>
     );
 }
+
+export default Controller;
