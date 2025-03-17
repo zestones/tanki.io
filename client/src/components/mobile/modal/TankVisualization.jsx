@@ -4,11 +4,16 @@ import { withOpacity } from '../../../utils/colorUtils';
 import { Stage, Layer } from 'react-konva';
 import SchemaLabel from './SchemaLabel';
 
-function TankVisualization({ TankComponent, tankColor, stats, username }) {
+function TankVisualization({ TankComponent, tankColor, stats: initialStats, username, onStatsChange }) {
     const [scale, setScale] = useState(1);
     const [tankRotation, setTankRotation] = useState(0);
     const containerRef = useRef(null);
     const lastDistance = useRef(null);
+
+    // Stats management
+    const [stats, setStats] = useState(initialStats || { defense: 0, damage: 0, speed: 0, specialty: 'N/A' });
+    const [upgradePoints, setUpgradePoints] = useState(5); // Starting upgrade points
+    const [upgradeEffect, setUpgradeEffect] = useState(null);
 
     // Auto-rotation effect
     useEffect(() => {
@@ -18,11 +23,59 @@ function TankVisualization({ TankComponent, tankColor, stats, username }) {
         return () => clearInterval(interval);
     }, []);
 
+    const handleUpgradeStat = (statName) => {
+        if (upgradePoints <= 0 || stats[statName] >= 10) return;
+
+        // Apply upgrade
+        const newStats = {
+            ...stats,
+            [statName]: Math.min(stats[statName] + 1, 10)
+        };
+
+        setStats(newStats);
+        setUpgradePoints(prev => prev - 1);
+
+        // Trigger upgrade effect animation
+        setUpgradeEffect(statName);
+        setTimeout(() => setUpgradeEffect(null), 1000);
+
+        // Notify parent component if provided
+        if (onStatsChange) {
+            onStatsChange(newStats);
+        }
+    };
+
     const schemaPoints = [
-        { x: -120, y: -80, label: 'ARMOR PLATING', value: `${stats?.defense || 0}/10` },
-        { x: 120, y: -80, label: 'WEAPON SYSTEMS', value: `${stats?.damage || 0}/10` },
-        { x: -120, y: 80, label: 'ENGINE OUTPUT', value: `${stats?.speed || 0}/10` },
-        { x: 120, y: 80, label: 'SPECIALTY', value: stats?.specialty || 'N/A' }
+        {
+            x: -120,
+            y: -80,
+            label: 'ARMOR PLATING',
+            value: `${stats?.defense || 0}/10`,
+            statKey: 'defense',
+            upgradable: stats?.defense < 10 && upgradePoints > 0
+        },
+        {
+            x: 120,
+            y: -80,
+            label: 'WEAPON SYSTEMS',
+            value: `${stats?.damage || 0}/10`,
+            statKey: 'damage',
+            upgradable: stats?.damage < 10 && upgradePoints > 0
+        },
+        {
+            x: -120,
+            y: 80,
+            label: 'ENGINE OUTPUT',
+            value: `${stats?.speed || 0}/10`,
+            statKey: 'speed',
+            upgradable: stats?.speed < 10 && upgradePoints > 0
+        },
+        {
+            x: 120,
+            y: 80,
+            label: 'SPECIALTY',
+            value: stats?.specialty || 'N/A'
+        }
     ];
 
     const handleTouchStart = (e) => {
@@ -115,6 +168,8 @@ function TankVisualization({ TankComponent, tankColor, stats, username }) {
                         key={index}
                         point={point}
                         tankColor={tankColor}
+                        onUpgrade={point.statKey ? () => handleUpgradeStat(point.statKey) : null}
+                        upgradeEffect={upgradeEffect === point.statKey}
                     />
                 ))}
             </svg>
@@ -141,7 +196,6 @@ function TankVisualization({ TankComponent, tankColor, stats, username }) {
                         </Layer>
                     </Stage>
                 </div>
-
             </div>
 
             {/* Grid overlay */}
@@ -157,9 +211,99 @@ function TankVisualization({ TankComponent, tankColor, stats, username }) {
             <div className="absolute bottom-0 left-0 w-6 h-6 border-b-2 border-l-2" style={{ borderColor: tankColor }}></div>
             <div className="absolute bottom-0 right-0 w-6 h-6 border-b-2 border-r-2" style={{ borderColor: tankColor }}></div>
 
-            {/* Updated zoom instructions */}
+            {/* Arknights-style Upgrade Points Display */}
+            <div className="absolute top-4 right-4 flex flex-col items-end">
+                <div className="relative">
+                    {/* Main container */}
+                    <svg width="150" height="60" viewBox="0 0 150 60" className="filter drop-shadow-lg">
+                        {/* Main background shape */}
+                        <polygon
+                            points="15,0 150,0 150,40 135,60 0,60 0,20"
+                            fill="rgba(10,12,18,0.9)"
+                            stroke={tankColor}
+                            strokeWidth="1.5"
+                        />
+
+                        {/* Left accent bar */}
+                        <rect x="0" y="20" width="5" height="40" fill={tankColor} />
+
+                        {/* Tech accent lines */}
+                        <line x1="15" y1="0" x2="0" y2="20" stroke={tankColor} strokeWidth="1" />
+                        <line x1="150" y1="40" x2="135" y2="60" stroke={tankColor} strokeWidth="1" />
+
+                        {/* Decorative elements */}
+                        <rect x="125" y="0" width="25" height="5" fill={tankColor} />
+                        <rect x="0" y="30" width="150" height="1" fill={withOpacity(tankColor, 0.3)} />
+                        <rect x="20" y="45" width="115" height="1" fill={withOpacity(tankColor, 0.2)} />
+                    </svg>
+
+                    {/* Content overlay */}
+                    <div className="absolute inset-0 flex items-center px-3">
+                        {/* Left side - label */}
+                        <div className="flex flex-col mr-3">
+                            <span className="text-[10px] font-mono leading-tight tracking-wider opacity-70 uppercase"
+                                style={{ color: withOpacity(tankColor, 0.8) }}>
+                                Tactical
+                            </span>
+                            <span className="text-xs font-mono leading-tight tracking-wider font-semibold uppercase"
+                                style={{ color: tankColor }}>
+                                Points
+                            </span>
+                        </div>
+
+                        {/* Right side - Hexagonal icon with number */}
+                        <div className="flex items-center">
+                            {/* Hexagonal icon */}
+                            <div className="relative mr-2">
+                                <svg width="26" height="30" viewBox="0 0 26 30">
+                                    {/* Base hexagon */}
+                                    <polygon
+                                        points="13,0 26,7.5 26,22.5 13,30 0,22.5 0,7.5"
+                                        fill="rgba(0,0,0,0.5)"
+                                        stroke={tankColor}
+                                        strokeWidth="1.5"
+                                    />
+                                    {/* Inner hexagon */}
+                                    <polygon
+                                        points="13,5 21,9.5 21,20.5 13,25 5,20.5 5,9.5"
+                                        fill="transparent"
+                                        stroke={withOpacity(tankColor, 0.7)}
+                                        strokeWidth="1"
+                                    />
+                                    {/* Center dot */}
+                                    <circle cx="13" cy="15" r="2" fill={tankColor} />
+                                    {/* Tech lines */}
+                                    <line x1="13" y1="5" x2="13" y2="0" stroke={withOpacity(tankColor, 0.7)} strokeWidth="1" />
+                                    <line x1="13" y1="25" x2="13" y2="30" stroke={withOpacity(tankColor, 0.7)} strokeWidth="1" />
+                                    <line x1="5" y1="9.5" x2="0" y2="7.5" stroke={withOpacity(tankColor, 0.7)} strokeWidth="1" />
+                                    <line x1="21" y1="9.5" x2="26" y2="7.5" stroke={withOpacity(tankColor, 0.7)} strokeWidth="1" />
+                                    <line x1="5" y1="20.5" x2="0" y2="22.5" stroke={withOpacity(tankColor, 0.7)} strokeWidth="1" />
+                                    <line x1="21" y1="20.5" x2="26" y2="22.5" stroke={withOpacity(tankColor, 0.7)} strokeWidth="1" />
+                                </svg>
+                            </div>
+
+                            {/* Number display */}
+                            <div className="flex flex-col items-center">
+                                <span className="text-2xl font-bold font-mono" style={{ color: tankColor }}>
+                                    {upgradePoints}
+                                </span>
+                                <div className="h-1 w-full" style={{ backgroundColor: withOpacity(tankColor, 0.5) }} />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Subtitle with tech border */}
+                <div className="mt-1 px-3 py-1 bg-black bg-opacity-70 relative" style={{ borderLeft: `2px solid ${tankColor}` }}>
+                    <span className="text-[10px] font-mono opacity-80" style={{ color: tankColor }}>
+                        UPGRADES AVAILABLE
+                    </span>
+                </div>
+            </div>
+
+            {/* Updated instructions */}
             <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-xs font-mono text-gray-400 opacity-50">
-                Pinch to zoom
+                Pinch to zoom • Tap + to upgrade
             </div>
         </div>
     );
@@ -174,7 +318,8 @@ TankVisualization.propTypes = {
         speed: PropTypes.number,
         specialty: PropTypes.string
     }),
-    username: PropTypes.string.isRequired
+    username: PropTypes.string.isRequired,
+    onStatsChange: PropTypes.func
 };
 
 export default TankVisualization;
