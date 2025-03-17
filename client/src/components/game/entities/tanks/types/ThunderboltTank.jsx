@@ -19,10 +19,9 @@ function ThunderboltTank({ x, y, rotation, hp, username, isDead, color = "#9b59b
     const themeColor = '#00BFFF'; // Electric blue theme color
 
     // Set body color based on HP
-    let fillColor = "#4CAF50"; // Green for full health (hp = 3)
-    if (hp === 2) fillColor = "#FFC107"; // Yellow for medium health
-    if (hp === 1) fillColor = "#F44336"; // Red for low health
-
+    let fillColor = "#4CAF50";
+    if (hp <= 66 && hp > 33) fillColor = "#FFC107";
+    if (hp <= 33) fillColor = "#F44336";
     // Calculate rotation in radians and direction vectors
     const theta = (rotation * Math.PI) / 180;
     const dx = Math.cos(theta); // X-direction for barrel

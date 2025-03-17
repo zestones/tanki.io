@@ -3,17 +3,17 @@ import PropTypes from 'prop-types';
 import { useSpring, animated } from '@react-spring/web';
 import { useEffect, useState } from 'react';
 
-const MAX_STAT = 6;
+const MAX_STAT = 10;
 function TankStats({ selectedTank, spacing }) {
     const [animatedStats, setAnimatedStats] = useState({
-        health: false,
+        defense: false,
         damage: false,
         speed: false
     });
 
-    const healthFillProps = useSpring({
+    const defenseFillProps = useSpring({
         from: { height: '0%' },
-        to: { height: `${Math.min((selectedTank.stats.health / MAX_STAT) * 100, 100)}%` },
+        to: { height: `${Math.min((selectedTank.stats.defense / MAX_STAT) * 100, 100)}%` },
         config: { mass: 1, tension: 180, friction: 24 },
         delay: 100,
     });
@@ -37,7 +37,7 @@ function TankStats({ selectedTank, spacing }) {
         to: { transform: 'translateY(-3px)' },
         config: { duration: 1000, friction: 10 },
         loop: { reverse: true },
-        pause: !animatedStats.health,
+        pause: !animatedStats.defense,
     });
 
     const damageWaveProps = useSpring({
@@ -60,7 +60,7 @@ function TankStats({ selectedTank, spacing }) {
     useEffect(() => {
         const timer = setTimeout(() => {
             setAnimatedStats({
-                health: true,
+                defense: true,
                 damage: true,
                 speed: true
             });
@@ -122,10 +122,10 @@ function TankStats({ selectedTank, spacing }) {
     return (
         <div className={`flex justify-around px-8 ${spacing.tankStats} bg-gray-900 bg-opacity-70`}>
             {renderHexStat(
-                selectedTank.stats.health,
-                "HP",
+                selectedTank.stats.defense,
+                "DFS",
                 <Shield size={14} />,
-                healthFillProps,
+                defenseFillProps,
                 healthWaveProps
             )}
             {renderHexStat(
@@ -150,7 +150,7 @@ TankStats.propTypes = {
     selectedTank: PropTypes.shape({
         color: PropTypes.string.isRequired,
         stats: PropTypes.shape({
-            health: PropTypes.number.isRequired,
+            defense: PropTypes.number.isRequired,
             damage: PropTypes.number.isRequired,
             speed: PropTypes.number.isRequired
         }).isRequired

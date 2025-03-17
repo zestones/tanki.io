@@ -41,9 +41,9 @@ function ShredderTank({ x, y, rotation, hp, username, isDead, color = "#e74c3c" 
     const rightEndY = rightStartY + dy * sideBarrelLength;
 
     // Determine fill color based on health points
-    let fillColor = "#4CAF50"; // Green for full health (3 HP)
-    if (hp === 2) fillColor = "#FFC107"; // Yellow for 2 HP
-    if (hp === 1) fillColor = "#F44336"; // Red for 1 HP
+    let fillColor = "#4CAF50";
+    if (hp <= 66 && hp > 33) fillColor = "#FFC107";
+    if (hp <= 33) fillColor = "#F44336";
 
     return (
         <Group>

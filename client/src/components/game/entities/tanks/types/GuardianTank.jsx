@@ -14,8 +14,8 @@ function GuardianTank({ x, y, rotation, hp, username, isDead, color = "#3498db" 
 
     // Health-based color
     let fillColor = "#4CAF50";
-    if (hp === 2) fillColor = "#FFC107";
-    if (hp === 1) fillColor = "#F44336";
+    if (hp <= 66 && hp > 33) fillColor = "#FFC107";
+    if (hp <= 33) fillColor = "#F44336";
 
     // Barrel positioning calculations
     const theta = (rotation * Math.PI) / 180;

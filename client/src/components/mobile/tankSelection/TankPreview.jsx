@@ -21,7 +21,7 @@ function TankPreview({ selectedTank, tankRotation, animateIn, onNext, onPrev, Ta
                             x={size.width / 2}
                             y={size.height / 2}
                             rotation={tankRotation}
-                            hp={selectedTank.stats.health}
+                            hp={100}
                             username={selectedTank.name}
                             isDead={false}
                         />
@@ -57,7 +57,7 @@ function TankPreview({ selectedTank, tankRotation, animateIn, onNext, onPrev, Ta
 TankPreview.propTypes = {
     selectedTank: PropTypes.shape({
         stats: PropTypes.shape({
-            health: PropTypes.number.isRequired
+            defense: PropTypes.number.isRequired
         }).isRequired,
         name: PropTypes.string.isRequired,
         color: PropTypes.string.isRequired
