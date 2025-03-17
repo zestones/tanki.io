@@ -8,8 +8,10 @@ export default class ExplosionSystem {
 
     createExplosion(x, y) {
         const explosion = new Explosion();
+
         explosion.x = x;
         explosion.y = y;
+
         this.state.explosions.push(explosion);
     }
 
@@ -17,8 +19,10 @@ export default class ExplosionSystem {
         const explosion = new Explosion();
         explosion.x = x;
         explosion.y = y;
+
         explosion.maxRadius = gameConfig.TANK_EXPLOSION.maxRadius;
         explosion.duration = gameConfig.TANK_EXPLOSION.duration;
+
         this.state.explosions.push(explosion);
     }
 

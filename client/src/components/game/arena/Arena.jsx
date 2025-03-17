@@ -46,7 +46,6 @@ function Arena({ gameState }) {
                 strokeWidth={2}
             />
 
-            {/* Hexagonal center decoration */}
             <Group>
                 <Line
                     points={[
@@ -88,7 +87,12 @@ function Arena({ gameState }) {
             ))}
 
             {bullets.map((bullet, index) => (
-                <Bullet key={'bullet-' + index} bullet={bullet} />
+                <Bullet
+                    key={'bullet-' + index}
+                    bullet={bullet}
+                    tankType={players.get(bullet.ownerId)?.tank.type}
+                    color={players.get(bullet.ownerId)?.tank.color}
+                />
             ))}
 
             {Array.from(players.entries()).map(([sessionId, player]) => {

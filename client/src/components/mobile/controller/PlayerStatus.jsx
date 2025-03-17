@@ -93,7 +93,6 @@ function PlayerStatus({ onToggleStats, username, tankType, health, score = 0, ta
                     </div>
                 </div>
 
-                {/* Arknights-style Tank Stats Toggle Button */}
                 <ScanTechButton
                     onClose={onToggleStats}
                     text='STATS'
