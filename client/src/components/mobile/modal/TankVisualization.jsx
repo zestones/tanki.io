@@ -1,10 +1,11 @@
 import PropTypes from 'prop-types';
-import { useState, useRef, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { Layer, Stage } from 'react-konva';
 import { withOpacity } from '../../../utils/colorUtils';
-import { Stage, Layer } from 'react-konva';
+import ScanTechButton from '../buttons/ScanTechButton';
 import SchemaLabel from './SchemaLabel';
 
-function TankVisualization({ TankComponent, tankColor, stats: initialStats, username, onStatsChange }) {
+function TankVisualization({ onClose, TankComponent, tankColor, stats: initialStats, username, onStatsChange }) {
     const [scale, setScale] = useState(1);
     const [tankRotation, setTankRotation] = useState(0);
     const containerRef = useRef(null);
@@ -136,6 +137,14 @@ function TankVisualization({ TankComponent, tankColor, stats: initialStats, user
             ref={containerRef}
             className="relative w-full h-full flex items-center justify-center touch-none"
         >
+            <ScanTechButton
+                onClose={onClose}
+                text='CLOSE'
+                color={tankColor}
+                type="close"
+                className='absolute top-4 left-4 z-20 focus:outline-none active:opacity-80 transition-opacity duration-100'
+            />
+
             {/* Background hexagon */}
             <svg width="300" height="300" viewBox="0 0 300 300" className="absolute">
                 <polygon
@@ -165,7 +174,7 @@ function TankVisualization({ TankComponent, tankColor, stats: initialStats, user
             }}>
                 {schemaPoints.map((point, index) => (
                     <SchemaLabel
-                        key={index}
+                        key={'schema-point-' + index}
                         point={point}
                         tankColor={tankColor}
                         onUpgrade={point.statKey ? () => handleUpgradeStat(point.statKey) : null}
@@ -310,6 +319,7 @@ function TankVisualization({ TankComponent, tankColor, stats: initialStats, user
 }
 
 TankVisualization.propTypes = {
+    onClose: PropTypes.func.isRequired,
     TankComponent: PropTypes.func,
     tankColor: PropTypes.string.isRequired,
     stats: PropTypes.shape({
