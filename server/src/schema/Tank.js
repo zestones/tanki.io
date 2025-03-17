@@ -13,7 +13,7 @@ export class Tank extends Schema {
 }
 
 type("string")(Tank.prototype, "type");
-type("number")(Tank.prototype, "health");
+type("number")(Tank.prototype, "defense");
 type("number")(Tank.prototype, "damage");
 type("number")(Tank.prototype, "speed");
 type("string")(Tank.prototype, "specialty");

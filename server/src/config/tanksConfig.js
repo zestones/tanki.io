@@ -4,7 +4,7 @@ export default {
         stats: {
             defense: 3,
             damage: 3,
-            speed: 6,
+            speed: 4,
             specialty: "Adaptive"
         },
         abilities: ["Armor Plating", "Adaptive Systems"],
@@ -24,9 +24,9 @@ export default {
     "GD-N02": {
         name: "GUARDIAN",
         stats: {
-            defense: 5,
+            defense: 6,
             damage: 2,
-            speed: 3,
+            speed: 2,
             specialty: "Shield Projection"
         },
         abilities: ["Energy Shield", "Reactive Armor"],
@@ -46,9 +46,9 @@ export default {
     "SH-N03": {
         name: "SHREDDER",
         stats: {
-            defense: 3,
+            defense: 2,
             damage: 5,
-            speed: 4,
+            speed: 3,
             specialty: "Area Damage"
         },
         abilities: ["Rapid Fire", "Afterburner"],
@@ -70,7 +70,7 @@ export default {
         stats: {
             defense: 4,
             damage: 5,
-            speed: 2,
+            speed: 1,
             specialty: "Breakthrough"
         },
         abilities: ["Ramming Speed", "Heavy Artillery"],
@@ -90,8 +90,8 @@ export default {
     "TB-N05": {
         name: "THUNDERBOLT",
         stats: {
-            defense: 3,
-            damage: 4,
+            defense: 2,
+            damage: 3,
             speed: 5,
             specialty: "EMP Strike"
         },

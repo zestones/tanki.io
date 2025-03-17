@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useSpring, animated } from '@react-spring/web';
 import { useEffect, useState } from 'react';
 
-const MAX_STAT = 6;
+const MAX_STAT = 10;
 function TankStats({ selectedTank, spacing }) {
     const [animatedStats, setAnimatedStats] = useState({
         defense: false,
