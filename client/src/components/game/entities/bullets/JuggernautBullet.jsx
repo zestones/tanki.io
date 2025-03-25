@@ -10,7 +10,7 @@ function JuggernautBullet({ bullet }) {
             <Circle
                 x={bullet.x}
                 y={bullet.y}
-                radius={BULLET_SIZE * 4}
+                radius={BULLET_SIZE * 2.3}
                 fill="rgba(241, 196, 15, 0.08)"
                 stroke="rgba(241, 196, 15, 0.3)"
                 strokeWidth={0.8}
@@ -20,7 +20,7 @@ function JuggernautBullet({ bullet }) {
                 x={bullet.x}
                 y={bullet.y}
                 sides={6}
-                radius={BULLET_SIZE * 3}
+                radius={BULLET_SIZE * 2}
                 stroke="rgba(241, 196, 15, 0.5)"
                 strokeWidth={1}
                 fill="rgba(241, 196, 15, 0.15)"
@@ -30,17 +30,17 @@ function JuggernautBullet({ bullet }) {
             {/* Heavy Artillery trail with energy particles */}
             <Line
                 points={[
-                    bullet.x - Math.cos((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 12,
-                    bullet.y + Math.sin((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 12,
-                    bullet.x - Math.cos((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 8,
-                    bullet.y + Math.sin((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 8,
-                    bullet.x - Math.cos((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 4,
-                    bullet.y + Math.sin((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 4,
+                    bullet.x - Math.cos((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 10,
+                    bullet.y + Math.sin((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 10,
+                    bullet.x - Math.cos((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 6,
+                    bullet.y + Math.sin((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 6,
+                    bullet.x - Math.cos((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 3,
+                    bullet.y + Math.sin((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 3,
                     bullet.x,
                     bullet.y
                 ]}
                 stroke="rgba(241, 196, 15, 0.7)"
-                strokeWidth={BULLET_SIZE * 1.8}
+                strokeWidth={BULLET_SIZE * 1.3}
                 lineCap="round"
                 tension={0.2}
             />
@@ -48,13 +48,13 @@ function JuggernautBullet({ bullet }) {
             {/* Secondary energy trail - smoother animation feel */}
             <Line
                 points={[
-                    bullet.x - Math.cos((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 10,
-                    bullet.y + Math.sin((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 10,
+                    bullet.x - Math.cos((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 8,
+                    bullet.y + Math.sin((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 8,
                     bullet.x,
                     bullet.y
                 ]}
                 stroke="rgba(243, 213, 78, 0.6)"
-                strokeWidth={BULLET_SIZE}
+                strokeWidth={BULLET_SIZE * 0.9}
                 lineCap="round"
             />
 
@@ -62,7 +62,7 @@ function JuggernautBullet({ bullet }) {
             <Circle
                 x={bullet.x}
                 y={bullet.y}
-                radius={BULLET_SIZE * 2.2}
+                radius={BULLET_SIZE * 1.6}
                 fill="rgba(241, 196, 15, 0.6)"
                 stroke="rgba(243, 156, 18, 0.8)"
                 strokeWidth={0.6}
@@ -73,7 +73,7 @@ function JuggernautBullet({ bullet }) {
                 x={bullet.x}
                 y={bullet.y}
                 sides={3}
-                radius={BULLET_SIZE * 1.2}
+                radius={BULLET_SIZE * 1.1}
                 fill="#f1c40f"
                 rotation={bullet.direction}
                 stroke="rgba(255, 255, 255, 0.6)"
@@ -84,7 +84,7 @@ function JuggernautBullet({ bullet }) {
             <Circle
                 x={bullet.x}
                 y={bullet.y}
-                radius={BULLET_SIZE * 0.8}
+                radius={BULLET_SIZE * 0.7}
                 fill="#f39c12"
             />
 
@@ -92,8 +92,8 @@ function JuggernautBullet({ bullet }) {
             <Ring
                 x={bullet.x}
                 y={bullet.y}
-                innerRadius={BULLET_SIZE * 2.6}
-                outerRadius={BULLET_SIZE * 2.8}
+                innerRadius={BULLET_SIZE * 2}
+                outerRadius={BULLET_SIZE * 2.1}
                 fill="rgba(241, 196, 15, 0)"
                 stroke="rgba(243, 156, 18, 0.7)"
                 strokeWidth={0.5}
@@ -101,8 +101,8 @@ function JuggernautBullet({ bullet }) {
             <Ring
                 x={bullet.x}
                 y={bullet.y}
-                innerRadius={BULLET_SIZE * 3.2}
-                outerRadius={BULLET_SIZE * 3.3}
+                innerRadius={BULLET_SIZE * 2.3}
+                outerRadius={BULLET_SIZE * 2.4}
                 fill="rgba(241, 196, 15, 0)"
                 stroke="rgba(243, 156, 18, 0.4)"
                 strokeWidth={0.4}
@@ -111,10 +111,10 @@ function JuggernautBullet({ bullet }) {
             {/* Direction indicators - showing path of impact */}
             <Line
                 points={[
+                    bullet.x + Math.cos((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 1.8,
+                    bullet.y - Math.sin((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 1.8,
                     bullet.x + Math.cos((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 2.5,
                     bullet.y - Math.sin((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 2.5,
-                    bullet.x + Math.cos((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 4,
-                    bullet.y - Math.sin((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 4,
                 ]}
                 stroke="rgba(243, 156, 18, 0.7)"
                 strokeWidth={BULLET_SIZE * 0.4}

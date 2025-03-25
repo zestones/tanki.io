@@ -11,7 +11,7 @@ function GuardianBullet({ bullet }) {
                 x={bullet.x}
                 y={bullet.y}
                 sides={6}
-                radius={BULLET_SIZE * 2.5}
+                radius={BULLET_SIZE * 2}
                 fill="rgba(52, 152, 219, 0.15)"
                 stroke="rgba(52, 152, 219, 0.6)"
                 strokeWidth={0.8}
@@ -56,7 +56,7 @@ function GuardianBullet({ bullet }) {
             <Circle
                 x={bullet.x}
                 y={bullet.y}
-                radius={BULLET_SIZE * 2}
+                radius={BULLET_SIZE * 1.5}
                 stroke="rgba(52, 152, 219, 0.8)"
                 strokeWidth={1.5}
                 fill="rgba(52, 152, 219, 0.1)"
@@ -65,20 +65,20 @@ function GuardianBullet({ bullet }) {
             {/* Energy diffraction lines */}
             <Line
                 points={[
-                    bullet.x - BULLET_SIZE * 1.8,
-                    bullet.y - BULLET_SIZE * 1.8,
-                    bullet.x + BULLET_SIZE * 1.8,
-                    bullet.y + BULLET_SIZE * 1.8
+                    bullet.x - BULLET_SIZE * 1.5,
+                    bullet.y - BULLET_SIZE * 1.5,
+                    bullet.x + BULLET_SIZE * 1.5,
+                    bullet.y + BULLET_SIZE * 1.5
                 ]}
                 stroke="rgba(142, 202, 230, 0.8)"
                 strokeWidth={0.8}
             />
             <Line
                 points={[
-                    bullet.x + BULLET_SIZE * 1.8,
-                    bullet.y - BULLET_SIZE * 1.8,
-                    bullet.x - BULLET_SIZE * 1.8,
-                    bullet.y + BULLET_SIZE * 1.8
+                    bullet.x + BULLET_SIZE * 1.5,
+                    bullet.y - BULLET_SIZE * 1.5,
+                    bullet.x - BULLET_SIZE * 1.5,
+                    bullet.y + BULLET_SIZE * 1.5
                 ]}
                 stroke="rgba(142, 202, 230, 0.8)"
                 strokeWidth={0.8}

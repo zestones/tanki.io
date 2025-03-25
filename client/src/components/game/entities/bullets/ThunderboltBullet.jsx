@@ -10,7 +10,7 @@ function ThunderboltBullet({ bullet }) {
             <Circle
                 x={bullet.x}
                 y={bullet.y}
-                radius={BULLET_SIZE * 4}
+                radius={BULLET_SIZE * 2.5}
                 fill="rgba(155, 89, 182, 0.08)"
                 stroke="rgba(155, 89, 182, 0.2)"
                 strokeWidth={0.5}
@@ -21,7 +21,7 @@ function ThunderboltBullet({ bullet }) {
                 x={bullet.x}
                 y={bullet.y}
                 sides={8}
-                radius={BULLET_SIZE * 2.8}
+                radius={BULLET_SIZE * 2}
                 fill="rgba(155, 89, 182, 0)"
                 stroke="rgba(155, 89, 182, 0.4)"
                 strokeWidth={0.6}
@@ -31,21 +31,19 @@ function ThunderboltBullet({ bullet }) {
             {/* Lightning trail with */}
             <Line
                 points={[
-                    bullet.x - Math.cos((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 9,
-                    bullet.y + Math.sin((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 9,
-                    bullet.x - Math.cos((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 7 + BULLET_SIZE * 1.5,
-                    bullet.y + Math.sin((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 7 + BULLET_SIZE * 1.5,
-                    bullet.x - Math.cos((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 5 - BULLET_SIZE * 1.5,
-                    bullet.y + Math.sin((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 5 - BULLET_SIZE * 1.5,
-                    bullet.x - Math.cos((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 3 + BULLET_SIZE * 0.8,
-                    bullet.y + Math.sin((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 3 + BULLET_SIZE * 0.8,
-                    bullet.x - Math.cos((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 1.5 - BULLET_SIZE * 0.5,
-                    bullet.y + Math.sin((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 1.5 - BULLET_SIZE * 0.5,
+                    bullet.x - Math.cos((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 7,
+                    bullet.y + Math.sin((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 7,
+                    bullet.x - Math.cos((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 5 + BULLET_SIZE * 1.2,
+                    bullet.y + Math.sin((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 5 + BULLET_SIZE * 1.2,
+                    bullet.x - Math.cos((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 3 - BULLET_SIZE * 1.2,
+                    bullet.y + Math.sin((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 3 - BULLET_SIZE * 1.2,
+                    bullet.x - Math.cos((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 1.5 + BULLET_SIZE * 0.6,
+                    bullet.y + Math.sin((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 1.5 + BULLET_SIZE * 0.6,
                     bullet.x,
                     bullet.y
                 ]}
                 stroke="rgba(155, 89, 182, 0.8)"
-                strokeWidth={BULLET_SIZE * 0.7}
+                strokeWidth={BULLET_SIZE * 0.6}
                 lineCap="round"
                 tension={0}
             />
@@ -53,13 +51,13 @@ function ThunderboltBullet({ bullet }) {
             {/* Secondary electric arcs */}
             <Line
                 points={[
-                    bullet.x - Math.cos((bullet.direction * Math.PI) / 180 + 0.2) * BULLET_SIZE * 6,
-                    bullet.y + Math.sin((bullet.direction * Math.PI) / 180 + 0.2) * BULLET_SIZE * 6,
-                    bullet.x - Math.cos((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 4,
-                    bullet.y + Math.sin((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 4,
+                    bullet.x - Math.cos((bullet.direction * Math.PI) / 180 + 0.2) * BULLET_SIZE * 4,
+                    bullet.y + Math.sin((bullet.direction * Math.PI) / 180 + 0.2) * BULLET_SIZE * 4,
+                    bullet.x - Math.cos((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 2,
+                    bullet.y + Math.sin((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 2,
                 ]}
                 stroke="rgba(187, 143, 206, 0.7)"
-                strokeWidth={BULLET_SIZE * 0.4}
+                strokeWidth={BULLET_SIZE * 0.3}
                 lineCap="round"
             />
 
@@ -68,8 +66,8 @@ function ThunderboltBullet({ bullet }) {
                 x={bullet.x}
                 y={bullet.y}
                 numPoints={5}
-                innerRadius={BULLET_SIZE * 0.7}
-                outerRadius={BULLET_SIZE * 1.3}
+                innerRadius={BULLET_SIZE * 0.6}
+                outerRadius={BULLET_SIZE * 1.1}
                 fill="#9b59b6"
                 rotation={bullet.direction * 2}
                 stroke="rgba(255, 255, 255, 0.5)"
@@ -80,7 +78,7 @@ function ThunderboltBullet({ bullet }) {
             <Circle
                 x={bullet.x}
                 y={bullet.y}
-                radius={BULLET_SIZE * 0.7}
+                radius={BULLET_SIZE * 0.6}
                 fill="#d2b4de"
             />
 
@@ -88,7 +86,7 @@ function ThunderboltBullet({ bullet }) {
             <Circle
                 x={bullet.x}
                 y={bullet.y}
-                radius={BULLET_SIZE * 1.8}
+                radius={BULLET_SIZE * 1.4}
                 stroke="rgba(155, 89, 182, 0.8)"
                 strokeWidth={0.7}
                 fill="rgba(155, 89, 182, 0.1)"
@@ -96,7 +94,7 @@ function ThunderboltBullet({ bullet }) {
             <Circle
                 x={bullet.x}
                 y={bullet.y}
-                radius={BULLET_SIZE * 2.5}
+                radius={BULLET_SIZE * 1.8}
                 stroke="rgba(155, 89, 182, 0.4)"
                 strokeWidth={0.5}
                 fill="rgba(155, 89, 182, 0)"
@@ -109,8 +107,8 @@ function ThunderboltBullet({ bullet }) {
                     points={[
                         bullet.x,
                         bullet.y,
-                        bullet.x + Math.cos(((bullet.direction + angle) * Math.PI) / 180) * BULLET_SIZE * (i % 2 === 0 ? 2 : 1.5),
-                        bullet.y - Math.sin(((bullet.direction + angle) * Math.PI) / 180) * BULLET_SIZE * (i % 2 === 0 ? 2 : 1.5),
+                        bullet.x + Math.cos(((bullet.direction + angle) * Math.PI) / 180) * BULLET_SIZE * (i % 2 === 0 ? 1.5 : 1.2),
+                        bullet.y - Math.sin(((bullet.direction + angle) * Math.PI) / 180) * BULLET_SIZE * (i % 2 === 0 ? 1.5 : 1.2),
                     ]}
                     stroke="rgba(155, 89, 182, 0.9)"
                     strokeWidth={BULLET_SIZE * 0.3}
@@ -126,9 +124,9 @@ function ThunderboltBullet({ bullet }) {
                 fill="rgba(155, 89, 182, 0.9)"
             />
             <Circle
-                x={bullet.x - Math.cos((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 6}
-                y={bullet.y + Math.sin((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 6}
-                radius={BULLET_SIZE * 0.4}
+                x={bullet.x - Math.cos((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 5}
+                y={bullet.y + Math.sin((bullet.direction * Math.PI) / 180) * BULLET_SIZE * 5}
+                radius={BULLET_SIZE * 0.3}
                 fill="rgba(155, 89, 182, 0.9)"
             />
 

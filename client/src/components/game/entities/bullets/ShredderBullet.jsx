@@ -28,7 +28,7 @@ function ShredderBullet({ bullet }) {
             <Circle
                 x={bullet.x}
                 y={bullet.y}
-                radius={BULLET_SIZE * 3}
+                radius={BULLET_SIZE * 2.2}
                 fill="rgba(231, 76, 60, 0.1)"
                 stroke="rgba(231, 76, 60, 0.3)"
                 strokeWidth={0.5}
@@ -56,8 +56,8 @@ function ShredderBullet({ bullet }) {
 
             {/* Energy burst particles - showing rapid-fire capability */}
             <Star
-                x={bullet.x + Math.cos((bullet.direction * Math.PI) / 180 + Math.PI / 2) * BULLET_SIZE * 1.2}
-                y={bullet.y - Math.sin((bullet.direction * Math.PI) / 180 + Math.PI / 2) * BULLET_SIZE * 1.2}
+                x={bullet.x + Math.cos((bullet.direction * Math.PI) / 180 + Math.PI / 2) * BULLET_SIZE * 1}
+                y={bullet.y - Math.sin((bullet.direction * Math.PI) / 180 + Math.PI / 2) * BULLET_SIZE * 1}
                 numPoints={4}
                 innerRadius={BULLET_SIZE * 0.3}
                 outerRadius={BULLET_SIZE * 0.6}
@@ -65,8 +65,8 @@ function ShredderBullet({ bullet }) {
                 rotation={bullet.direction}
             />
             <Star
-                x={bullet.x + Math.cos((bullet.direction * Math.PI) / 180 - Math.PI / 2) * BULLET_SIZE * 1.2}
-                y={bullet.y - Math.sin((bullet.direction * Math.PI) / 180 - Math.PI / 2) * BULLET_SIZE * 1.2}
+                x={bullet.x + Math.cos((bullet.direction * Math.PI) / 180 - Math.PI / 2) * BULLET_SIZE * 1}
+                y={bullet.y - Math.sin((bullet.direction * Math.PI) / 180 - Math.PI / 2) * BULLET_SIZE * 1}
                 numPoints={4}
                 innerRadius={BULLET_SIZE * 0.3}
                 outerRadius={BULLET_SIZE * 0.6}
@@ -79,7 +79,7 @@ function ShredderBullet({ bullet }) {
                 x={bullet.x}
                 y={bullet.y}
                 sides={8}
-                radius={BULLET_SIZE * 1.8}
+                radius={BULLET_SIZE * 1.5}
                 stroke="rgba(231, 76, 60, 0.8)"
                 strokeWidth={0.7}
                 fill="rgba(231, 76, 60, 0)"
@@ -91,8 +91,8 @@ function ShredderBullet({ bullet }) {
                 points={[
                     bullet.x,
                     bullet.y,
-                    bullet.x + Math.cos((bullet.direction * Math.PI) / 180 + Math.PI / 3) * BULLET_SIZE * 2,
-                    bullet.y - Math.sin((bullet.direction * Math.PI) / 180 + Math.PI / 3) * BULLET_SIZE * 2
+                    bullet.x + Math.cos((bullet.direction * Math.PI) / 180 + Math.PI / 3) * BULLET_SIZE * 1.5,
+                    bullet.y - Math.sin((bullet.direction * Math.PI) / 180 + Math.PI / 3) * BULLET_SIZE * 1.5
                 ]}
                 stroke="rgba(231, 76, 60, 0.8)"
                 strokeWidth={0.5}
@@ -101,8 +101,8 @@ function ShredderBullet({ bullet }) {
                 points={[
                     bullet.x,
                     bullet.y,
-                    bullet.x + Math.cos((bullet.direction * Math.PI) / 180 - Math.PI / 3) * BULLET_SIZE * 2,
-                    bullet.y - Math.sin((bullet.direction * Math.PI) / 180 - Math.PI / 3) * BULLET_SIZE * 2
+                    bullet.x + Math.cos((bullet.direction * Math.PI) / 180 - Math.PI / 3) * BULLET_SIZE * 1.5,
+                    bullet.y - Math.sin((bullet.direction * Math.PI) / 180 - Math.PI / 3) * BULLET_SIZE * 1.5
                 ]}
                 stroke="rgba(231, 76, 60, 0.8)"
                 strokeWidth={0.5}
