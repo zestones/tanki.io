@@ -2,6 +2,7 @@ import { Room } from "@colyseus/core";
 import { GameState } from "../schema/GameState.js";
 import { Player } from "../schema/Player.js";
 import gameConfig from "../config/gameConfig.js";
+import specialistConfig from "../config/specialistConfig.js";
 
 // Import systems
 import MovementSystem from "../systems/MovementSystem.js";
@@ -10,6 +11,7 @@ import WeaponSystem from "../systems/WeaponSystem.js";
 import RespawnSystem from "../systems/RespawnSystem.js";
 import ExplosionSystem from "../systems/ExplosionSystem.js";
 import TankSystem from "../systems/TankSystem.js";
+import SpecialistSystem from "../systems/SpecialistSystem.js";
 
 // Import controllers
 import InputController from "../controllers/InputController.js";
@@ -27,6 +29,9 @@ export class GameRoom extends Room {
         this.weaponSystem = new WeaponSystem(this.state);
         this.respawnSystem = new RespawnSystem(this.state, this);
         this.tankSystem = new TankSystem();
+
+        // Initialize specialist system after other systems
+        this.specialistSystem = new SpecialistSystem(this.state, this.weaponSystem, this.explosionSystem);
 
         // Initialize controllers
         this.inputController = new InputController(this.movementSystem, this.weaponSystem);
@@ -80,6 +85,53 @@ export class GameRoom extends Room {
             player.tank[message.stat]++;
             player.upgradePoints--;
         });
+
+        // Add specialist activation message handler
+        this.onMessage("activateSpecialist", (client, data = {}) => {
+            const player = this.state.players.get(client.sessionId);
+            if (!player) return;
+
+            // Activate the specialist
+            const success = this.specialistSystem.activateSpecialist(
+                player,
+                client.sessionId,
+                data.targetPosition // Optional target position for abilities like orbital strike
+            );
+
+            if (success) {
+                // Broadcast the specialist activation to all clients
+                const tankType = player.tank.type; // Use tank.type which is the ID (ST-N01, etc.)
+                const specialist = specialistConfig[tankType];
+
+                if (!specialist) {
+                    console.log(`Warning: No specialist config found for tank type: ${tankType}`);
+                    return;
+                }
+
+                this.broadcast("specialistActivated", {
+                    playerId: client.sessionId,
+                    tankId: tankType,
+                    specialistName: specialist.name,
+                    effectType: specialist.effect.type,
+                    position: { x: player.x, y: player.y },
+                    targetPosition: data.targetPosition,
+                    duration: specialist.duration
+                });
+            }
+        });
+
+        // Add target selection message for specialists that need targeting
+        this.onMessage("selectSpecialistTarget", (client, data) => {
+            // This is useful for abilities like Orbital Strike that need a target location
+            const player = this.state.players.get(client.sessionId);
+            if (!player || !player.specialistActive) return;
+
+            // Store the target position in the specialist system
+            const activeEffect = this.specialistSystem.activeEffects.get(client.sessionId);
+            if (activeEffect && activeEffect.type === "aoe") {
+                activeEffect.data.targetPosition = data.position;
+            }
+        });
     }
 
     onJoin(client, options) {
@@ -115,5 +167,6 @@ export class GameRoom extends Room {
         this.collisionSystem.checkBulletPlayerCollisions();
         this.explosionSystem.updateExplosions();
         this.respawnSystem.checkRespawns();
+        this.specialistSystem.updateSpecialists();
     }
 }

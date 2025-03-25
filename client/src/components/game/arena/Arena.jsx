@@ -3,12 +3,13 @@ import Grid from './Grid';
 
 import Bullet from '../entities/bullets/Bullet';
 import Explosion from '../fx/Explosion';
+import SpecialistEffect from '../fx/SpecialistEffect';
 
 import PropTypes from 'prop-types';
 
 import { tankComponentMap } from '../../../utils/tankComponentMap';
 
-function Arena({ gameState }) {
+function Arena({ gameState, specialistEffects }) {
     const { arenaWidth, arenaHeight, players, bullets, explosions } = gameState;
 
     return (
@@ -95,6 +96,15 @@ function Arena({ gameState }) {
                 />
             ))}
 
+            {/* Render specialist effects */}
+            {specialistEffects.map(effect => (
+                <SpecialistEffect
+                    key={effect.id}
+                    effect={effect}
+                    player={players.get(effect.playerId)}
+                />
+            ))}
+
             {Array.from(players.entries()).map(([sessionId, player]) => {
                 const TankComponent = tankComponentMap[player.tank.type];
                 return (
@@ -121,6 +131,7 @@ Arena.propTypes = {
         bullets: PropTypes.arrayOf(PropTypes.object).isRequired,
         explosions: PropTypes.arrayOf(PropTypes.object).isRequired,
     }).isRequired,
+    specialistEffects: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default Arena;

@@ -19,6 +19,11 @@ export class Player extends Schema {
 
         this.tank = new Tank();
         this.upgradePoints = 5;
+
+        // Specialist properties
+        this.specialistCooldown = 0;
+        this.specialistActive = false;
+        this.specialistActiveUntil = 0;
     }
 }
 
@@ -32,3 +37,6 @@ type("string")(Player.prototype, "username");
 type("number")(Player.prototype, "score");
 type(Tank)(Player.prototype, "tank");
 type("number")(Player.prototype, "upgradePoints");
+type("number")(Player.prototype, "specialistCooldown");
+type("boolean")(Player.prototype, "specialistActive");
+type("number")(Player.prototype, "specialistActiveUntil");

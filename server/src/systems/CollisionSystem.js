@@ -39,7 +39,7 @@ export default class CollisionSystem {
         let hasCollided = false;
 
         this.state.players.forEach((player, sessionId) => {
-            if (player.isDead || sessionId === bullet.ownerId || hasCollided) return;
+            if (player.isDead || sessionId === bullet.ownerId || hasCollided || player.specialistInvulnerable) return;
 
             if (this.isColliding(player, bullet)) {
                 hasCollided = true;
@@ -74,7 +74,11 @@ export default class CollisionSystem {
         );
 
         const finalDamage = Math.ceil(rawDamage * defenseMultiplier);
-        player.hp -= finalDamage;
+
+        // Check for shield protection
+        if (!player.specialistActive && !player.specialistShieldActive) {
+            player.hp -= finalDamage;
+        }
 
         if (shooter) {
             if (player.hp <= 0) {

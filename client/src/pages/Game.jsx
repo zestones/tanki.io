@@ -28,6 +28,9 @@ function Game() {
     const viewportSize = useViewportSize(containerRef);
     const roomRef = useRef(null);
 
+    // State for specialist effects
+    const [specialistEffects, setSpecialistEffects] = useState([]);
+
     // Send viewport size to server when it changes
     useEffect(() => {
         if (roomRef.current && viewportSize.width && viewportSize.height) {
@@ -63,11 +66,61 @@ function Game() {
                     arenaHeight: state.arenaHeight
                 });
             });
+
+            // Listen for specialist activation events
+            room.onMessage("specialistActivated", (message) => {
+                console.log("Specialist activated:", message);
+
+                // Create a new specialist effect
+                const effectId = `specialist-${Date.now()}`;
+                const effectDuration = message.duration;
+                const newEffect = {
+                    id: effectId,
+                    playerId: message.playerId,
+                    type: message.effectType,
+                    position: message.position,
+                    targetPosition: message.targetPosition,
+                    createdAt: Date.now(),
+                    duration: effectDuration,
+                    name: message.specialistName
+                };
+
+                // Add the new effect to the list
+                setSpecialistEffects(prevEffects => [...prevEffects, newEffect]);
+
+                // Remove the effect after it expires
+                setTimeout(() => {
+                    setSpecialistEffects(prevEffects =>
+                        prevEffects.filter(effect => effect.id !== effectId)
+                    );
+                }, effectDuration);
+            });
+
         }).catch(e => {
             console.error('Could not join room as spectator:', e);
             setIsConnecting(false);
             setError("Failed to connect to game server");
         });
+
+        // Cleanup on unmount
+        return () => {
+            if (roomRef.current) {
+                roomRef.current.leave();
+            }
+        };
+    }, []);
+
+    // Clean up expired specialist effects
+    useEffect(() => {
+        const now = Date.now();
+        const cleanupEffects = () => {
+            setSpecialistEffects(prevEffects =>
+                prevEffects.filter(effect => now < effect.createdAt + effect.duration)
+            );
+        };
+
+        const intervalId = setInterval(cleanupEffects, 1000);
+        return () => clearInterval(intervalId);
     }, []);
 
     if (isConnecting) {
@@ -98,9 +151,41 @@ function Game() {
                     className="w-full h-full"
                 >
                     <Layer>
-                        <Arena gameState={gameState} />
+                        <Arena
+                            gameState={gameState}
+                            specialistEffects={specialistEffects}
+                        />
                     </Layer>
                 </Stage>
+
+                {/* Specialist notifications */}
+                <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10 flex flex-col items-center">
+                    {specialistEffects.map(effect => {
+                        // Get player data
+                        const player = gameState.players.get(effect.playerId);
+                        if (!player) return null;
+
+                        // Determine color based on effect type
+                        const effectColors = {
+                            'dash': 'from-blue-500 to-cyan-300',
+                            'shield': 'from-green-500 to-emerald-300',
+                            'homing': 'from-red-500 to-orange-300',
+                            'decoy': 'from-purple-500 to-indigo-300',
+                            'aoe': 'from-yellow-500 to-amber-300'
+                        };
+
+                        const colorClass = effectColors[effect.type] || 'from-gray-500 to-gray-300';
+
+                        return (
+                            <div
+                                key={effect.id}
+                                className={`mb-2 px-4 py-1 rounded-md bg-gradient-to-r ${colorClass} text-white font-bold text-sm animate-fade-up`}
+                            >
+                                {player.username} activated {effect.name}
+                            </div>
+                        );
+                    })}
+                </div>
 
                 <Leaderboard players={gameState.players} />
                 {showStats && (

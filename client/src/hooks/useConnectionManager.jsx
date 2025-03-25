@@ -16,6 +16,13 @@ export default function useConnectionManager() {
     const [upgradePoints, setUpgradePoints] = useState(0);
     const [score, setScore] = useState(0);
 
+    // Simplified specialist state - directly using values from Player schema
+    const [specialistState, setSpecialistState] = useState({
+        cooldownUntil: 0,
+        activeUntil: 0,
+        isActive: false
+    });
+
     const hasConnected = useRef(false);
 
     // State to track both joystick positions
@@ -59,6 +66,13 @@ export default function useConnectionManager() {
                         setHealth(myPlayer.hp);
                         setScore(myPlayer.score);
                         setUpgradePoints(myPlayer.upgradePoints);
+
+                        // Make sure we're safely handling specialist state properties
+                        setSpecialistState({
+                            cooldownUntil: myPlayer.specialistCooldown || 0,
+                            activeUntil: myPlayer.specialistActiveUntil || 0,
+                            isActive: Boolean(myPlayer.specialistActive)
+                        });
                     }
                 });
             })
@@ -91,6 +105,26 @@ export default function useConnectionManager() {
         return () => {
             room.removeAllListeners('respawnCountdown');
             room.removeAllListeners('playerRespawned');
+        };
+    }, [room]);
+
+    // Add effect for listening to specialist events
+    useEffect(() => {
+        if (!room) return;
+
+        room.onMessage('specialistActivated', (message) => {
+            if (message.playerId === room.sessionId) {
+                // Update UI when our specialist is activated
+                setSpecialistState(prev => ({
+                    ...prev,
+                    activeUntil: Date.now() + message.duration,
+                    isActive: true
+                }));
+            }
+        });
+
+        return () => {
+            room.removeAllListeners('specialistActivated');
         };
     }, [room]);
 
@@ -164,6 +198,21 @@ export default function useConnectionManager() {
         return true;
     };
 
+    const activateSpecialist = (targetPosition = null) => {
+        if (!room) return false;
+
+        // Only send the message if we're not in cooldown and not already active
+        const now = Date.now();
+        if (specialistState.cooldownUntil > now || specialistState.isActive) {
+            console.log("Specialist not available right now");
+            return false;
+        }
+
+        const message = targetPosition ? { targetPosition } : {};
+        room.send('activateSpecialist', message);
+        return true;
+    };
+
     return {
         room,
         health,
@@ -173,9 +222,11 @@ export default function useConnectionManager() {
         respawnCountdown,
         score,
         upgradePoints,
+        specialistState,
         handleMove,
         handleStopMoving,
         handleAim,
-        handleUpgradeTank
+        handleUpgradeTank,
+        activateSpecialist
     };
 }

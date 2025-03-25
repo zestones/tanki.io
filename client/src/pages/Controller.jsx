@@ -3,6 +3,7 @@ import { useRef, useState } from 'react';
 import { withOpacity } from '../utils/colorUtils';
 
 import LoadingScreen from '../components/common/LoadingScreen';
+import SpecialistButton from '../components/mobile/buttons/SpecialistButton';
 import Joystick from '../components/mobile/controller/Joystick';
 import PlayerStatus from '../components/mobile/controller/PlayerStatus';
 import RespawnCountdown from '../components/mobile/screens/CountdownScreen';
@@ -22,10 +23,12 @@ function Controller() {
         score,
         upgradePoints,
         respawnCountdown,
+        specialistState,
         handleMove,
         handleStopMoving,
         handleAim,
-        handleUpgradeTank
+        handleUpgradeTank,
+        activateSpecialist
     } = useConnectionManager();
 
     const tankColor = tank?.color ?? '#ff8c00';
@@ -145,6 +148,18 @@ function Controller() {
                                 onMove={handleAim}
                                 onStop={handleStopMoving}
                                 type="aiming"
+                            />
+                        </div>
+                    </div>
+
+                    {/* Specialist button - positioned in the center bottom area */}
+                    <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-20">
+                        <div className="relative group">
+                            <SpecialistButton
+                                specialistState={specialistState}
+                                color={tankColor}
+                                onActivate={activateSpecialist}
+                                size={100}
                             />
                         </div>
                     </div>
