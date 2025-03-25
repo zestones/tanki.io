@@ -18,6 +18,7 @@ export class Player extends Schema {
         this.score = 0;
 
         this.tank = new Tank();
+        this.upgradePoints = 5;
     }
 }
 
@@ -30,3 +31,4 @@ type("number")(Player.prototype, "respawnTime");
 type("string")(Player.prototype, "username");
 type("number")(Player.prototype, "score");
 type(Tank)(Player.prototype, "tank");
+type("number")(Player.prototype, "upgradePoints");

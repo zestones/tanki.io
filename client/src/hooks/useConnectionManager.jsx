@@ -13,10 +13,12 @@ export default function useConnectionManager() {
 
     const [isConnecting, setIsConnecting] = useState(true);
     const [respawnCountdown, setRespawnCountdown] = useState(null);
-    const [score, setScore] = useState(0); // Add score state
+    const [upgradePoints, setUpgradePoints] = useState(0);
+    const [score, setScore] = useState(0);
+
     const hasConnected = useRef(false);
 
-    // Add state to track both joystick positions
+    // State to track both joystick positions
     const playerState = useRef({
         movement: {
             direction: 0,
@@ -56,6 +58,7 @@ export default function useConnectionManager() {
                     if (myPlayer) {
                         setHealth(myPlayer.hp);
                         setScore(myPlayer.score);
+                        setUpgradePoints(myPlayer.upgradePoints);
                     }
                 });
             })
@@ -147,6 +150,20 @@ export default function useConnectionManager() {
         handleMove(direction, isActive, "aiming");
     };
 
+    const handleUpgradeTank = (stat) => {
+        if (!room || upgradePoints <= 0) return false;
+
+        room.send('upgradeTank', { stat });
+
+        const newStats = {
+            ...(tank?.stats || {}),
+            [stat]: Math.min((tank?.stats?.[stat] || 0) + 1, 10)
+        };
+        setTank({ ...tank, stats: newStats });
+
+        return true;
+    };
+
     return {
         room,
         health,
@@ -155,8 +172,10 @@ export default function useConnectionManager() {
         isConnecting,
         respawnCountdown,
         score,
+        upgradePoints,
         handleMove,
         handleStopMoving,
-        handleAim
+        handleAim,
+        handleUpgradeTank
     };
 }

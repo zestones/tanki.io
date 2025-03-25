@@ -13,10 +13,9 @@ import GridOverlay from './layout/GridOverlay';
 
 import PropTypes from 'prop-types';
 
-function TankVisualization({ onClose, TankComponent, tankColor, stats: initialStats, username, onStatsChange }) {
+function TankVisualization({ onClose, TankComponent, tankColor, stats: initialStats, username, upgradePoints, onUpgrade }) {
     // Stats management
     const [stats, setStats] = useState(initialStats);
-    const [upgradePoints, setUpgradePoints] = useState(5);
     const [upgradeEffect, setUpgradeEffect] = useState(null);
 
     const { scale, containerRef } = usePinchZoom();
@@ -24,23 +23,21 @@ function TankVisualization({ onClose, TankComponent, tankColor, stats: initialSt
     const handleUpgradeStat = (statName) => {
         if (upgradePoints <= 0 || stats[statName] >= 10) return;
 
-        // Apply upgrade
+        // Call server to update stats
+        const success = onUpgrade(statName);
+        if (!success) return;
+
+        // Apply optimistic update
         const newStats = {
             ...stats,
             [statName]: Math.min(stats[statName] + 1, 10)
         };
 
         setStats(newStats);
-        setUpgradePoints(prev => prev - 1);
 
         // Trigger upgrade effect animation
         setUpgradeEffect(statName);
         setTimeout(() => setUpgradeEffect(null), 1000);
-
-        // Notify parent component if provided
-        if (onStatsChange) {
-            onStatsChange(newStats);
-        }
     };
 
     const schemaPoints = [
@@ -119,7 +116,7 @@ function TankVisualization({ onClose, TankComponent, tankColor, stats: initialSt
 
 TankVisualization.propTypes = {
     onClose: PropTypes.func.isRequired,
-    TankComponent: PropTypes.func,
+    TankComponent: PropTypes.func.isRequired,
     tankColor: PropTypes.string.isRequired,
     stats: PropTypes.shape({
         defense: PropTypes.number,
@@ -128,7 +125,8 @@ TankVisualization.propTypes = {
         specialty: PropTypes.string
     }),
     username: PropTypes.string.isRequired,
-    onStatsChange: PropTypes.func
+    upgradePoints: PropTypes.number.isRequired,
+    onUpgrade: PropTypes.func.isRequired,
 };
 
 export default TankVisualization;
