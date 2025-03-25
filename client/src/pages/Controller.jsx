@@ -20,10 +20,12 @@ function Controller() {
         tank,
         health,
         score,
+        upgradePoints,
         respawnCountdown,
         handleMove,
         handleStopMoving,
-        handleAim
+        handleAim,
+        handleUpgradeTank
     } = useConnectionManager();
 
     const tankColor = tank?.color ?? '#ff8c00';
@@ -153,13 +155,14 @@ function Controller() {
             <div className="absolute inset-0 bg-[linear-gradient(transparent_50%,rgba(0,0,0,0.03)_50%)] bg-[length:100%_2px] pointer-events-none z-10"></div>
 
             {showTankStats && (
-
                 <TankVisualization
                     onClose={() => setShowTankStats(false)}
                     TankComponent={tankComponentMap[tank?.codeName]}
                     tankColor={tankColor}
                     stats={tank?.stats}
                     username={username}
+                    upgradePoints={upgradePoints}
+                    onUpgrade={handleUpgradeTank}
                 />
             )}
 

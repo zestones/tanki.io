@@ -61,14 +61,24 @@ export class GameRoom extends Room {
 
         this.onMessage("upgradeTank", (client, message) => {
             const player = this.state.players.get(client.sessionId);
-            if (!player) return;
+            if (!player || player.upgradePoints <= 0) return;
 
-            const upgraded = this.tankSystem.upgradeTank(player.tank, message.stat);
+            const validStats = ['damage', 'defense', 'speed'];
 
-            // Optional: send confirmation to client
-            if (upgraded) {
-                client.send("upgradeSuccess", { stat: message.stat, newValue: player.tank[message.stat] });
+            if (!validStats.includes(message.stat)) {
+                console.log(`Invalid stat upgrade attempt: ${message.stat}`);
+                return;
             }
+
+            // Check if stat is already at max
+            if (player.tank[message.stat] >= 10) {
+                console.log(`Stat already at max: ${message.stat}`);
+                return;
+            }
+
+            // Upgrade the stat
+            player.tank[message.stat]++;
+            player.upgradePoints--;
         });
     }
 

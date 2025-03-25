@@ -21,7 +21,9 @@ function TankSelection() {
     const rootRef = useRef(null);
     const { height } = useViewportSize(rootRef);
     const { layoutSize, spacing } = useLayoutSpacing(height);
+
     const navigate = useNavigate();
+
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [tankRotation, setTankRotation] = useState(0);
     const [animateIn, setAnimateIn] = useState(false);
@@ -80,7 +82,6 @@ function TankSelection() {
         return () => clearTimeout(timer);
     }, [selectedIndex]);
 
-    // TODO use the loading screen and error screen components
     if (loading) {
         return <LoadingScreen title={'Initializing Tanks'} message={'Retrieving tank data from the tactical warfare network... Please wait.'} />;
     }
