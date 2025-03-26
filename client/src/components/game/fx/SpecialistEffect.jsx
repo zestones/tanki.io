@@ -1,26 +1,15 @@
 import PropTypes from 'prop-types';
-import DashEffect from './specialists/DashEffect';
-import ShieldEffect from './specialists/ShieldEffect';
-import HomingEffect from './specialists/HomingEffect';
-import DecoyEffect from './specialists/DecoyEffect';
 import OrbitalStrikeEffect from './specialists/OrbitalStrikeEffect';
+import ShieldEffect from './specialists/ShieldEffect';
 
 const SpecialistEffect = ({ effect, player }) => {
     if (!player) return null;
+    console.log('SpecialistEffect', effect);
 
     // Render different visual effects based on type
     switch (effect.type) {
-        case 'dash':
-            return <DashEffect effect={effect} player={player} />;
-
         case 'shield':
             return <ShieldEffect effect={effect} player={player} />;
-
-        case 'homing':
-            return <HomingEffect effect={effect} player={player} />;
-
-        case 'decoy':
-            return <DecoyEffect effect={effect} player={player} />;
 
         case 'aoe':
             return <OrbitalStrikeEffect effect={effect} player={player} />;

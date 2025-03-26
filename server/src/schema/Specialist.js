@@ -10,11 +10,12 @@ export class Specialist extends Schema {
         HEAL: "heal"
     };
 
-    constructor(tankType = "ST-N01") {
+    constructor(tankType) {
         super();
 
-        // Initialize with default specialist data
-        const specialistInfo = specialistData[tankType] || specialistData["ST-N01"];
+        const specialistInfo = specialistData[tankType];
+        console.log("Specialist constructor", specialistInfo);
+        
 
         // Core specialist properties
         this.name = specialistInfo.name;
