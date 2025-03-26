@@ -135,40 +135,6 @@ function Game() {
                     </Layer>
                 </Stage>
 
-                {/* Specialist notifications */}
-                <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10 flex flex-col items-center">
-                    {Array.from(activeSpecialists.values()).map(effect => {
-                        // Get player data
-                        const player = gameState.players.get(effect.playerId);
-                        if (!player) return null;
-
-                        // Show notification only for newly activated specialists
-                        const now = Date.now();
-                        const activationTime = effect.createdAt;
-                        if (now - activationTime > 2000) return null; // Only show notification for 2 seconds
-
-                        // Determine color based on effect type
-                        const effectColors = {
-                            'dash': 'from-blue-500 to-cyan-300',
-                            'shield': 'from-green-500 to-emerald-300',
-                            'homing': 'from-red-500 to-orange-300',
-                            'decoy': 'from-purple-500 to-indigo-300',
-                            'aoe': 'from-yellow-500 to-amber-300'
-                        };
-
-                        const colorClass = effectColors[effect.type] || 'from-gray-500 to-gray-300';
-
-                        return (
-                            <div
-                                key={effect.id}
-                                className={`mb-2 px-4 py-1 rounded-md bg-gradient-to-r ${colorClass} text-white font-bold text-sm animate-fade-up`}
-                            >
-                                {player.username} activated {effect.name}
-                            </div>
-                        );
-                    })}
-                </div>
-
                 <Leaderboard players={gameState.players} />
                 {showStats && (
                     <StatsPanel
