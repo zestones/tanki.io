@@ -1,66 +1,57 @@
 export default {
     "ST-N01": {
-        name: "Turbo Dash",
-        cooldown: 30000, // 30 seconds cooldown
-        duration: 3000,  // 3 seconds active
-        effect: {
-            type: "dash",
-            speedBoost: 5.0,
-            invulnerable: true,
-            shockwave: {
-                radius: 100,
-                damage: 40,
-                knockback: 150
-            }
-        },
-        description: "Dash forward at incredible speed, becoming invulnerable and creating a damaging shockwave on impact"
-    },
-    "GD-N02": {
         name: "Energy Shield",
-        cooldown: 45000, // 45 seconds cooldown
-        duration: 5000,  // 5 seconds active
+        cooldown: 45000,
+        duration: 5000,
         effect: {
             type: "shield",
-            damageReduction: 1.0, // 100% damage reduction
-            pulseRate: 500 // Shield visual pulsing effect interval in ms
+            radius: 100,
+            intensity: 0.8 // 80% damage reduction or effect strength
         },
-        description: "Deploys an impenetrable energy shield that blocks all damage"
+        description: "Deploys a protective energy shield that covers a wide area"
     },
-    "SH-N03": {
-        name: "Homing Missiles",
-        cooldown: 40000, // 40 seconds cooldown
-        duration: 4000,  // 4 seconds active
-        effect: {
-            type: "homing",
-            missileCount: 3,
-            damage: 50,
-            trackingSpeed: 0.8,
-            visualEffect: "smoke-trail"
-        },
-        description: "Launches intelligent guided missiles that track and pursue enemy tanks"
-    },
-    "JG-N04": {
-        name: "Hologram Decoys",
-        cooldown: 50000, // 50 seconds cooldown
-        duration: 8000,  // 8 seconds active
-        effect: {
-            type: "decoy",
-            decoyCount: 3,
-            decoyHealth: 30,
-            decoyBehavior: "aggressive"
-        },
-        description: "Deploys holographic decoys that distract and confuse enemies"
-    },
-    "TB-N05": {
+    "SH-N02": {
         name: "Orbital Strike",
-        cooldown: 60000, // 60 seconds cooldown
-        duration: 2000,  // 2 seconds active
+        cooldown: 50000,
+        duration: 2000,
         effect: {
             type: "aoe",
             radius: 150,
-            damage: 80,
-            visualEffect: "orbital-beam"
+            intensity: 0.7 // 70% damage or effect strength
         },
-        description: "Calls down a devastating orbital strike that damages all enemies in the target area"
+        description: "Calls down a devastating area-of-effect strike from orbit"
+    },
+    "TB-N03": {
+        name: "Smoke Screen",
+        cooldown: 40000,
+        duration: 6000,
+        effect: {
+            type: "obscure",
+            radius: 120,
+            intensity: 0.6 // 60% visibility reduction
+        },
+        description: "Creates a dense smoke screen that blocks vision and confuses enemies"
+    },
+    "JG-N04": {
+        name: "Electromagnetic Pulse",
+        cooldown: 55000,
+        duration: 3000,
+        effect: {
+            type: "disable",
+            radius: 130,
+            intensity: 0.5 // 50% effectiveness of disabling effects
+        },
+        description: "Releases an EMP that disrupts electronic systems in the area"
+    },
+    "GD-N05": {
+        name: "Healing Zone",
+        cooldown: 60000,
+        duration: 4000,
+        effect: {
+            type: "heal",
+            radius: 110,
+            intensity: 0.4 // 40% healing rate
+        },
+        description: "Creates a regenerative zone that restores health to allies"
     }
 }

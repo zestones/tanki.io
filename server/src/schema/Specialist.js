@@ -1,0 +1,87 @@
+import { Schema, type } from "@colyseus/schema";
+import specialistData from "../config/specialistConfig.js";
+
+export class Specialist extends Schema {
+    constructor(tankType = "ST-N01") {
+        super();
+
+        // Initialize with default specialist data
+        const specialistInfo = specialistData[tankType] || specialistData["ST-N01"];
+
+        // Core specialist properties
+        this.name = specialistInfo.name;
+        this.cooldown = specialistInfo.cooldown;
+        this.duration = specialistInfo.duration;
+        this.description = specialistInfo.description;
+
+        // Effect properties
+        this.effectType = specialistInfo.effect.type;
+        this.effectRadius = specialistInfo.effect.radius;
+        this.effectIntensity = specialistInfo.effect.intensity;
+
+        // Tracking and state management
+        this.isActive = false;
+        this.lastActivationTime = 0;
+        this.remainingCooldown = 0;
+    }
+
+    activate(currentTime) {
+        if (this.isReadyToActivate(currentTime)) {
+            this.isActive = true;
+            this.lastActivationTime = currentTime;
+            return true;
+        }
+
+        return false;
+    }
+
+    isReadyToActivate(currentTime) {
+        return !this.isActive &&
+            (currentTime - this.lastActivationTime >= this.cooldown);
+    }
+
+    update(currentTime) {
+        if (this.isActive) {
+            if (currentTime - this.lastActivationTime >= this.duration) {
+                this.deactivate(currentTime);
+            }
+        } else {
+            this.remainingCooldown = Math.max(
+                0,
+                this.cooldown - (currentTime - this.lastActivationTime)
+            );
+        }
+    }
+
+    deactivate(currentTime) {
+        this.isActive = false;
+        this.lastActivationTime = currentTime;
+    }
+
+    getAbilityInfo() {
+        return {
+            name: this.name,
+            description: this.description,
+            effectType: this.effectType,
+            radius: this.effectRadius,
+            intensity: this.effectIntensity,
+            cooldown: this.cooldown,
+            duration: this.duration
+        };
+    }
+}
+
+type("string")(Specialist.prototype, "name");
+
+type("number")(Specialist.prototype, "cooldown");
+type("number")(Specialist.prototype, "duration");
+
+type("string")(Specialist.prototype, "description");
+type("string")(Specialist.prototype, "effectType");
+
+type("number")(Specialist.prototype, "effectRadius");
+type("number")(Specialist.prototype, "effectIntensity");
+type("boolean")(Specialist.prototype, "isActive");
+
+type("number")(Specialist.prototype, "lastActivationTime");
+type("number")(Specialist.prototype, "remainingCooldown");

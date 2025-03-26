@@ -15,7 +15,7 @@ import { BackgroundEffects, CornerDecorations, SidePanels } from '../components/
 
 import PropTypes from 'prop-types';
 
-function Home({ animateIn = false, themeColor = "#3498db" }) {
+function Home({ themeColor = "#3498db" }) {
     const [username, setUsername] = useState('');
     const [contentReady, setContentReady] = useState(false);
 
@@ -25,15 +25,12 @@ function Home({ animateIn = false, themeColor = "#3498db" }) {
     const { height } = useViewportSize(rootRef);
     const { layoutSize, spacing } = useLayoutSpacing(height);
 
-    // Stagger the animation of elements for a more dramatic entry
     useEffect(() => {
-        if (animateIn) {
-            const timer = setTimeout(() => {
-                setContentReady(true);
-            }, 300);
-            return () => clearTimeout(timer);
-        }
-    }, [animateIn]);
+        const timer = setTimeout(() => {
+            setContentReady(true);
+        }, 300);
+        return () => clearTimeout(timer);
+    }, []);
 
     const handleSubmit = (e) => {
         if (e) e.preventDefault();
@@ -128,14 +125,12 @@ function Home({ animateIn = false, themeColor = "#3498db" }) {
                 </motion.div>
             </div>
 
-            {/* Use SidePanels component instead of duplicated code */}
             <SidePanels />
         </div>
     );
 }
 
 Home.propTypes = {
-    animateIn: PropTypes.bool,
     themeColor: PropTypes.string
 };
 

@@ -1,21 +1,20 @@
 import { Room } from "@colyseus/core";
-import { GameState } from "../schema/GameState.js";
-import { Player } from "../schema/Player.js";
 import gameConfig from "../config/gameConfig.js";
 import specialistConfig from "../config/specialistConfig.js";
+import { GameState } from "../schema/GameState.js";
+import { Player } from "../schema/Player.js";
 
 // Import systems
-import MovementSystem from "../systems/MovementSystem.js";
 import CollisionSystem from "../systems/CollisionSystem.js";
-import WeaponSystem from "../systems/WeaponSystem.js";
-import RespawnSystem from "../systems/RespawnSystem.js";
 import ExplosionSystem from "../systems/ExplosionSystem.js";
-import TankSystem from "../systems/TankSystem.js";
+import MovementSystem from "../systems/MovementSystem.js";
+import RespawnSystem from "../systems/RespawnSystem.js";
 import SpecialistSystem from "../systems/SpecialistSystem.js";
+import WeaponSystem from "../systems/WeaponSystem.js";
 
 // Import controllers
-import InputController from "../controllers/InputController.js";
 import ArenaController from "../controllers/ArenaController.js";
+import InputController from "../controllers/InputController.js";
 
 export class GameRoom extends Room {
     onCreate() {
@@ -28,7 +27,6 @@ export class GameRoom extends Room {
         this.collisionSystem = new CollisionSystem(this.state, this.explosionSystem, this);
         this.weaponSystem = new WeaponSystem(this.state);
         this.respawnSystem = new RespawnSystem(this.state, this);
-        this.tankSystem = new TankSystem();
 
         // Initialize specialist system after other systems
         this.specialistSystem = new SpecialistSystem(this.state, this.weaponSystem, this.explosionSystem);
@@ -66,24 +64,8 @@ export class GameRoom extends Room {
 
         this.onMessage("upgradeTank", (client, message) => {
             const player = this.state.players.get(client.sessionId);
-            if (!player || player.upgradePoints <= 0) return;
-
-            const validStats = ['damage', 'defense', 'speed'];
-
-            if (!validStats.includes(message.stat)) {
-                console.log(`Invalid stat upgrade attempt: ${message.stat}`);
-                return;
-            }
-
-            // Check if stat is already at max
-            if (player.tank[message.stat] >= 10) {
-                console.log(`Stat already at max: ${message.stat}`);
-                return;
-            }
-
-            // Upgrade the stat
-            player.tank[message.stat]++;
-            player.upgradePoints--;
+            if (!player) return;
+            player.updgradeTankStat(message.stat);
         });
 
         // Add specialist activation message handler
@@ -119,39 +101,14 @@ export class GameRoom extends Room {
                 });
             }
         });
-
-        // Add target selection message for specialists that need targeting
-        this.onMessage("selectSpecialistTarget", (client, data) => {
-            // This is useful for abilities like Orbital Strike that need a target location
-            const player = this.state.players.get(client.sessionId);
-            if (!player || !player.specialistActive) return;
-
-            // Store the target position in the specialist system
-            const activeEffect = this.specialistSystem.activeEffects.get(client.sessionId);
-            if (activeEffect && activeEffect.type === "aoe") {
-                activeEffect.data.targetPosition = data.position;
-            }
-        });
     }
 
     onJoin(client, options) {
-        // Don't create a player for spectators
-        if (options.isSpectator) return;
-
+        if (options.isSpectator) return; // Don't create a player for spectators
         console.log('Player joining', options);
 
-        const player = new Player();
-        player.username = options.username || `Player ${client.sessionId.substr(0, 4)}`;
-
-        // Set tank type if specified
-        if (options.tankType && this.tankSystem.getTankConfig(options.tankType)) {
-            player.tank = this.tankSystem.createTank(options.tankType);
-        }
-
-        // Spawn player at a random position
         const position = this.arenaController.getRandomPosition();
-        player.x = position.x;
-        player.y = position.y;
+        const player = new Player(options.username, position, options.tankType);
 
         this.state.players.set(client.sessionId, player);
     }
