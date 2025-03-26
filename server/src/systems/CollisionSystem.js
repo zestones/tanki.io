@@ -1,5 +1,6 @@
 import MathUtils from "../utils/MathUtils.js";
 import gameConfig from "../config/gameConfig.js";
+import { Specialist } from "../schema/Specialist.js";
 
 export default class CollisionSystem {
     constructor(state, explosionSystem, room) {
@@ -76,7 +77,7 @@ export default class CollisionSystem {
         const finalDamage = Math.ceil(rawDamage * defenseMultiplier);
 
         // Check for shield protection
-        if (!player.specialistActive && !player.specialistShieldActive) {
+        if (!(player.tank.specialist.effectType === Specialist.TYPE_ENUM.SHIELD && player.tank.specialist.isActive)) {
             player.hp -= finalDamage;
         }
 

@@ -2,6 +2,14 @@ import { Schema, type } from "@colyseus/schema";
 import specialistData from "../config/specialistConfig.js";
 
 export class Specialist extends Schema {
+    static TYPE_ENUM = {
+        SHIELD: "shield",
+        AOE: "aoe",
+        OBSCURE: "obscure",
+        DISABLE: "disable",
+        HEAL: "heal"
+    };
+
     constructor(tankType = "ST-N01") {
         super();
 
@@ -45,14 +53,12 @@ export class Specialist extends Schema {
             console.log(currentTime + ' --- ');
             if (currentTime - this.lastActivationTime >= this.duration) {
                 this.deactivate(currentTime);
-                console.log(`${this.name} deactivated`);
             }
         } else {
             this.remainingCooldown = Math.max(
                 0,
                 this.cooldown - (currentTime - this.lastActivationTime)
             );
-            console.log(`${this.name} cooling down: ${this.remainingCooldown}`);
         }
     }
 

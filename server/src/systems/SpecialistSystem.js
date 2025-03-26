@@ -1,5 +1,3 @@
-import { Explosion } from "../schema/Explosion.js";
-
 export default class SpecialistSystem {
     constructor(state, weaponSystem, explosionSystem) {
         this.state = state;
