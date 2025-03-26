@@ -16,11 +16,16 @@ export default function useConnectionManager() {
     const [upgradePoints, setUpgradePoints] = useState(0);
     const [score, setScore] = useState(0);
 
-    // Simplified specialist state - directly using values from Player schema
+    // Updated specialist state to match server schema structure
     const [specialistState, setSpecialistState] = useState({
-        cooldownUntil: 0,
-        activeUntil: 0,
-        isActive: false
+        cooldown: 0,             // Base cooldown time in ms
+        duration: 0,             // Base duration time in ms
+        isActive: false,         // Is the specialist currently active?
+        lastActivationTime: 0,   // When was the specialist last activated?
+        remainingCooldown: 0,    // How much cooldown is remaining?
+        // Computed values for UI
+        cooldownUntil: 0,        // When will the cooldown end?
+        activeUntil: 0           // When will the active effect end?
     });
 
     const hasConnected = useRef(false);
@@ -67,11 +72,27 @@ export default function useConnectionManager() {
                         setScore(myPlayer.score);
                         setUpgradePoints(myPlayer.upgradePoints);
 
-                        // Make sure we're safely handling specialist state properties
+                        const specialist = myPlayer.tank.specialist;
+
+                        // Compute active until time
+                        const activeUntil = specialist.isActive
+                            ? specialist.lastActivationTime + specialist.duration
+                            : 0;
+
+                        // Compute cooldown until time
+                        const cooldownUntil = !specialist.isActive && specialist.lastActivationTime > 0
+                            ? specialist.lastActivationTime + specialist.cooldown
+                            : 0;
+
+                        // Make sure we're handling specialist state properties correctly
                         setSpecialistState({
-                            cooldownUntil: myPlayer.specialistCooldown || 0,
-                            activeUntil: myPlayer.specialistActiveUntil || 0,
-                            isActive: Boolean(myPlayer.specialistActive)
+                            cooldown: specialist.cooldown || 0,
+                            duration: specialist.duration || 0,
+                            isActive: Boolean(specialist.isActive),
+                            lastActivationTime: specialist.lastActivationTime || 0,
+                            remainingCooldown: specialist.remainingCooldown || 0,
+                            activeUntil: activeUntil,
+                            cooldownUntil: cooldownUntil
                         });
                     }
                 });
@@ -105,26 +126,6 @@ export default function useConnectionManager() {
         return () => {
             room.removeAllListeners('respawnCountdown');
             room.removeAllListeners('playerRespawned');
-        };
-    }, [room]);
-
-    // Add effect for listening to specialist events
-    useEffect(() => {
-        if (!room) return;
-
-        room.onMessage('specialistActivated', (message) => {
-            if (message.playerId === room.sessionId) {
-                // Update UI when our specialist is activated
-                setSpecialistState(prev => ({
-                    ...prev,
-                    activeUntil: Date.now() + message.duration,
-                    isActive: true
-                }));
-            }
-        });
-
-        return () => {
-            room.removeAllListeners('specialistActivated');
         };
     }, [room]);
 
@@ -198,18 +199,25 @@ export default function useConnectionManager() {
         return true;
     };
 
-    const activateSpecialist = (targetPosition = null) => {
+    const activateSpecialist = () => {
         if (!room) return false;
 
-        // Only send the message if we're not in cooldown and not already active
+        // Get current time
         const now = Date.now();
-        if (specialistState.cooldownUntil > now || specialistState.isActive) {
-            console.log("Specialist not available right now");
+
+        // Check if specialist is in cooldown or already active
+        if (specialistState.isActive) {
+            console.log("Specialist is already active");
             return false;
         }
 
-        const message = targetPosition ? { targetPosition } : {};
-        room.send('activateSpecialist', message);
+        if (now < specialistState.cooldownUntil) {
+            console.log("Specialist is still in cooldown");
+            return false;
+        }
+
+        // Send activation message to server
+        room.send('activateSpecialist');
         return true;
     };
 

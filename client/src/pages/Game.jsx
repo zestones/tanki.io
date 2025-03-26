@@ -28,8 +28,8 @@ function Game() {
     const viewportSize = useViewportSize(containerRef);
     const roomRef = useRef(null);
 
-    // State for specialist effects
-    const [specialistEffects, setSpecialistEffects] = useState([]);
+    // Track active specialist effects
+    const [activeSpecialists, setActiveSpecialists] = useState(new Map());
 
     // Send viewport size to server when it changes
     useEffect(() => {
@@ -65,37 +65,27 @@ function Game() {
                     arenaWidth: state.arenaWidth,
                     arenaHeight: state.arenaHeight
                 });
+
+                // Update active specialists by checking player specialist states
+                const newActiveSpecialists = new Map();
+
+                state.players.forEach((player, playerId) => {
+                    if (player.tank?.specialist?.isActive) {
+                        // Create or update specialist effect info
+                        newActiveSpecialists.set(playerId, {
+                            id: `specialist-${playerId}`,
+                            playerId: playerId,
+                            type: player.tank.specialist.effectType,
+                            position: { x: player.x, y: player.y },
+                            createdAt: player.tank.specialist.lastActivationTime,
+                            duration: player.tank.specialist.duration,
+                            name: player.tank.specialist.name
+                        });
+                    }
+                });
+
+                setActiveSpecialists(newActiveSpecialists);
             });
-
-            // Listen for specialist activation events
-            room.onMessage("specialistActivated", (message) => {
-                console.log("Specialist activated:", message);
-
-                // Create a new specialist effect
-                const effectId = `specialist-${Date.now()}`;
-                const effectDuration = message.duration;
-                const newEffect = {
-                    id: effectId,
-                    playerId: message.playerId,
-                    type: message.effectType,
-                    position: message.position,
-                    targetPosition: message.targetPosition,
-                    createdAt: Date.now(),
-                    duration: effectDuration,
-                    name: message.specialistName
-                };
-
-                // Add the new effect to the list
-                setSpecialistEffects(prevEffects => [...prevEffects, newEffect]);
-
-                // Remove the effect after it expires
-                setTimeout(() => {
-                    setSpecialistEffects(prevEffects =>
-                        prevEffects.filter(effect => effect.id !== effectId)
-                    );
-                }, effectDuration);
-            });
-
         }).catch(e => {
             console.error('Could not join room as spectator:', e);
             setIsConnecting(false);
@@ -108,19 +98,6 @@ function Game() {
                 roomRef.current.leave();
             }
         };
-    }, []);
-
-    // Clean up expired specialist effects
-    useEffect(() => {
-        const now = Date.now();
-        const cleanupEffects = () => {
-            setSpecialistEffects(prevEffects =>
-                prevEffects.filter(effect => now < effect.createdAt + effect.duration)
-            );
-        };
-
-        const intervalId = setInterval(cleanupEffects, 1000);
-        return () => clearInterval(intervalId);
     }, []);
 
     if (isConnecting) {
@@ -153,17 +130,22 @@ function Game() {
                     <Layer>
                         <Arena
                             gameState={gameState}
-                            specialistEffects={specialistEffects}
+                            activeSpecialists={activeSpecialists}
                         />
                     </Layer>
                 </Stage>
 
                 {/* Specialist notifications */}
                 <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10 flex flex-col items-center">
-                    {specialistEffects.map(effect => {
+                    {Array.from(activeSpecialists.values()).map(effect => {
                         // Get player data
                         const player = gameState.players.get(effect.playerId);
                         if (!player) return null;
+
+                        // Show notification only for newly activated specialists
+                        const now = Date.now();
+                        const activationTime = effect.createdAt;
+                        if (now - activationTime > 2000) return null; // Only show notification for 2 seconds
 
                         // Determine color based on effect type
                         const effectColors = {

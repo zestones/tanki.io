@@ -42,14 +42,17 @@ export class Specialist extends Schema {
 
     update(currentTime) {
         if (this.isActive) {
+            console.log(currentTime + ' --- ');
             if (currentTime - this.lastActivationTime >= this.duration) {
                 this.deactivate(currentTime);
+                console.log(`${this.name} deactivated`);
             }
         } else {
             this.remainingCooldown = Math.max(
                 0,
                 this.cooldown - (currentTime - this.lastActivationTime)
             );
+            console.log(`${this.name} cooling down: ${this.remainingCooldown}`);
         }
     }
 

@@ -69,37 +69,16 @@ export class GameRoom extends Room {
         });
 
         // Add specialist activation message handler
-        this.onMessage("activateSpecialist", (client, data = {}) => {
+        this.onMessage("activateSpecialist", (client) => {
             const player = this.state.players.get(client.sessionId);
             if (!player) return;
+            console.log('Activating specialist', player.tank.specialist);
 
             // Activate the specialist
-            const success = this.specialistSystem.activateSpecialist(
+            this.specialistSystem.activateSpecialist(
                 player,
                 client.sessionId,
-                data.targetPosition // Optional target position for abilities like orbital strike
             );
-
-            if (success) {
-                // Broadcast the specialist activation to all clients
-                const tankType = player.tank.type; // Use tank.type which is the ID (ST-N01, etc.)
-                const specialist = specialistConfig[tankType];
-
-                if (!specialist) {
-                    console.log(`Warning: No specialist config found for tank type: ${tankType}`);
-                    return;
-                }
-
-                this.broadcast("specialistActivated", {
-                    playerId: client.sessionId,
-                    tankId: tankType,
-                    specialistName: specialist.name,
-                    effectType: specialist.effect.type,
-                    position: { x: player.x, y: player.y },
-                    targetPosition: data.targetPosition,
-                    duration: specialist.duration
-                });
-            }
         });
     }
 

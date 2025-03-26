@@ -18,36 +18,39 @@ const SpecialistButton = ({
         const updateStatus = () => {
             const now = Date.now();
 
-            // Handle active status from player schema
+            // Handle active status from server
             setIsActive(specialistState.isActive);
 
-            // Handle active time indicator
-            if (specialistState.activeUntil > now) {
-                const specialistDuration = specialistState.activeUntil - now;
-                // Assuming typical durations between 2-8 seconds
-                const assumedTotalDuration = 5000;
-                const remainingPercent = Math.min(specialistDuration / assumedTotalDuration, 1);
+            // Handle active time indicator when specialist is active
+            if (specialistState.isActive && specialistState.activeUntil > now) {
+                const elapsed = now - specialistState.lastActivationTime;
+                const total = specialistState.duration;
+                const remainingPercent = 1 - Math.min(elapsed / total, 1);
                 setActivePercent(remainingPercent * 100);
             } else {
                 setActivePercent(0);
             }
 
-            // Handle cooldown
-            if (specialistState.cooldownUntil > now) {
-                setIsAvailable(false);
-                const cooldownDuration = specialistState.cooldownUntil - now;
-                // Assuming typical cooldowns between 30-60 seconds
-                const assumedTotalCooldown = 45000;
-                const elapsedPercent = 1 - Math.min(cooldownDuration / assumedTotalCooldown, 1);
-                setCooldownPercent(elapsedPercent * 100);
-            } else {
+            // Handle cooldown indicator when specialist is not active but in cooldown
+            if (!specialistState.isActive && specialistState.lastActivationTime > 0) {
+                const elapsed = now - specialistState.lastActivationTime;
+                const total = specialistState.cooldown;
+
+                if (elapsed < total) {
+                    setIsAvailable(false);
+                    const progress = Math.min(elapsed / total, 1);
+                    setCooldownPercent(progress * 100);
+                } else {
+                    setIsAvailable(true);
+                    setCooldownPercent(100);
+                }
+            } else if (!specialistState.isActive) {
                 setIsAvailable(true);
                 setCooldownPercent(100);
             }
         };
 
-        console.log("SpecialistButton.jsx");
-        console.log("specialistState: ", specialistState);
+        console.log("SpecialistButton received state:", specialistState);
         updateStatus();
         const interval = setInterval(updateStatus, 100);
         return () => clearInterval(interval);

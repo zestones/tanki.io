@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 
 import { tankComponentMap } from '../../../utils/tankComponentMap';
 
-function Arena({ gameState, specialistEffects }) {
+function Arena({ gameState, activeSpecialists }) {
     const { arenaWidth, arenaHeight, players, bullets, explosions } = gameState;
 
     return (
@@ -96,8 +96,8 @@ function Arena({ gameState, specialistEffects }) {
                 />
             ))}
 
-            {/* Render specialist effects */}
-            {specialistEffects.map(effect => (
+            {/* Render active specialist effects */}
+            {Array.from(activeSpecialists.values()).map(effect => (
                 <SpecialistEffect
                     key={effect.id}
                     effect={effect}
@@ -116,6 +116,7 @@ function Arena({ gameState, specialistEffects }) {
                         hp={player.hp}
                         username={player.username}
                         isDead={player.isDead}
+                        isSpecialistActive={player.tank.specialist.isActive}
                     />
                 );
             })}
@@ -131,7 +132,7 @@ Arena.propTypes = {
         bullets: PropTypes.arrayOf(PropTypes.object).isRequired,
         explosions: PropTypes.arrayOf(PropTypes.object).isRequired,
     }).isRequired,
-    specialistEffects: PropTypes.arrayOf(PropTypes.object).isRequired,
+    activeSpecialists: PropTypes.object.isRequired,
 };
 
 export default Arena;
