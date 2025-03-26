@@ -50,7 +50,6 @@ const SpecialistButton = ({
             }
         };
 
-        console.log("SpecialistButton received state:", specialistState);
         updateStatus();
         const interval = setInterval(updateStatus, 100);
         return () => clearInterval(interval);
