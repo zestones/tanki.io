@@ -77,6 +77,7 @@ function Game() {
                             playerId: playerId,
                             type: player.tank.specialist.effectType,
                             position: { x: player.x, y: player.y },
+                            radius: player.tank.specialist.effectRadius,
                             createdAt: player.tank.specialist.lastActivationTime,
                             duration: player.tank.specialist.duration,
                             name: player.tank.specialist.name

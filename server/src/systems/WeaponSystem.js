@@ -1,6 +1,8 @@
-import { Bullet } from "../schema/Bullet.js";
-import MathUtils from "../utils/MathUtils.js";
 import gameConfig from "../config/gameConfig.js";
+
+import { Bullet } from "../schema/Bullet.js";
+
+import MathUtils from "../utils/MathUtils.js";
 
 export default class WeaponSystem {
     constructor(state) {

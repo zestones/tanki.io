@@ -1,6 +1,7 @@
 import { Room } from "@colyseus/core";
+
 import gameConfig from "../config/gameConfig.js";
-import specialistConfig from "../config/specialistConfig.js";
+
 import { GameState } from "../schema/GameState.js";
 import { Player } from "../schema/Player.js";
 
@@ -29,7 +30,7 @@ export class GameRoom extends Room {
         this.respawnSystem = new RespawnSystem(this.state, this);
 
         // Initialize specialist system after other systems
-        this.specialistSystem = new SpecialistSystem(this.state, this.weaponSystem, this.explosionSystem);
+        this.specialistSystem = new SpecialistSystem(this.state, this.weaponSystem, this.explosionSystem, this.collisionSystem);
 
         // Initialize controllers
         this.inputController = new InputController(this.movementSystem, this.weaponSystem);

@@ -6,8 +6,10 @@ export class Explosion extends Schema {
         super();
         this.x = 0;
         this.y = 0;
+
         this.radius = 0;
         this.maxRadius = gameConfig.DEFAULT_EXPLOSION.maxRadius;
+
         this.duration = gameConfig.DEFAULT_EXPLOSION.duration;
         this.createdAt = Date.now();
     }

@@ -15,7 +15,7 @@ export class Specialist extends Schema {
 
         const specialistInfo = specialistData[tankType];
         console.log("Specialist constructor", specialistInfo);
-        
+
 
         // Core specialist properties
         this.name = specialistInfo.name;
@@ -51,7 +51,6 @@ export class Specialist extends Schema {
 
     update(currentTime) {
         if (this.isActive) {
-            console.log(currentTime + ' --- ');
             if (currentTime - this.lastActivationTime >= this.duration) {
                 this.deactivate(currentTime);
             }
