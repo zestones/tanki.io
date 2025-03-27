@@ -88,7 +88,7 @@ export class GameRoom extends Room {
         console.log('Player joining', options);
 
         const position = this.arenaController.getRandomPosition();
-        const player = new Player(options.username, position, options.tankType);
+        const player = new Player(client.sessionId, options.username, position, options.tankType);
 
         this.state.players.set(client.sessionId, player);
     }

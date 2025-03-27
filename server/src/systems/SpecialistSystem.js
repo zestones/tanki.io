@@ -48,7 +48,7 @@ export default class SpecialistSystem {
         this.state.players.forEach(otherPlayer => {
             const distance = MathUtils.distance(player.x, player.y, otherPlayer.x, otherPlayer.y);
             if (distance <= radius) {
-                // TODO: avoid self damage
+                if (otherPlayer.id === player.id) return;
 
                 if (!(otherPlayer.tank.specialist.effectType === Specialist.TYPE_ENUM.SHIELD && otherPlayer.tank.specialist.isActive)) {
                     // Apply damage as percentage of max health each tick
@@ -58,7 +58,7 @@ export default class SpecialistSystem {
 
                     if (otherPlayer.isDead) {
                         this.explosionSystem.createTankExplosion(otherPlayer.x, otherPlayer.y);
-                        this.collisionSystem.handlePlayerDeath(player, otherPlayer);
+                        this.collisionSystem.handlePlayerDeath(otherPlayer, player, otherPlayer.id);
                     }
                 }
             }

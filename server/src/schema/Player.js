@@ -7,9 +7,10 @@ import gameConfig from "../config/gameConfig.js";
 export class Player extends Schema {
     static STAT_UPGRADE_COST = 1;
 
-    constructor(username, position, tankType) {
+    constructor(id, username, position, tankType) {
         super();
 
+        this.id = id;
         this.x = position.x;
         this.y = position.y;
 
