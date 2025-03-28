@@ -29,7 +29,7 @@ function TankStats({ selectedTank, spacing = null }) {
     const iconSize = utils.getIconSize('xs');
 
     // Get text sizes from responsive utils
-    const labelTextSize = utils.getFontSize('xs').replace('text-', '');
+    const labelTextSize = utils.getFontSize('xs');
     const valueTextSize = `${labelTextSize} font-bold`;
 
     const defenseFillProps = useSpring({
