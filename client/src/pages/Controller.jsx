@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 
 import { withOpacity } from '../utils/colorUtils';
 
@@ -32,6 +32,29 @@ function Controller() {
     } = useConnectionManager();
 
     const tankColor = tank?.color ?? '#ff8c00';
+
+    // Enable proper multi-touch support at the container level
+    useEffect(() => {
+        const container = containerRef.current;
+        if (container) {
+            // This helps ensure touch events are handled properly across components
+            const handleTouchStart = (e) => {
+                // Do not prevent defaults globally - this would break multi-touch
+                // Let individual components handle their own touch events
+
+                // Just ensure container doesn't scroll or zoom
+                if (e.touches.length > 1) {
+                    e.preventDefault();
+                }
+            };
+
+            container.addEventListener('touchstart', handleTouchStart, { passive: false });
+
+            return () => {
+                container.removeEventListener('touchstart', handleTouchStart);
+            };
+        }
+    }, []);
 
     // Loading screen
     if (isConnecting) {
@@ -152,13 +175,14 @@ function Controller() {
                         </div>
                     </div>
 
-                    <div className="absolute bottom-36 right-60 z-20">
+                    <div className="absolute bottom-36 right-60 z-30">
                         <div className="absolute -z-10 inset-0 rounded-full"
                             style={{
                                 boxShadow: `0 0 20px ${withOpacity(tankColor, 0.3)}`,
                                 background: `radial-gradient(circle, ${withOpacity(tankColor, 0.1)} 0%, transparent 70%)`
                             }}>
                         </div>
+                        {/* Increased z-index to ensure it's above other elements */}
                         <SpecialistButton
                             specialistState={specialistState}
                             color={tankColor}

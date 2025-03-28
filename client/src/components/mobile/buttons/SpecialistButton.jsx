@@ -60,7 +60,11 @@ function SpecialistButton({ specialistState, onActivate, size = 80, color = '#3a
     }, [specialistState]);
 
     // Handle button press animation
-    const handlePress = () => {
+    const handlePress = (e) => {
+        // Prevent any default browser behavior that might interfere
+        e.preventDefault();
+        e.stopPropagation();
+
         if (!isAvailable || isActive) return;
 
         setIsPressed(true);
@@ -116,8 +120,32 @@ function SpecialistButton({ specialistState, onActivate, size = 80, color = '#3a
         setTimeout(() => setIsPressed(false), 300);
     };
 
+    // Add explicit touch handler to ensure the button works with multi-touch
+    const handleTouchStart = (e) => {
+        // Prevent other handlers from capturing this touch
+        e.stopPropagation();
+        handlePress(e);
+    };
+
+    useEffect(() => {
+        // Add direct touch event listener to ensure button responds to touches
+        const buttonElement = buttonRef.current;
+        if (buttonElement) {
+            buttonElement.addEventListener('touchstart', handleTouchStart, { passive: false });
+
+            return () => {
+                buttonElement.removeEventListener('touchstart', handleTouchStart);
+            };
+        }
+    }, [isAvailable, isActive]); // Re-add listener when availability changes
+
     // Visual states
-    const buttonState = isActive ? 'active' : !isAvailable ? 'cooldown' : 'ready';
+    let buttonState = 'ready';
+    if (isActive) {
+        buttonState = 'active';
+    } else if (!isAvailable) {
+        buttonState = 'cooldown';
+    }
 
     // Color schemes for different states
     const colorSchemes = {
@@ -155,7 +183,7 @@ function SpecialistButton({ specialistState, onActivate, size = 80, color = '#3a
     return (
         <div
             ref={buttonRef}
-            className="relative select-none"
+            className="relative select-none z-20"
             style={{ width: size, height: size }}
         >
             {/* Ambient Glow Effect */}
@@ -210,7 +238,7 @@ function SpecialistButton({ specialistState, onActivate, size = 80, color = '#3a
                 </div>
             )}
 
-            {/* Main Button */}
+            {/* Main Button - Use onClick for mouse and let our custom touch handler handle touch events */}
             <button
                 onClick={handlePress}
                 disabled={!isAvailable || isActive}
