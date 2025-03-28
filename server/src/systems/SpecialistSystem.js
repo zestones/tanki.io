@@ -49,6 +49,8 @@ export default class SpecialistSystem {
                     this._applyAOEEffect(player);
                 } else if (player.tank.specialist.effectType === Specialist.TYPE_ENUM.DISABLE) {
                     this._applyDisableEffect(player);
+                } else if (player.tank.specialist.effectType === Specialist.TYPE_ENUM.HEAL) {
+                    this._applyHealEffect(player);
                 }
             }
         });
@@ -100,6 +102,32 @@ export default class SpecialistSystem {
                 otherPlayer.tank.speed = Math.max(0, otherPlayer.tank.speed - (speedReduction * 100));
             }
         });
+    }
+
+    _applyHealEffect(player) {
+        const specialist = player.tank.specialist;
+        const intensity = specialist.effectIntensity;
+        const duration = specialist.duration;
+        const maxHP = gameConfig.PLAYER_INITIAL_HP;
+        const intendedTotalHeal = intensity * maxHP;
+
+        // Stop if total healing has reached the intended amount
+        if (specialist.totalHealApplied >= intendedTotalHeal) return;
+
+        // Calculate healing per tick based on total intended healing
+        const totalTicks = duration / gameConfig.TICK_RATE;
+        const healPerTick = intendedTotalHeal / totalTicks;
+
+        // Determine heal amount, respecting max HP and remaining healing
+        const healAmount = Math.min(
+            Math.ceil(healPerTick),                         // Base healing per tick
+            maxHP - player.hp,                              // Don't exceed max HP
+            intendedTotalHeal - specialist.totalHealApplied // Don't exceed total intended healing
+        );
+
+        // Apply healing and update total
+        player.hp = Math.min(maxHP, player.hp + healAmount);
+        specialist.totalHealApplied += healAmount;
     }
 
     _restoreAffectedPlayerSpeeds(playerId) {

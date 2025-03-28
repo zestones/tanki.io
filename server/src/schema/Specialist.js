@@ -30,12 +30,16 @@ export class Specialist extends Schema {
         this.isActive = false;
         this.lastActivationTime = 0;
         this.remainingCooldown = 0;
+
+        this.totalHealApplied = 0;
+
     }
 
     activate(currentTime) {
         if (this.isReadyToActivate(currentTime)) {
             this.isActive = true;
             this.lastActivationTime = currentTime;
+            this.totalHealApplied = 0;
             return true;
         }
 

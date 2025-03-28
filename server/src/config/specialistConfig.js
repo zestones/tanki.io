@@ -23,11 +23,11 @@ export default {
     },
     "SH-N03": {
         name: "Healing Zone",
-        cooldown: 60000,
-        duration: 4000,
+        cooldown: 40000,
+        duration: 2000,
         effect: {
             type: "heal",
-            radius: 110,
+            radius: 70,
             intensity: 0.4 // 40% healing rate
         },
         description: "Creates a regenerative zone that restores health to allies"
