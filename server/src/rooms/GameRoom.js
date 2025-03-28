@@ -60,7 +60,7 @@ export class GameRoom extends Room {
         // TODO : Legacy shoot handler (keeped for backward compatibility with tests)
         this.onMessage("shoot", (client) => {
             const player = this.state.players.get(client.sessionId);
-            this.inputController.handleShootInput(player, client.sessionId);
+            this.inputController.handleShootInput(player, client.sessionId); // ! DEPRECATED
         });
 
         this.onMessage("upgradeTank", (client, message) => {
