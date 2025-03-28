@@ -5,7 +5,7 @@ export default {
         duration: 2000,
         effect: {
             type: "heal",
-            radius: 70,
+            radius: 70,    // for display purposes only
             intensity: 0.4 // 40% healing rate
         },
         description: "Creates a regenerative zone that restores health to allies"
@@ -16,7 +16,7 @@ export default {
         duration: 5000,
         effect: {
             type: "shield",
-            radius: 100,
+            radius: 100,   // for display purposes only
             intensity: 0.8 // 80% damage reduction or effect strength
         },
         description: "Deploys a protective energy shield that covers a wide area"
@@ -27,7 +27,7 @@ export default {
         "duration": 5000,
         "effect": {
             "type": "damage_boost",
-            "radius": 70,
+            "radius": 70,    // for display purposes only
             "intensity": 2.0 // 200% damage increase
         },
         "description": "Enhances bullets within the zone, increasing their damage for a short duration."
