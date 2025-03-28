@@ -152,16 +152,19 @@ function Controller() {
                         </div>
                     </div>
 
-                    {/* Specialist button - positioned in the center bottom area */}
-                    <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-20">
-                        <div className="relative group">
-                            <SpecialistButton
-                                specialistState={specialistState}
-                                color={tankColor}
-                                onActivate={activateSpecialist}
-                                size={100}
-                            />
+                    <div className="absolute bottom-36 right-60 z-20">
+                        <div className="absolute -z-10 inset-0 rounded-full"
+                            style={{
+                                boxShadow: `0 0 20px ${withOpacity(tankColor, 0.3)}`,
+                                background: `radial-gradient(circle, ${withOpacity(tankColor, 0.1)} 0%, transparent 70%)`
+                            }}>
                         </div>
+                        <SpecialistButton
+                            specialistState={specialistState}
+                            color={tankColor}
+                            onActivate={activateSpecialist}
+                            size={80}
+                        />
                     </div>
                 </>
             )}
