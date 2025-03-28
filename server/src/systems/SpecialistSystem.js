@@ -10,8 +10,13 @@ export default class SpecialistSystem {
         this.explosionSystem = explosionSystem;
         this.collisionSystem = collisionSystem;
 
-        // Store original speeds for affected players
+        // Store original stats for players before being affected by an effect
+        // This is used to restore the original stats when the effect ends
+        // or when the player is no longer affected by the effect
+        // For example, if a player is affected by an EMP, we need to restore
+        // their speed when the effect ends
         this.originalSpeeds = new Map();
+        this.originalDamage = new Map();
     }
 
     getSpecialist(playerId) {
@@ -34,6 +39,10 @@ export default class SpecialistSystem {
             if (specialist.effectType === Specialist.TYPE_ENUM.DISABLE) {
                 this._restoreAffectedPlayerSpeeds(playerId);
             }
+            // If this was a damage boost effect, restore original damage
+            else if (specialist.effectType === Specialist.TYPE_ENUM.DAMAGE_BOOST) {
+                this._restorePlayerDamage(playerId);
+            }
         }
     }
 
@@ -51,6 +60,8 @@ export default class SpecialistSystem {
                     this._applyDisableEffect(player);
                 } else if (player.tank.specialist.effectType === Specialist.TYPE_ENUM.HEAL) {
                     this._applyHealEffect(player);
+                } else if (player.tank.specialist.effectType === Specialist.TYPE_ENUM.DAMAGE_BOOST) {
+                    this._applyDamageBoostEffect(player);
                 }
             }
         });
@@ -128,6 +139,32 @@ export default class SpecialistSystem {
         // Apply healing and update total
         player.hp = Math.min(maxHP, player.hp + healAmount);
         specialist.totalHealApplied += healAmount;
+    }
+
+    _applyDamageBoostEffect(player) {
+        const specialist = player.tank.specialist;
+        const intensity = specialist.effectIntensity;
+
+        // Only apply damage boost once when activated
+        if (!this.originalDamage.has(player.id)) {
+            // Store original damage value
+            this.originalDamage.set(player.id, player.tank.damage);
+
+            // Increase damage by intensity percentage
+            const damageBoost = player.tank.damage * intensity;
+            player.tank.damage += damageBoost;
+        }
+    }
+
+    _restorePlayerDamage(playerId) {
+        if (this.originalDamage.has(playerId)) {
+            const player = this.state.players.get(playerId);
+            if (player) {
+                player.tank.damage = this.originalDamage.get(playerId);
+            }
+
+            this.originalDamage.delete(playerId);
+        }
     }
 
     _restoreAffectedPlayerSpeeds(playerId) {

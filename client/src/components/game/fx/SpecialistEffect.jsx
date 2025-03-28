@@ -1,8 +1,10 @@
 import PropTypes from 'prop-types';
-import OrbitalStrikeEffect from './specialists/OrbitalStrikeEffect';
-import ShieldEffect from './specialists/ShieldEffect';
+
 import EMPEffect from './specialists/EMPEffect';
 import HealEffect from './specialists/HealEffect';
+import OrbitalStrikeEffect from './specialists/OrbitalStrikeEffect';
+import ShieldEffect from './specialists/ShieldEffect';
+import DamageBoostEffect from './specialists/DamageBoostEffect';
 
 const SpecialistEffect = ({ effect, player }) => {
     if (!player) return null;
@@ -14,13 +16,16 @@ const SpecialistEffect = ({ effect, player }) => {
             return <ShieldEffect effect={effect} player={player} />;
 
         case 'aoe':
-            return <OrbitalStrikeEffect effect={effect} player={player} />;
+            return <OrbitalStrikeEffect effect={effect} />;
 
         case 'disable':
-            return <EMPEffect effect={effect} player={player} />;
+            return <EMPEffect effect={effect} />;
 
         case 'heal':
-            return <HealEffect effect={effect} player={player} />;
+            return <HealEffect effect={effect} />;
+
+        case 'damage_boost':
+            return <DamageBoostEffect effect={effect} player={player} />;
 
         default:
             return null;

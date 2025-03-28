@@ -5,9 +5,9 @@ export class Specialist extends Schema {
     static TYPE_ENUM = {
         SHIELD: "shield",
         AOE: "aoe",
-        OBSCURE: "obscure",
         DISABLE: "disable",
-        HEAL: "heal"
+        HEAL: "heal",
+        DAMAGE_BOOST: "damage_boost"
     };
 
     constructor(tankType) {

@@ -1,14 +1,14 @@
 export default {
     "ST-N01": {
-        name: "Smoke Screen",
+        name: "Healing Zone",
         cooldown: 40000,
-        duration: 6000,
+        duration: 2000,
         effect: {
-            type: "obscure",
-            radius: 120,
-            intensity: 0.6 // 60% visibility reduction
+            type: "heal",
+            radius: 70,
+            intensity: 0.4 // 40% healing rate
         },
-        description: "Creates a dense smoke screen that blocks vision and confuses enemies"
+        description: "Creates a regenerative zone that restores health to allies"
     },
     "GD-N02": {
         name: "Energy Shield",
@@ -22,15 +22,15 @@ export default {
         description: "Deploys a protective energy shield that covers a wide area"
     },
     "SH-N03": {
-        name: "Healing Zone",
-        cooldown: 40000,
-        duration: 2000,
-        effect: {
-            type: "heal",
-            radius: 70,
-            intensity: 0.4 // 40% healing rate
+        "name": "Heavy Bullets",
+        "cooldown": 40000,
+        "duration": 5000,
+        "effect": {
+            "type": "damage_boost",
+            "radius": 70,
+            "intensity": 2.0 // 200% damage increase
         },
-        description: "Creates a regenerative zone that restores health to allies"
+        "description": "Enhances bullets within the zone, increasing their damage for a short duration."
     },
     "JG-N04": {
         name: "Orbital Strike",

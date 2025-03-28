@@ -1,6 +1,8 @@
+import { animated, useSpring } from '@react-spring/konva';
 import React, { useEffect, useState } from 'react';
-import { Group, Circle, Line, Text, Ring } from 'react-konva';
-import { useSpring, animated } from '@react-spring/konva';
+import { Circle, Group, Line, Ring } from 'react-konva';
+import PropTypes from 'prop-types';
+
 
 function HealEffect({ effect }) {
     const [waves, setWaves] = useState([]);
@@ -23,7 +25,6 @@ function HealEffect({ effect }) {
     // Calculate remaining time and progress
     const elapsedTime = Date.now() - effect.createdAt;
     const remainingTime = Math.max(0, effect.duration - elapsedTime);
-    const progress = Math.min(1, elapsedTime / effect.duration);
 
     // Initialize waves and particles
     useEffect(() => {
@@ -64,21 +65,20 @@ function HealEffect({ effect }) {
                 prevWaves.map(wave => {
                     // Progress each wave
                     let newRadius = wave.radius + 1.5;
-                    let newOpacity = wave.opacity;
 
                     // Reset wave when it reaches max radius
                     if (newRadius > effect.radius) {
                         newRadius = 0;
-                        newOpacity = 0.8;
+                        wave.opacity = 0.8;
                     } else {
                         // Fade out as it expands
-                        newOpacity = 0.8 * (1 - newRadius / effect.radius);
+                        wave.opacity = 0.8 * (1 - newRadius / effect.radius);
                     }
 
                     return {
                         ...wave,
                         radius: newRadius,
-                        opacity: newOpacity
+                        opacity: wave.opacity
                     };
                 })
             );
@@ -215,7 +215,7 @@ function HealEffect({ effect }) {
             <Group>
                 <animated.Circle
                     radius={12}
-                    fill={`rgba(46, 204, 113, ${coreProps.opacity})`}
+                    fill={`rgba(46, 204, 113, ${coreProps.opacity * 1})`}
                     scaleX={coreProps.scaleX}
                     scaleY={coreProps.scaleY}
                 />
@@ -250,5 +250,9 @@ function HealEffect({ effect }) {
         </Group>
     );
 }
+
+HealEffect.propTypes = {
+    effect: PropTypes.object.isRequired
+};
 
 export default HealEffect;
