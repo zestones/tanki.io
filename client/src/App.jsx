@@ -56,8 +56,8 @@ function AppContent() {
       )}
 
       {fullscreenHandled && (
-        <div className="relative w-full h-screen overflow-hidden">
-          <div className={`absolute inset-0 z-10 transition-opacity duration-1000`}>
+        <div className="w-full h-full">
+          <div className={`transition-opacity duration-1000`}>
             <Router>
               <Routes>
                 <Route path='/tanki.io/' element={<Home themeColor={themeColor} />} />
