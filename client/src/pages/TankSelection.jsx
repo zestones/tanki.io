@@ -1,26 +1,31 @@
-import { useEffect, useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import useResponsiveUtils from '../hooks/useResponsiveUtils';
 
-import FullscreenController from '../components/mobile/utils/FullscreenStateManager';
 import NavBar from '../components/mobile/layout/NavBar';
+import TankDetails from '../components/mobile/tankSelection/TankDetails';
 import TankPreview from '../components/mobile/tankSelection/TankPreview';
 import TankStats from '../components/mobile/tankSelection/TankStats';
-import TankDetails from '../components/mobile/tankSelection/TankDetails';
+import FullscreenController from '../components/mobile/utils/FullscreenStateManager';
 
-// Import client-side tank components for rendering
+import { config } from '../config/config';
 import { tankComponentMap } from '../utils/tankComponentMap';
 
-import useLayoutSpacing from '../hooks/useLayoutSpacing';
-import useViewportSize from '../hooks/useViewportSize';
-import { config } from '../config/config';
-import LoadingScreen from '../components/common/LoadingScreen';
 import ErrorScreen from '../components/common/ErrorScreen';
+import LoadingScreen from '../components/common/LoadingScreen';
 
 function TankSelection() {
     const rootRef = useRef(null);
-    const { height } = useViewportSize(rootRef);
-    const { layoutSize, spacing } = useLayoutSpacing(height);
+
+    // Use our custom responsive hooks
+    const {
+        isPortrait,
+        isVerySmallScreen,
+        isSmallScreen,
+        layoutSpacing,
+        utils
+    } = useResponsiveUtils();
 
     const navigate = useNavigate();
 
@@ -30,6 +35,13 @@ function TankSelection() {
     const [tanksData, setTanksData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    // Determine appropriate layout size based on screen size
+    const getResponsiveLayoutSize = () => {
+        if (isVerySmallScreen) return 'xs';
+        if (isSmallScreen) return 'sm';
+        return 'md';
+    };
 
     // Fetch tank data from server
     useEffect(() => {
@@ -53,9 +65,6 @@ function TankSelection() {
                 console.error("Failed to fetch tanks data:", err);
                 setError(err.message);
                 setLoading(false);
-
-                // Fallback to client-side data if server fetch fails
-                setTanksData(tankComponents);
             }
         };
 
@@ -110,65 +119,143 @@ function TankSelection() {
                 version="SYSTEM v2.5"
             />
 
-            <div className="flex-grow flex flex-col">
-                <div className={`px-4 ${spacing.header} transition-opacity duration-300 ${animateIn ? 'opacity-100' : 'opacity-0'}`}>
-                    <div className="flex items-baseline">
-                        <h2 className="text-2xl font-bold">{selectedTank.name}</h2>
-                        <span className="ml-2 text-xs font-mono text-gray-400">{selectedTank.codeName}</span>
+            {isPortrait ? (
+                // Portrait layout
+                <div className="flex-grow flex flex-col">
+                    <div className={`${utils.getPadding(isVerySmallScreen ? 'xs' : 'sm', 'x')} ${layoutSpacing.header} transition-opacity duration-300 ${animateIn ? 'opacity-100' : 'opacity-0'}`}>
+                        <div className="flex items-baseline">
+                            <h2 className={`${utils.getFontSize('xl')} font-bold`}>{selectedTank.name}</h2>
+                            <span className="ml-2 text-xs font-mono text-gray-400">{selectedTank.codeName}</span>
+                        </div>
+                        <div className="flex items-center mt-1">
+                            <div className="w-2 h-2 mr-2 rounded-sm" style={{ backgroundColor: selectedTank.color }}></div>
+                            <span className="text-xs font-medium" style={{ color: selectedTank.color }}>
+                                {selectedTank.classification}
+                            </span>
+                        </div>
                     </div>
-                    <div className="flex items-center mt-1">
-                        <div className="w-2 h-2 mr-2 rounded-sm" style={{ backgroundColor: selectedTank.color }}></div>
-                        <span className="text-xs font-medium" style={{ color: selectedTank.color }}>
-                            {selectedTank.classification}
-                        </span>
+
+                    <TankPreview
+                        selectedTank={selectedTank}
+                        tankRotation={tankRotation}
+                        animateIn={animateIn}
+                        onNext={goNext}
+                        onPrev={goPrev}
+                        TankComponent={TankComponent}
+                        layoutSize={getResponsiveLayoutSize()}
+                    />
+
+                    <div className="flex justify-center space-x-1.5 mb-1.5">
+                        {tanksData.map((tank, index) => (
+                            <div
+                                key={tank.codeName}
+                                className={`h-1 transition-all duration-300 ${selectedIndex === index ? 'w-6' : 'w-3 bg-gray-700'}`}
+                                style={selectedIndex === index ? { backgroundColor: tank.color } : {}}
+                            ></div>
+                        ))}
+                    </div>
+
+                    <TankStats
+                        selectedTank={selectedTank}
+                        spacing={layoutSpacing.section}
+                    />
+
+                    <TankDetails
+                        selectedTank={selectedTank}
+                        animateIn={animateIn}
+                        isSmallScreen={isVerySmallScreen}
+                    />
+                </div>
+            ) : (
+                // Landscape layout - optimized for side-by-side content
+                <div className="flex-grow flex flex-row overflow-hidden">
+                    {/* Left section - Tank preview and stats */}
+                    <div className={`${isVerySmallScreen ? 'w-[60%]' : 'w-[55%]'} flex flex-col`}>
+                        <div className={`${utils.getPadding('xs')} transition-opacity duration-300 ${animateIn ? 'opacity-100' : 'opacity-0'}`}>
+                            <div className="flex items-baseline">
+                                <h2 className={`${utils.getFontSize('lg')} font-bold`}>{selectedTank.name}</h2>
+                                <span className="ml-1.5 text-xs font-mono text-gray-400">{selectedTank.codeName}</span>
+                            </div>
+                            <div className="flex items-center mt-0.5">
+                                <div className="w-1.5 h-1.5 mr-1.5 rounded-sm" style={{ backgroundColor: selectedTank.color }}></div>
+                                <span className="text-xs font-medium" style={{ color: selectedTank.color }}>
+                                    {selectedTank.classification}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div className="flex-grow flex flex-col">
+                            <TankPreview
+                                selectedTank={selectedTank}
+                                tankRotation={tankRotation}
+                                animateIn={animateIn}
+                                onNext={goNext}
+                                onPrev={goPrev}
+                                TankComponent={TankComponent}
+                                layoutSize={isVerySmallScreen ? 'xs' : 'sm'}
+                            />
+
+                            <div className="flex justify-center space-x-1.5 my-1">
+                                {tanksData.map((tank, index) => (
+                                    <div
+                                        key={tank.codeName}
+                                        className={`h-1 transition-all duration-300 ${selectedIndex === index ? 'w-5' : 'w-2.5 bg-gray-700'}`}
+                                        style={selectedIndex === index ? { backgroundColor: tank.color } : {}}
+                                    ></div>
+                                ))}
+                            </div>
+
+                            <TankStats
+                                selectedTank={selectedTank}
+                                spacing={utils.getPadding('xs')}
+                            />
+                        </div>
+                    </div>
+
+                    {/* Right section - Tank details */}
+                    <div className={`${isVerySmallScreen ? 'w-[40%]' : 'w-[45%]'} border-l border-gray-800 overflow-hidden flex flex-col`}>
+                        <TankDetails
+                            selectedTank={selectedTank}
+                            animateIn={animateIn}
+                            isSmallScreen={true}
+                            isLandscape={true}
+                            isVerySmallScreen={isVerySmallScreen}
+                        />
+
+                        {/* Action button - positioned at the bottom in landscape */}
+                        <div className="pb-2 px-3 border-t border-gray-800 bg-black bg-opacity-50 mt-auto">
+                            <button
+                                onClick={handleSelect}
+                                className={`w-full ${utils.getButtonSize('sm')} flex items-center justify-center transition-all duration-300 transform`}
+                                style={{
+                                    backgroundColor: selectedTank.color,
+                                    boxShadow: `0 0 15px ${selectedTank.color}80`
+                                }}
+                            >
+                                <span className="font-bold tracking-wider mr-2 text-sm">DEPLOY</span>
+                                <ArrowRight size={utils.getIconSize('xs')} />
+                            </button>
+                        </div>
                     </div>
                 </div>
+            )}
 
-                <TankPreview
-                    selectedTank={selectedTank}
-                    tankRotation={tankRotation}
-                    animateIn={animateIn}
-                    onNext={goNext}
-                    onPrev={goPrev}
-                    TankComponent={TankComponent}
-                    layoutSize={layoutSize}
-                    spacing={spacing}
-                />
-
-                <div className="flex justify-center space-x-2 mb-2">
-                    {tanksData.map((tank, index) => (
-                        <div
-                            key={tank.codeName}
-                            className={`h-1 transition-all duration-300 ${selectedIndex === index ? 'w-8 bg-blue-400' : 'w-4 bg-gray-700'}`}
-                            style={selectedIndex === index ? { backgroundColor: tank.color } : {}}
-                        ></div>
-                    ))}
+            {/* Action button for portrait mode */}
+            {isPortrait && (
+                <div className={`${layoutSpacing.section} bg-black bg-opacity-80 border-t border-gray-800`}>
+                    <button
+                        onClick={handleSelect}
+                        className={`w-full ${utils.getButtonSize('md')} flex items-center justify-center transition-all duration-300 transform`}
+                        style={{
+                            backgroundColor: selectedTank.color,
+                            boxShadow: `0 0 20px ${selectedTank.color}80`
+                        }}
+                    >
+                        <span className="font-bold tracking-wider mr-2">DEPLOY</span>
+                        <ArrowRight size={utils.getIconSize('sm')} />
+                    </button>
                 </div>
-
-                <TankStats
-                    selectedTank={selectedTank}
-                    spacing={spacing}
-                />
-
-                <TankDetails
-                    selectedTank={selectedTank}
-                    animateIn={animateIn}
-                />
-            </div>
-
-            <div className={`${spacing.actionButtons} bg-black bg-opacity-80 border-t border-gray-800`}>
-                <button
-                    onClick={handleSelect}
-                    className="w-full py-3 flex items-center justify-center transition-all duration-300 transform"
-                    style={{
-                        backgroundColor: selectedTank.color,
-                        boxShadow: `0 0 20px ${selectedTank.color}80`
-                    }}
-                >
-                    <span className="font-bold tracking-wider mr-2">DEPLOY</span>
-                    <ArrowRight size={16} />
-                </button>
-            </div>
+            )}
         </div>
     );
 }
