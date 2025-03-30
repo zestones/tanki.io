@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { FullscreenProvider, useFullscreenContext } from './contexts/FullscreenContext';
-import IntroAnimation from './components/IntroAnimation';
+import React, { useEffect, useState } from 'react';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import FullscreenModal from './components/mobile/modal/FullscreenModal';
+import { FullscreenProvider, useFullscreenContext } from './contexts/FullscreenContext';
 
-import Home from './pages/Home';
-import Game from './pages/Game';
 import Controller from './pages/Controller';
+import Game from './pages/Game';
+import Home from './pages/Home';
 import TankClassSelection from './pages/TankSelection';
 
 
@@ -19,7 +18,6 @@ function App() {
 }
 
 function AppContent() {
-  const [loadingPhase, setLoadingPhase] = useState('intro'); // 'intro', 'transitioning', 'complete'
   const [showFullscreenModal, setShowFullscreenModal] = useState(false);
   const [fullscreenHandled, setFullscreenHandled] = useState(false);
   const { isFullscreen, enterFullscreen } = useFullscreenContext();
@@ -45,13 +43,6 @@ function AppContent() {
     setFullscreenHandled(true);
   };
 
-  const handleLoadingComplete = () => {
-    setLoadingPhase('transitioning');
-    setTimeout(() => {
-      setLoadingPhase('complete');
-    }, 500);
-  };
-
   const themeColor = "#3498db";
 
   return (
@@ -65,15 +56,11 @@ function AppContent() {
       )}
 
       {fullscreenHandled && (
-        <div className="relative w-full h-screen overflow-hidden">
-          <div className={`absolute inset-0 z-20 transition-opacity duration-1000 ${loadingPhase !== 'intro' ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
-            <IntroAnimation onLoadComplete={handleLoadingComplete} />
-          </div>
-
-          <div className={`absolute inset-0 z-10 transition-opacity duration-1000 ${loadingPhase === 'intro' ? 'opacity-0' : 'opacity-100'}`}>
+        <div className="w-full h-full">
+          <div className={`transition-opacity duration-1000`}>
             <Router>
               <Routes>
-                <Route path='/tanki.io/' element={<Home animateIn={loadingPhase !== 'intro'} themeColor={themeColor} />} />
+                <Route path='/tanki.io/' element={<Home themeColor={themeColor} />} />
                 <Route path='/tanki.io/game' element={<Game />} />
                 <Route path='/tanki.io/controller' element={<Controller />} />
                 <Route path='/tanki.io/tank-selection' element={<TankClassSelection />} />

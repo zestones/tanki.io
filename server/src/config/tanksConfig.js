@@ -1,3 +1,5 @@
+import specialistData from "./specialistConfig.js";
+
 export default {
     "ST-N01": {
         name: "SENTINEL",
@@ -5,19 +7,16 @@ export default {
             defense: 3,
             damage: 3,
             speed: 4,
-            specialty: "Adaptive"
+            specialty: "Healer"
         },
-        abilities: ["Armor Plating", "Adaptive Systems"],
+        abilities: ["Healing Zone", "Balanced Systems"],
         color: "#2ecc71",
         classification: "BALANCED",
         range: "Medium",
-        skills: [
-            { name: "Evasive Maneuvers", level: 3, description: "Balanced movement patterns to avoid incoming fire" },
-            { name: "Resource Management", level: 4, description: "Efficient use of ammunition and fuel resources" }
-        ],
+        skill: specialistData["ST-N01"],
         equipment: [
             { name: "Reinforced Hull", type: "Armor", effect: "Provides all-around protection against various threats" },
-            { name: "Multi-terrain Tracks", type: "Mobility", effect: "Adaptable to different terrain conditions" }
+            { name: "Multi-terrain Tracks", type: "Special", effect: "Adaptable to different terrain conditions" }
         ],
         description: "Standard tank with balanced stats and versatile combat capabilities."
     },
@@ -33,10 +32,7 @@ export default {
         color: "#3498db",
         classification: "DEFENDER",
         range: "Short",
-        skills: [
-            { name: "Shield Mastery", level: 5, description: "Expert control of energy shield systems" },
-            { name: "Team Protection", level: 4, description: "Ability to extend shields to nearby allies" }
-        ],
+        skill: specialistData["GD-N02"],
         equipment: [
             { name: "Energy Projector", type: "Weapon", effect: "Medium damage output with shield penetration capabilities" },
             { name: "Shield Generator", type: "Special", effect: "Projects energy barriers that absorb incoming damage" }
@@ -55,10 +51,7 @@ export default {
         color: "#e74c3c",
         classification: "ASSAULT",
         range: "Medium",
-        skills: [
-            { name: "Sustained Fire", level: 4, description: "Ability to maintain continuous fire on targets" },
-            { name: "Tactical Movement", level: 4, description: "Fast repositioning during combat engagements" }
-        ],
+        skill: specialistData["SH-N03"],
         equipment: [
             { name: "Gatling Cannon", type: "Weapon", effect: "High rate of fire with increasing accuracy" },
             { name: "Composite Armor", type: "Armor", effect: "Lightweight protection optimized for mobility" }
@@ -77,10 +70,7 @@ export default {
         color: "#f1c40f",
         classification: "HEAVY",
         range: "Long",
-        skills: [
-            { name: "Heavy Weapons Expert", level: 5, description: "Mastery of high-caliber artillery systems" },
-            { name: "Armor Breaker", level: 5, description: "Specialized in penetrating enemy defenses" }
-        ],
+        skill: specialistData["JG-N04"],
         equipment: [
             { name: "Siege Cannon", type: "Weapon", effect: "Extremely high damage with longer reload times" },
             { name: "Reinforced Superstructure", type: "Armor", effect: "Massive armor plating with impact resistance" }
@@ -99,10 +89,7 @@ export default {
         color: "#9b59b6",
         classification: "SCOUT",
         range: "Variable",
-        skills: [
-            { name: "Recon Specialist", level: 4, description: "Enhanced awareness of battlefield conditions" },
-            { name: "Electronic Warfare", level: 5, description: "Disruption of enemy systems and communications" }
-        ],
+        skill: specialistData["TB-N05"],
         equipment: [
             { name: "Tesla Cannon", type: "Weapon", effect: "Electric-based weapon that can chain to nearby targets" },
             { name: "EMP Generator", type: "Special", effect: "Disables enemy systems within a certain radius" }

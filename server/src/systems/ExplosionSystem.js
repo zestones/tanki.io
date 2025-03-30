@@ -6,8 +6,9 @@ export default class ExplosionSystem {
         this.state = state;
     }
 
+    // TODO: Add explosion radius
     createExplosion(x, y) {
-        const explosion = new Explosion();
+        const explosion = new Explosion(); // TODO : instantiate explosion position and radius
 
         explosion.x = x;
         explosion.y = y;

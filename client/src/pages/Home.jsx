@@ -1,141 +1,192 @@
-import { motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import useLayoutSpacing from '../hooks/useLayoutSpacing';
-import useViewportSize from '../hooks/useViewportSize';
+import { withOpacity } from '../utils/colorUtils';
 
-import ActionButtons from '../components/mobile/buttons/ActionButtons';
-import RegistrationForm from '../components/mobile/form/RegistrationForm';
-import CombatOperationStatus from '../components/mobile/layout/CombatOperationStatus';
-import Header from '../components/mobile/layout/Header';
-import MissionBriefing from '../components/mobile/layout/MissionBriefing';
-import NavBar from '../components/mobile/layout/NavBar';
-import { BackgroundEffects, CornerDecorations, SidePanels } from '../components/mobile/utils/VisualEffects';
+import AuthModal from '../components/mobile/menu/AuthModal';
 
 import PropTypes from 'prop-types';
+import MenuOptions from '../components/mobile/menu/MenuOptions';
 
-function Home({ animateIn = false, themeColor = "#3498db" }) {
+function Home({ themeColor = "#3498db" }) {
     const [username, setUsername] = useState('');
-    const [contentReady, setContentReady] = useState(false);
-
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [orientation, setOrientation] = useState(window.innerHeight > window.innerWidth ? 'portrait' : 'landscape');
     const navigate = useNavigate();
+    const inputRef = useRef(null);
     const rootRef = useRef(null);
 
-    const { height } = useViewportSize(rootRef);
-    const { layoutSize, spacing } = useLayoutSpacing(height);
-
-    // Stagger the animation of elements for a more dramatic entry
+    // Check if user is already authenticated
     useEffect(() => {
-        if (animateIn) {
-            const timer = setTimeout(() => {
-                setContentReady(true);
-            }, 300);
-            return () => clearTimeout(timer);
+        const savedUsername = sessionStorage.getItem('username');
+        if (savedUsername) {
+            setUsername(savedUsername);
+            setIsAuthenticated(true);
         }
-    }, [animateIn]);
+
+        // Focus on input when component mounts
+        if (inputRef.current && !isAuthenticated) {
+            inputRef.current.focus();
+        }
+
+        // Handle orientation changes
+        const handleOrientationChange = () => {
+            setOrientation(window.innerHeight > window.innerWidth ? 'portrait' : 'landscape');
+        };
+
+        window.addEventListener('resize', handleOrientationChange);
+        return () => window.removeEventListener('resize', handleOrientationChange);
+    }, [isAuthenticated]);
 
     const handleSubmit = (e) => {
-        if (e) e.preventDefault();
+        e.preventDefault();
         if (username.trim()) {
             sessionStorage.setItem('username', username.trim());
-            navigate('/tanki.io/tank-selection');
+            setIsAuthenticated(true);
         }
     };
 
+    const handleMenuOption = (option) => {
+        switch (option) {
+            case 'play':
+                navigate('/tanki.io/tank-selection');
+                break;
+            case 'tutorial':
+                console.log('Tutorial clicked');
+                // Implement tutorial navigation
+                break;
+            case 'spectate':
+                navigate('/tanki.io/game');
+                break;
+            case 'quit':
+                console.log('Quit clicked');
+                sessionStorage.removeItem('username');
+                setIsAuthenticated(false);
+                setUsername('');
+                break;
+            default:
+                break;
+        }
+    };
+
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                when: "beforeChildren",
+                staggerChildren: 0.1
+            }
+        },
+        exit: {
+            opacity: 0,
+            y: 20,
+            transition: { ease: "easeInOut" }
+        }
+    };
+
+    const itemVariants = {
+        hidden: { opacity: 0, y: 20 },
+        visible: { opacity: 1, y: 0 },
+    };
+
     return (
-        <div ref={rootRef} className="flex flex-col h-screen bg-gray-900 text-white overflow-hidden">
-            {/* Use imported visual effect components */}
-            <BackgroundEffects />
-            <CornerDecorations />
+        <div ref={rootRef} className="flex flex-col h-screen bg-gray-900 text-white overflow-hidden relative">
+            {/* Background with hexagonal grid pattern */}
+            <div className="absolute inset-0 bg-[#141418] z-0">
+                {/* Hexagonal grid pattern */}
+                <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MCIgaGVpZ2h0PSI0MyIgdmlld0JveD0iMCAwIDUwIDQzIj48cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiMzMDMwNDAiIHN0cm9rZS13aWR0aD0iMC44IiBkPSJNMjUsMSBMMSwyMSBMMSw2MSBMMjUsODEgTDQ5LDYxIEw0OSwyMSBMMjUsMSIgLz48L3N2Zz4=')] opacity-10"></div>
 
-            <NavBar
-                themeColor={themeColor}
-                title="TANKI.IO"
-                version="SYSTEM v2.5"
-            />
+                {/* Overlay gradients */}
+                <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black opacity-60"></div>
+                <div className="absolute inset-0" style={{ background: `radial-gradient(circle at center, ${withOpacity(themeColor, 0.15)}, transparent 70%)` }}></div>
 
-            <div className="flex-grow flex flex-col h-full relative z-10">
-                <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: contentReady ? 1 : 0, y: contentReady ? 0 : 10 }}
-                    transition={{ duration: 0.5 }}
-                >
-                    <Header
-                        spacing={spacing.header}
-                        animateIn={contentReady}
-                        layoutSize={layoutSize}
-                    />
-                </motion.div>
-
-                <div className="flex flex-col flex-grow px-6">
-                    <div>
-                        <motion.div
-                            initial={{ opacity: 0, y: 15 }}
-                            animate={{ opacity: contentReady ? 1 : 0, y: contentReady ? 0 : 15 }}
-                            transition={{ duration: 0.6, delay: 0.1 }}
-                        >
-                            <RegistrationForm
-                                username={username}
-                                setUsername={setUsername}
-                                handleSubmit={handleSubmit}
-                                spacing={spacing}
-                                layoutSize={layoutSize}
-                                themeColor={themeColor}
-                            />
-                        </motion.div>
-
-                        <motion.div
-                            initial={{ opacity: 0, y: 15 }}
-                            animate={{ opacity: contentReady ? 1 : 0, y: contentReady ? 0 : 15 }}
-                            transition={{ duration: 0.6, delay: 0.2 }}
-                        >
-                            <CombatOperationStatus
-                                spacing={spacing}
-                                animateIn={contentReady}
-                                themeColor={themeColor}
-                                layoutSize={layoutSize}
-                            />
-                        </motion.div>
-
-                        <motion.div
-                            initial={{ opacity: 0, y: 15 }}
-                            animate={{ opacity: contentReady ? 1 : 0, y: contentReady ? 0 : 15 }}
-                            transition={{ duration: 0.6, delay: 0.3 }}
-                        >
-                            <MissionBriefing
-                                spacing={spacing}
-                                animateIn={contentReady}
-                                layoutSize={layoutSize}
-                            />
-                        </motion.div>
-                    </div>
+                {/* Animated grid lines */}
+                <div className="absolute inset-0 opacity-20">
+                    {[...Array(10)].map((_, i) => (
+                        <div
+                            key={`h-${i}`}
+                            className="absolute w-full h-px bg-blue-400"
+                            style={{
+                                top: `${i * 10}%`,
+                                backgroundImage: `linear-gradient(90deg, transparent, ${withOpacity(themeColor, 0.5)}, transparent)`,
+                                animation: `scanline ${3 + i * 0.5}s linear infinite`
+                            }}
+                        ></div>
+                    ))}
+                    {[...Array(10)].map((_, i) => (
+                        <div
+                            key={`v-${i}`}
+                            className="absolute h-full w-px bg-blue-400"
+                            style={{
+                                left: `${i * 10}%`,
+                                backgroundImage: `linear-gradient(0deg, transparent, ${withOpacity(themeColor, 0.5)}, transparent)`,
+                                animation: `scanlineVertical ${3 + i * 0.5}s linear infinite`
+                            }}
+                        ></div>
+                    ))}
                 </div>
-
-                <motion.div
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: contentReady ? 1 : 0, y: contentReady ? 0 : 15 }}
-                    transition={{ duration: 0.6, delay: 0.4 }}
-                >
-                    <ActionButtons
-                        spacing={spacing.actionButtons}
-                        layoutSize={layoutSize}
-                        themeColor={themeColor}
-                        username={username}
-                        handleSubmit={handleSubmit}
-                        navigate={navigate}
-                    />
-                </motion.div>
             </div>
 
-            {/* Use SidePanels component instead of duplicated code */}
-            <SidePanels />
+            {/* Top navigation bar */}
+            <div className="relative z-10 bg-black bg-opacity-70 border-b border-gray-800 px-4 py-3 flex justify-between items-center">
+                <div className="flex items-center">
+                    <div className="w-3 h-3 mr-2" style={{ backgroundColor: themeColor }}></div>
+                    <h1 className="text-lg font-bold tracking-wider">TANKI.IO</h1>
+                </div>
+                <div className="flex items-center">
+                    <div className="text-xs font-mono text-gray-400">SYSTEM v2.5</div>
+                    <div className="ml-2 h-2 w-2 rounded-full animate-pulse bg-green-500"></div>
+                </div>
+            </div>
+
+            {/* Main content */}
+            <div className="flex-grow flex flex-col relative z-10">
+                {!isAuthenticated ? (
+                    <AuthModal
+                        containerVariants={containerVariants}
+                        itemVariants={itemVariants}
+                        themeColor={themeColor}
+                        onLogin={handleSubmit}
+                        inputRef={inputRef}
+                        username={username}
+                        setUsername={setUsername}
+                    />
+                ) : (
+                    <MenuOptions
+                        containerVariants={containerVariants}
+                        itemVariants={itemVariants}
+                        username={username}
+                        themeColor={themeColor}
+                        handleMenuOption={handleMenuOption}
+                    />
+                )}
+            </div>
+
+            {/* Scanlines effect */}
+            <div className="absolute inset-0 bg-[linear-gradient(transparent_50%,rgba(0,0,0,0.02)_50%)] bg-[length:100%_2px] pointer-events-none z-20"></div>
+
+            {/* Global CSS for animations */}
+            <style jsx="true">{`
+                @keyframes scanline {
+                    0% { transform: translateX(-100%); }
+                    100% { transform: translateX(100%); }
+                }
+                @keyframes scanlineVertical {
+                    0% { transform: translateY(-100%); }
+                    100% { transform: translateY(100%); }
+                }
+                @keyframes blink {
+                    0%, 100% { opacity: 1; }
+                    50% { opacity: 0.3; }
+                }
+            `}</style>
         </div>
     );
 }
 
+
 Home.propTypes = {
-    animateIn: PropTypes.bool,
     themeColor: PropTypes.string
 };
 

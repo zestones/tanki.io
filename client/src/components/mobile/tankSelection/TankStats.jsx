@@ -1,15 +1,36 @@
+import { animated, useSpring } from '@react-spring/web';
 import { Shield, Target, Zap } from 'lucide-react';
 import PropTypes from 'prop-types';
-import { useSpring, animated } from '@react-spring/web';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import useResponsiveUtils from '../../../hooks/useResponsiveUtils';
 
 const MAX_STAT = 10;
-function TankStats({ selectedTank, spacing }) {
+
+function TankStats({ selectedTank, spacing = null }) {
+    const {
+        isVerySmallScreen,
+        isSmallScreen,
+        isLandscape,
+        utils,
+        layoutSpacing
+    } = useResponsiveUtils();
+
     const [animatedStats, setAnimatedStats] = useState({
         defense: false,
         damage: false,
         speed: false
     });
+
+    // Determine hex sizes based on screen size
+    const hexSize = isVerySmallScreen ? 10 : isSmallScreen ? 11 : 12;
+    const hexHeight = isVerySmallScreen ? 12 : isSmallScreen ? 13 : 14;
+
+    // Get icon size from responsive utils
+    const iconSize = utils.getIconSize('xs');
+
+    // Get text sizes from responsive utils
+    const labelTextSize = utils.getFontSize('xs');
+    const valueTextSize = `${labelTextSize} font-bold`;
 
     const defenseFillProps = useSpring({
         from: { height: '0%' },
@@ -32,9 +53,13 @@ function TankStats({ selectedTank, spacing }) {
         delay: 100,
     });
 
+    // Wave animations - adjust intensity based on screen size
+    const waveDistance = isVerySmallScreen ? -2 : -3;
+    const waveHeight = isVerySmallScreen ? '6px' : '8px';
+
     const healthWaveProps = useSpring({
         from: { transform: 'translateY(0px)' },
-        to: { transform: 'translateY(-3px)' },
+        to: { transform: `translateY(${waveDistance}px)` },
         config: { duration: 1000, friction: 10 },
         loop: { reverse: true },
         pause: !animatedStats.defense,
@@ -42,7 +67,7 @@ function TankStats({ selectedTank, spacing }) {
 
     const damageWaveProps = useSpring({
         from: { transform: 'translateY(0px)' },
-        to: { transform: 'translateY(-3px)' },
+        to: { transform: `translateY(${waveDistance}px)` },
         config: { duration: 1000, friction: 10 },
         loop: { reverse: true },
         pause: !animatedStats.damage,
@@ -50,7 +75,7 @@ function TankStats({ selectedTank, spacing }) {
 
     const speedWaveProps = useSpring({
         from: { transform: 'translateY(0px)' },
-        to: { transform: 'translateY(-3px)' },
+        to: { transform: `translateY(${waveDistance}px)` },
         config: { duration: 1000, friction: 10 },
         loop: { reverse: true },
         pause: !animatedStats.speed,
@@ -68,14 +93,14 @@ function TankStats({ selectedTank, spacing }) {
         return () => clearTimeout(timer);
     }, []);
 
-    // Refactored renderHexStat to not use hooks directly
+    // Render a hexagonal stat with liquid fill effect
     const renderHexStat = (value, label, icon, fillProps, waveProps) => {
         return (
             <div className="flex flex-col items-center">
-                <div className="relative w-12 h-14 mb-1">
+                <div className={`relative w-${hexSize} h-${hexHeight} mb-1`}>
                     {/* BASE HEXAGON */}
                     <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-12 h-12 bg-gray-800 rounded-md transform rotate-45"></div>
+                        <div className={`w-${hexSize} h-${hexSize} bg-gray-800 rounded-md transform rotate-45`}></div>
                     </div>
 
                     {/* HEXAGON FILL - LIQUID EFFECT */}
@@ -96,7 +121,7 @@ function TankStats({ selectedTank, spacing }) {
                                 className="absolute top-0 left-0 w-full"
                                 style={{
                                     ...waveProps,
-                                    height: '8px',
+                                    height: waveHeight,
                                     background: `linear-gradient(to bottom, 
                                         ${selectedTank.color} 30%, 
                                         rgba(255,255,255,0.3) 50%, 
@@ -110,41 +135,50 @@ function TankStats({ selectedTank, spacing }) {
 
                     {/* Icon */}
                     <div className="absolute inset-0 flex items-center justify-center text-white">
-                        {icon}
+                        {React.cloneElement(icon, { size: iconSize })}
                     </div>
                 </div>
-                <span className="text-xs text-gray-400">{label}</span>
-                <span className="text-xs font-bold text-white">{value}</span>
+                <span className={labelTextSize}>{label}</span>
+                <span className={valueTextSize}>{value}</span>
             </div>
         );
     };
 
+    // Determine container spacing and padding
+    const containerSpacing = spacing ?
+        (typeof spacing === 'string' ? spacing : spacing.tankStats) :
+        layoutSpacing.section;
+
+    const horizontalPadding = isLandscape ?
+        (isVerySmallScreen ? 'px-3' : 'px-5') :
+        (isVerySmallScreen ? 'px-4' : isSmallScreen ? 'px-6' : 'px-8');
+
     return (
-        <div className={`flex justify-around px-8 ${spacing.tankStats} bg-gray-900 bg-opacity-70`}>
+        <div className={`flex justify-around ${horizontalPadding} ${containerSpacing} bg-gray-900 bg-opacity-70 items-center h-full`}>
             {renderHexStat(
                 selectedTank.stats.defense,
                 "DFS",
-                <Shield size={14} />,
+                <Shield />,
                 defenseFillProps,
                 healthWaveProps
             )}
             {renderHexStat(
                 selectedTank.stats.damage,
                 "DMG",
-                <Target size={14} />,
+                <Target />,
                 damageFillProps,
                 damageWaveProps
             )}
             {renderHexStat(
                 selectedTank.stats.speed,
                 "SPD",
-                <Zap size={14} />,
+                <Zap />,
                 speedFillProps,
                 speedWaveProps
             )}
         </div>
     );
-};
+}
 
 TankStats.propTypes = {
     selectedTank: PropTypes.shape({
@@ -155,7 +189,10 @@ TankStats.propTypes = {
             speed: PropTypes.number.isRequired
         }).isRequired
     }).isRequired,
-    spacing: PropTypes.object.isRequired
+    spacing: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.object
+    ])
 };
 
 export default TankStats;
