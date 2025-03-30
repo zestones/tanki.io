@@ -28,7 +28,9 @@ function MenuOptions({ username, themeColor, handleMenuOption, containerVariants
     }, []);
 
     // More precise screen size detection
-    const isVerySmallScreen = screenSize.width <= 360 || screenSize.height <= 640;
+    const isVerySmallScreen = screenSize.width <= 360 || screenSize.height <= 640
+
+;
     const isSmallScreen = screenSize.width <= 390 || screenSize.height <= 700;
 
     // Determine username display format based on available space
