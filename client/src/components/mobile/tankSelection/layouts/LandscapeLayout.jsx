@@ -74,7 +74,7 @@ function LandscapeLayout({
                 />
 
                 {/* Action button - positioned at the bottom in landscape */}
-                <div className="pb-2 px-3 border-t border-gray-800 bg-black bg-opacity-50 mt-auto">
+                <div className="border-t border-gray-800 bg-black bg-opacity-50 mt-auto">
                     <button
                         onClick={handleSelect}
                         className={`w-full ${utils.getButtonSize('sm')} flex items-center justify-center transition-all duration-300 transform`}

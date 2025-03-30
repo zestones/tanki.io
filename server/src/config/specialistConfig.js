@@ -17,7 +17,7 @@ export default {
         effect: {
             type: "shield",
             radius: 100,   // for display purposes only
-            intensity: 0.8 // 80% damage reduction or effect strength
+            intensity: 1.0 // 100% damage reduction or effect strength
         },
         description: "Deploys a protective energy shield that covers a wide area"
     },
@@ -50,7 +50,7 @@ export default {
         effect: {
             type: "disable",
             radius: 130,
-            intensity: 0.5 // 50% effectiveness of disabling effects
+            intensity: 1.0 // 100% disable effect
         },
         description: "Releases an EMP that disrupts electronic systems in the area"
     }

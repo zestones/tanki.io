@@ -26,9 +26,17 @@ function PortraitLayout({
         return 'md';
     };
 
+    // Use different percentage splits based on screen size
+    const getHeightDistribution = () => {
+        return { topHeight: '60%', bottomHeight: '40%' };
+    };
+
+    const { topHeight, bottomHeight } = getHeightDistribution();
+
     return (
-        <>
-            <div className="flex-grow flex flex-col">
+        <div className="flex-grow flex flex-col overflow-hidden">
+            {/* Top section - Tank info, preview, and stats */}
+            <div className="flex flex-col" style={{ height: topHeight }}>
                 <div className={`${utils.getPadding(isVerySmallScreen ? 'xs' : 'sm', 'x')} ${layoutSpacing.header} transition-opacity duration-300 ${animateIn ? 'opacity-100' : 'opacity-0'}`}>
                     <div className="flex items-baseline">
                         <h2 className={`${utils.getFontSize('xl')} font-bold`}>{selectedTank.name}</h2>
@@ -66,29 +74,34 @@ function PortraitLayout({
                     selectedTank={selectedTank}
                     spacing={layoutSpacing.section}
                 />
-
-                <TankDetails
-                    selectedTank={selectedTank}
-                    animateIn={animateIn}
-                    isSmallScreen={isVerySmallScreen}
-                />
             </div>
 
-            {/* Action button for portrait mode */}
-            <div className={`${layoutSpacing.section} bg-black bg-opacity-80 border-t border-gray-800`}>
-                <button
-                    onClick={handleSelect}
-                    className={`w-full ${utils.getButtonSize('md')} flex items-center justify-center transition-all duration-300 transform`}
-                    style={{
-                        backgroundColor: selectedTank.color,
-                        boxShadow: `0 0 20px ${selectedTank.color}80`
-                    }}
-                >
-                    <span className="font-bold tracking-wider mr-2">DEPLOY</span>
-                    <ArrowRight size={utils.getIconSize('sm')} />
-                </button>
+            {/* Bottom section - Tank details */}
+            <div className="border-t border-gray-800 flex flex-col overflow-hidden" style={{ height: bottomHeight }}>
+                <div className="flex-grow flex flex-col overflow-hidden">
+                    <TankDetails
+                        selectedTank={selectedTank}
+                        animateIn={animateIn}
+                        isLandscape={false}
+                    />
+                </div>
+
+                {/* Action button */}
+                <div className="bg-black bg-opacity-80 border-t border-gray-800">
+                    <button
+                        onClick={handleSelect}
+                        className={`w-full ${utils.getButtonSize('md')} flex items-center justify-center transition-all duration-300 transform`}
+                        style={{
+                            backgroundColor: selectedTank.color,
+                            boxShadow: `0 0 20px ${selectedTank.color}80`
+                        }}
+                    >
+                        <span className="font-bold tracking-wider mr-2">DEPLOY</span>
+                        <ArrowRight size={utils.getIconSize('sm')} />
+                    </button>
+                </div>
             </div>
-        </>
+        </div>
     );
 }
 

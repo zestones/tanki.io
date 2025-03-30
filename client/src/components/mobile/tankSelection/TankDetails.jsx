@@ -14,7 +14,7 @@ import ProfileTab from './tabs/ProfileTab';
 import SkillsTab from './tabs/SkillsTab';
 import EquipmentTab from './tabs/EquipmentTab';
 
-function TankDetails({ selectedTank, animateIn }) {
+function TankDetails({ selectedTank, animateIn, isLandscape }) {
     const [activeTab, setActiveTab] = useState('profile');
     const [isChanging, setIsChanging] = useState(false);
 
@@ -35,7 +35,7 @@ function TankDetails({ selectedTank, animateIn }) {
 
     return (
         <motion.div
-            className="bg-black bg-opacity-80 h-full overflow-y-auto relative"
+            className={`bg-black bg-opacity-80 relative flex flex-col overflow-hidden h-full`}
             variants={containerVariants}
             initial="hidden"
             animate="visible"
@@ -47,22 +47,25 @@ function TankDetails({ selectedTank, animateIn }) {
                 activeTab={activeTab}
                 handleTabChange={handleTabChange}
                 tankColor={selectedTank.color}
+                className="sticky top-0 z-10 flex-shrink-0"
             />
 
-            <div className="p-4 space-y-4 relative">
-                <AnimatePresence mode="wait">
-                    {activeTab === 'profile' && (
-                        <ProfileTab selectedTank={selectedTank} isChanging={isChanging} />
-                    )}
+            <div className="overflow-y-auto flex-1">
+                <div className="p-4 space-y-4">
+                    <AnimatePresence mode="wait">
+                        {activeTab === 'profile' && (
+                            <ProfileTab selectedTank={selectedTank} isChanging={isChanging} />
+                        )}
 
-                    {activeTab === 'skills' && (
-                        <SkillsTab selectedTank={selectedTank} />
-                    )}
+                        {activeTab === 'skills' && (
+                            <SkillsTab selectedTank={selectedTank} />
+                        )}
 
-                    {activeTab === 'equipment' && (
-                        <EquipmentTab selectedTank={selectedTank} />
-                    )}
-                </AnimatePresence>
+                        {activeTab === 'equipment' && (
+                            <EquipmentTab selectedTank={selectedTank} />
+                        )}
+                    </AnimatePresence>
+                </div>
             </div>
         </motion.div>
     );
@@ -96,6 +99,11 @@ TankDetails.propTypes = {
         ).isRequired
     }).isRequired,
     animateIn: PropTypes.bool.isRequired,
+    isLandscape: PropTypes.bool
+};
+
+TankDetails.defaultProps = {
+    isLandscape: false
 };
 
 export default TankDetails;
