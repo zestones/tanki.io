@@ -137,9 +137,6 @@ function Controller() {
                                     />
                                 </svg>
                             </div>
-                            <div className="absolute -top-8 left-0 text-xs text-blue-400 font-mono tracking-wider">
-                                |TACTICAL MOVEMENT|
-                            </div>
                             <div className="absolute -bottom-6 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-blue-500/30 to-transparent"></div>
 
                             <Joystick
@@ -161,9 +158,6 @@ function Controller() {
                                         strokeWidth="2"
                                     />
                                 </svg>
-                            </div>
-                            <div className="absolute -top-8 right-0 text-xs text-red-600 font-mono tracking-wider">
-                                |WEAPON SYSTEMS|
                             </div>
                             <div className="absolute -bottom-6 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-red-600/30 to-transparent"></div>
 
