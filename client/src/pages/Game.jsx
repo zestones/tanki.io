@@ -28,6 +28,9 @@ function Game() {
     const viewportSize = useViewportSize(containerRef);
     const roomRef = useRef(null);
 
+    // Track active specialist effects
+    const [activeSpecialists, setActiveSpecialists] = useState(new Map());
+
     // Send viewport size to server when it changes
     useEffect(() => {
         if (roomRef.current && viewportSize.width && viewportSize.height) {
@@ -62,12 +65,40 @@ function Game() {
                     arenaWidth: state.arenaWidth,
                     arenaHeight: state.arenaHeight
                 });
+
+                // Update active specialists by checking player specialist states
+                const newActiveSpecialists = new Map();
+
+                state.players.forEach((player, playerId) => {
+                    if (player.tank?.specialist?.isActive) {
+                        // Create or update specialist effect info
+                        newActiveSpecialists.set(playerId, {
+                            id: `specialist-${playerId}`,
+                            playerId: playerId,
+                            type: player.tank.specialist.effectType,
+                            position: { x: player.x, y: player.y },
+                            radius: player.tank.specialist.effectRadius,
+                            createdAt: player.tank.specialist.lastActivationTime,
+                            duration: player.tank.specialist.duration,
+                            name: player.tank.specialist.name
+                        });
+                    }
+                });
+
+                setActiveSpecialists(newActiveSpecialists);
             });
         }).catch(e => {
             console.error('Could not join room as spectator:', e);
             setIsConnecting(false);
             setError("Failed to connect to game server");
         });
+
+        // Cleanup on unmount
+        return () => {
+            if (roomRef.current) {
+                roomRef.current.leave();
+            }
+        };
     }, []);
 
     if (isConnecting) {
@@ -98,7 +129,10 @@ function Game() {
                     className="w-full h-full"
                 >
                     <Layer>
-                        <Arena gameState={gameState} />
+                        <Arena
+                            gameState={gameState}
+                            activeSpecialists={activeSpecialists}
+                        />
                     </Layer>
                 </Stage>
 

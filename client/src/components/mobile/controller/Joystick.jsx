@@ -145,6 +145,9 @@ function Joystick({ onMove, onStop, size = "w-48 h-48", type = "movement" }) {
         // If no touch is within this joystick's bounds, don't do anything
         if (!touchWithinBounds) return;
 
+        // Very important: DO NOT prevent defaults or stop propagation globally
+        // This would block other touch events on other elements
+
         // Store this touch for this joystick instance
         handleStart(touchWithinBounds.clientX, touchWithinBounds.clientY, touchWithinBounds.identifier);
     };
@@ -161,6 +164,8 @@ function Joystick({ onMove, onStop, size = "w-48 h-48", type = "movement" }) {
 
         const touch = e.touches[touchIndex];
         handleMove(touch.clientX, touch.clientY);
+
+        // DO NOT stop propagation - this would prevent other touch events
     };
 
     const handleTouchEnd = (e) => {
@@ -181,16 +186,16 @@ function Joystick({ onMove, onStop, size = "w-48 h-48", type = "movement" }) {
         // Attach touch events to the specific joystick element
         element.addEventListener('touchstart', handleTouchStart, { passive: true });
 
-        // But attach move and end handlers to window for better tracking outside the element
-        window.addEventListener('touchmove', handleTouchMove, { passive: true });
-        window.addEventListener('touchend', handleTouchEnd, { passive: true });
-        window.addEventListener('touchcancel', handleTouchEnd, { passive: true });
+        // But attach move and end handlers to document for better tracking outside the element
+        document.addEventListener('touchmove', handleTouchMove, { passive: true });
+        document.addEventListener('touchend', handleTouchEnd, { passive: true });
+        document.addEventListener('touchcancel', handleTouchEnd, { passive: true });
 
         return () => {
             element.removeEventListener('touchstart', handleTouchStart);
-            window.removeEventListener('touchmove', handleTouchMove);
-            window.removeEventListener('touchend', handleTouchEnd);
-            window.removeEventListener('touchcancel', handleTouchEnd);
+            document.removeEventListener('touchmove', handleTouchMove);
+            document.removeEventListener('touchend', handleTouchEnd);
+            document.removeEventListener('touchcancel', handleTouchEnd);
         };
     }, [isDragging]); // Re-attach listeners when isDragging changes
 

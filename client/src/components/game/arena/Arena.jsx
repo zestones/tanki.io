@@ -3,12 +3,13 @@ import Grid from './Grid';
 
 import Bullet from '../entities/bullets/Bullet';
 import Explosion from '../fx/Explosion';
+import SpecialistEffect from '../fx/SpecialistEffect';
 
 import PropTypes from 'prop-types';
 
 import { tankComponentMap } from '../../../utils/tankComponentMap';
 
-function Arena({ gameState }) {
+function Arena({ gameState, activeSpecialists }) {
     const { arenaWidth, arenaHeight, players, bullets, explosions } = gameState;
 
     return (
@@ -46,7 +47,6 @@ function Arena({ gameState }) {
                 strokeWidth={2}
             />
 
-            {/* Hexagonal center decoration */}
             <Group>
                 <Line
                     points={[
@@ -88,7 +88,21 @@ function Arena({ gameState }) {
             ))}
 
             {bullets.map((bullet, index) => (
-                <Bullet key={'bullet-' + index} bullet={bullet} />
+                <Bullet
+                    key={'bullet-' + index}
+                    bullet={bullet}
+                    tankType={players.get(bullet.ownerId)?.tank.type}
+                    color={players.get(bullet.ownerId)?.tank.color}
+                />
+            ))}
+
+            {/* Render active specialist effects */}
+            {Array.from(activeSpecialists.values()).map(effect => (
+                <SpecialistEffect
+                    key={effect.id}
+                    effect={effect}
+                    player={players.get(effect.playerId)}
+                />
             ))}
 
             {Array.from(players.entries()).map(([sessionId, player]) => {
@@ -102,6 +116,7 @@ function Arena({ gameState }) {
                         hp={player.hp}
                         username={player.username}
                         isDead={player.isDead}
+                        isSpecialistActive={player.tank.specialist.isActive}
                     />
                 );
             })}
@@ -117,6 +132,7 @@ Arena.propTypes = {
         bullets: PropTypes.arrayOf(PropTypes.object).isRequired,
         explosions: PropTypes.arrayOf(PropTypes.object).isRequired,
     }).isRequired,
+    activeSpecialists: PropTypes.object.isRequired,
 };
 
 export default Arena;

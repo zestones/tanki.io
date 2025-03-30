@@ -1,11 +1,14 @@
-import { Bullet } from "../schema/Bullet.js";
-import MathUtils from "../utils/MathUtils.js";
 import gameConfig from "../config/gameConfig.js";
+
+import { Bullet } from "../schema/Bullet.js";
+
+import MathUtils from "../utils/MathUtils.js";
 
 export default class WeaponSystem {
     constructor(state) {
         this.state = state;
         this.lastShootTime = new Map();
+        this.nextBulletId = 0;
     }
 
     canShoot(playerId) {
@@ -15,10 +18,7 @@ export default class WeaponSystem {
     }
 
     shoot(player, playerId) {
-        if (!player || player.isDead) return false;
-
-        if (!this.canShoot(playerId)) return false;
-
+        if (!player || player.isDead || !this.canShoot(playerId)) return false;
         this.lastShootTime.set(playerId, Date.now());
 
         const bullet = new Bullet();
