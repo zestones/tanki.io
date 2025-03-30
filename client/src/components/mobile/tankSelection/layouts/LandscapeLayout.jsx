@@ -36,7 +36,7 @@ function LandscapeLayout({
                     </div>
                 </div>
 
-                <div className="flex flex-col justify-center flex-1">
+                <div className="flex flex-col justify-center">
                     <TankPreview
                         selectedTank={selectedTank}
                         tankRotation={tankRotation}

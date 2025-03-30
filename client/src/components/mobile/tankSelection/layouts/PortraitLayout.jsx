@@ -26,7 +26,6 @@ function PortraitLayout({
         return 'md';
     };
 
-    // Use different percentage splits based on screen size
     const getHeightDistribution = () => {
         return { topHeight: '60%', bottomHeight: '40%' };
     };

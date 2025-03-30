@@ -154,7 +154,7 @@ function TankStats({ selectedTank, spacing = null }) {
         (isVerySmallScreen ? 'px-4' : isSmallScreen ? 'px-6' : 'px-8');
 
     return (
-        <div className={`flex justify-around ${horizontalPadding} ${containerSpacing} bg-gray-900 bg-opacity-70`}>
+        <div className={`flex justify-around ${horizontalPadding} ${containerSpacing} bg-gray-900 bg-opacity-70 items-center h-full`}>
             {renderHexStat(
                 selectedTank.stats.defense,
                 "DFS",
